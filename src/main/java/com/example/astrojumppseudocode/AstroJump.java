@@ -19,9 +19,10 @@ public class AstroJump extends Application {
     private long lastUpdateTime = 0;
 
     //game objects
-    Player player;
-
-
+    private Player player;
+    private Obstacle[] obstacles;
+    private Star[] star;
+    private Net[] nets;
     public static void main(String[] args) {
         launch(args);
     }
@@ -40,6 +41,8 @@ public class AstroJump extends Application {
         startGameLoop();
 
     }
+
+    //create animation timer which calls the update method
     private void startGameLoop() {
         new AnimationTimer() {
             @Override
