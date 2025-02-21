@@ -11,7 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class AstroJumpDemo extends Application {
+public class AstroJump extends Application {
 
     //gameloop method propreties
     private static final int TARGET_FPS = 60;
@@ -29,7 +29,44 @@ public class AstroJumpDemo extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("AstroJump");
 
-        //create player imageview
+        //create player object and imageview
+        createPlayer();
+
+        //show the stage
+        primaryStage.setScene(new Scene(new Group(player.getImage())));
+        primaryStage.show();
+
+        // Start the game loop
+        startGameLoop();
+
+    }
+    private void startGameLoop() {
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // Calculate the time elapsed since the last frame
+                if (lastUpdateTime > 0) {
+                    long elapsedTime = now - lastUpdateTime;
+                    // If enough time has passed, call update and save lastUpdateTime
+                    if (elapsedTime >= NANOSECONDS_PER_FRAME) {
+                        update(elapsedTime / 1_000_000_000.0); // Convert nanoseconds to seconds
+                        lastUpdateTime = now;
+                    }
+                } else {
+                    lastUpdateTime = now;
+                }
+            }
+        }.start();
+    }
+    private void update(double deltaTime) {
+        // deltaTime is the time elapsed since the last frame in seconds
+        //you can multiply a value of speed or position by deltaTime to make it pixels/second
+        //example:
+        player.setX(player.getX()+10*deltaTime);
+
+    }
+
+    private void createPlayer(){
         final Image IMAGE = new Image("The_Horse_in_Motion.jpg");
         //number of columns in the spriteSheet
         final int COLUMNS = 4;
@@ -59,39 +96,6 @@ public class AstroJumpDemo extends Application {
         //create player object
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
-
-            //show the stage
-            primaryStage.setScene(new Scene(new Group(player.getImage())));
-            primaryStage.show();
-
-            // Start the game loop
-            startGameLoop();
-        //}
-    }
-    private void startGameLoop() {
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Calculate the time elapsed since the last frame
-                if (lastUpdateTime > 0) {
-                    long elapsedTime = now - lastUpdateTime;
-                    // If enough time has passed, call update and save lastUpdateTime
-                    if (elapsedTime >= NANOSECONDS_PER_FRAME) {
-                        update(elapsedTime / 1_000_000_000.0); // Convert nanoseconds to seconds
-                        lastUpdateTime = now;
-                    }
-                } else {
-                    lastUpdateTime = now;
-                }
-            }
-        }.start();
-    }
-    private void update(double deltaTime) {
-        // deltaTime is the time elapsed since the last frame in seconds
-        //you can multiply a value of speed or position by deltaTime to make it pixels/second
-        //example:
-        player.setX(player.getX()+10*deltaTime);
-
     }
 
 }
