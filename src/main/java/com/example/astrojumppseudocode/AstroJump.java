@@ -23,6 +23,10 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private Net[] nets;
+
+    //game pane propreties
+    private static final int GROUND_Y = 200;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -67,6 +71,9 @@ public class AstroJump extends Application {
         //example:
         player.setX(player.getX()+10*deltaTime);
 
+        if(player.getIsJumping()){
+            playerJump(-9.8f); //TASK: EVELYNNE: change -9.8 to planets gravity
+        }
     }
 
     private void createPlayer(){
@@ -100,5 +107,14 @@ public class AstroJump extends Application {
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
     }
+    private void playerJump(float gravitationalForce){
+        long timeElapsed = player.getJumpTimeElapsed();
+        double baseDisplacement = timeElapsed*player.getINITIAL_JUMP_SPEED();
+        double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
+        player.setY(GROUND_Y+player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
+        //if the player is back on the floor set is jumping to false
+        if(player.getY()>=(GROUND_Y+player.getHeight()))
+          player.setIsJumping(false);
+    }
 }
