@@ -121,6 +121,8 @@ public class Player implements Collidable{
         //if the player starts jumping record time
         if(isJumping)
             this.startJumpTime = System.currentTimeMillis();
+        else
+            setAnimationState(RUN);
     }
     public boolean getIsJumping(){
         return this.isJumping;

@@ -69,7 +69,7 @@ public class AstroJump extends Application {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
-        player.setX(player.getX()+10*deltaTime);
+        //player.setX(player.getX()+10*deltaTime);
 
         if(player.getIsJumping()){
             playerJump(-9.8f); //TASK: EVELYNNE: change -9.8 to planets gravity
@@ -108,6 +108,10 @@ public class AstroJump extends Application {
         player.setAnimationState(Player.RUN);
     }
     private void playerJump(float gravitationalForce){
+        //set player animation to jump
+        player.setAnimationState(Player.JUMP); // TO DO: move to action event
+
+        //move player
         long timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*player.getINITIAL_JUMP_SPEED();
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
