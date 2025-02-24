@@ -26,6 +26,10 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private Net[] nets;
+
+    //game pane propreties
+    private static final int GROUND_Y = 200;
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -73,21 +77,24 @@ public class AstroJump extends Application {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
-        player.setX(player.getX()+10*deltaTime);
+        //player.setX(player.getX()+10*deltaTime);
 
+        if(player.getIsJumping()){
+            playerJump(-9.8f); //TASK: EVELYNNE: change -9.8 to planets gravity
+        }
     }
 
     private void createPlayer(){
-        final Image IMAGE = new Image("The_Horse_in_Motion.jpg");
+        final Image IMAGE = new Image("playerSpriteSheet.png");
         //number of columns in the spriteSheet
-        final int COLUMNS = 4;
+        final int COLUMNS = 5;
         final int STARTING_ROW = Player.RUN;
         //beginning offset
-        final int OFFSET_X = 18;
-        final int OFFSET_Y = 25;
+        final int OFFSET_X = 0;
+        final int OFFSET_Y = 0;
         //size of one image
-        final int WIDTH = 374;
-        final int HEIGHT = 243;
+        final int WIDTH = 32;
+        final int HEIGHT = 32;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
         playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
@@ -107,6 +114,20 @@ public class AstroJump extends Application {
         //create player object
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
+    }
+    private void playerJump(float gravitationalForce){
+        //set player animation to jump
+        player.setAnimationState(Player.JUMP); // TO DO: move to action event
+
+        //move player
+        long timeElapsed = player.getJumpTimeElapsed();
+        double baseDisplacement = timeElapsed*player.getINITIAL_JUMP_SPEED();
+        double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
+        player.setY(GROUND_Y+player.getHeight()+baseDisplacement+acceleratedDisplacement);
+
+        //if the player is back on the floor set is jumping to false
+        if(player.getY()>=(GROUND_Y+player.getHeight()))
+          player.setIsJumping(false);
     }
 
 }
