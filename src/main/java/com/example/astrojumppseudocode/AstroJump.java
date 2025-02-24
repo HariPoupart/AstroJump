@@ -3,6 +3,7 @@ package com.example.astrojumppseudocode;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -10,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class AstroJump extends Application {
 
@@ -27,8 +30,13 @@ public class AstroJump extends Application {
         launch(args);
     }
 
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("AstroJump");
+
+        //link to FXML file
+        FXMLLoader loader = new FXMLLoader(/*Input .fxml file name*/);
+
+        Scene scene = new Scene(loader.load(), 320, 240);
 
         //create player object and imageview
         createPlayer();
@@ -43,7 +51,7 @@ public class AstroJump extends Application {
     }
 
     //create animation timer which calls the update method
-    private void startGameLoop() {
+    protected void startGameLoop() {
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -102,3 +110,4 @@ public class AstroJump extends Application {
     }
 
 }
+
