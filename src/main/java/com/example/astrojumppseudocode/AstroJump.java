@@ -38,7 +38,7 @@ public class AstroJump extends Application {
         primaryStage.setTitle("AstroJump");
 
         //link to FXML file
-        FXMLLoader loader = new FXMLLoader(/*Input .fxml file name*/);
+        FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
         Scene scene = new Scene(loader.load(), 320, 240);
 
@@ -77,10 +77,10 @@ public class AstroJump extends Application {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
-        //player.setX(player.getX()+10*deltaTime);
+        player.setX(player.getX()+10*deltaTime);
 
         if(player.getIsJumping()){
-            playerJump(-9.8f); //TASK: EVELYNNE: change -9.8 to planets gravity
+            playerJump(-9.8f); //TASK: EVELYNE: change -9.8 to planets gravity
         }
     }
 
