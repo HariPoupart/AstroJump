@@ -77,16 +77,16 @@ public class AstroJump extends Application {
     }
 
     private void createPlayer(){
-        final Image IMAGE = new Image("The_Horse_in_Motion.jpg");
+        final Image IMAGE = new Image("playerSpriteSheet.png");
         //number of columns in the spriteSheet
-        final int COLUMNS = 4;
+        final int COLUMNS = 5;
         final int STARTING_ROW = Player.RUN;
         //beginning offset
-        final int OFFSET_X = 18;
-        final int OFFSET_Y = 25;
+        final int OFFSET_X = 0;
+        final int OFFSET_Y = 0;
         //size of one image
-        final int WIDTH = 374;
-        final int HEIGHT = 243;
+        final int WIDTH = 32;
+        final int HEIGHT = 32;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
         playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
@@ -121,4 +121,5 @@ public class AstroJump extends Application {
         if(player.getY()>=(GROUND_Y+player.getHeight()))
           player.setIsJumping(false);
     }
+
 }
