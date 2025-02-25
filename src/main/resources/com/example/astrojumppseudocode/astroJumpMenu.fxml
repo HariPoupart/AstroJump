@@ -12,16 +12,17 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.astrojumppseudocode.MenuController">
    <center>
        <VBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
            <children>
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Start" />
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Tutorial" />
-               <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" text="Settings" />
+               <Button mnemonicParsing="false" onAction="#startButton" prefHeight="30.0" prefWidth="150.0" text="Start" />
+               <Button mnemonicParsing="false" onAction="#tutorialButton" prefHeight="30.0" prefWidth="150.0" text="Tutorial" />
+               <Button mnemonicParsing="false" onAction="#settingButton" prefHeight="30.0" prefWidth="150.0" text="Settings" />
+            <Button mnemonicParsing="false" onAction="#exitButton" prefHeight="30.0" prefWidth="150.0" text="Exit" />
            </children>
            <BorderPane.margin>
-               <Insets top="75.0" />
+               <Insets top="85.0" />
            </BorderPane.margin>
            <opaqueInsets>
                <Insets />
@@ -83,7 +84,7 @@
             </GridPane>
          </children>
          <BorderPane.margin>
-            <Insets right="20.0" top="50.0" />
+            <Insets right="20.0" top="75.0" />
          </BorderPane.margin>
       </VBox>
    </right>
