@@ -75,7 +75,7 @@ public class AstroJump extends Application {
         //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
-        Scene scene = new Scene(loader.load(), 1366,768);
+        Scene scene = new Scene(loader.load(), 1000,500);
 
         //create player
         createPlayer();
@@ -94,7 +94,7 @@ public class AstroJump extends Application {
 
     //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
-        Scene game = new Scene(new Group(player.getImage()),1366,768);
+        Scene game = new Scene(new Group(player.getImage()),1000,500);
 
         //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
