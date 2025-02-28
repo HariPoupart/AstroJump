@@ -3,6 +3,8 @@ package com.example.astrojumppseudocode;
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -22,6 +24,10 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateTime = 0;
+    public int screenHight;
+    public int screenWidth;
+    public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
+
 
     //game objects
     private Player player;
@@ -35,42 +41,68 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         launch(args);
-//        //initiate planetArray
-//        Planet earth = new Planet();
-//        planetArray = new Planet[]{earth};
+        //initiate planetArray
+        Planet mercury = new Planet(-9.8f,30f);
+        Planet venus = new Planet(-9.8f,30f);
+        Planet earth = new Planet(-9.8f,30f);
+        Planet mars = new Planet(-9.8f,30f);
+        Planet jupiter = new Planet(-9.8f,30f);
+        Planet saturn = new Planet(-9.8f,30f);
+        Planet uranus = new Planet(-9.8f,30f);
+        planetArray = new Planet[]{earth};
     }
 
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("AstroJump");
+
+        //listener
+        startLoopListener.addListener(e -> {
+            startGameLoop(primaryStage);
+            startLoopListener = new SimpleBooleanProperty(false);
+        });
 
         //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
         Scene scene = new Scene(loader.load(), 1366,768);
 
-        //create player object and imageview
+//        //create player object and imageview
         createPlayer();
+//
+//        //show the stage
+//        Scene game = new Scene(new Group(player.getImage()),1366,768);
+//
+//        //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
+//        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+//            if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
+//                player.setIsJumping(true);
+//                player.setY(GROUND_Y-1);
+//            }
+//        });
+       primaryStage.setScene(scene);
+       primaryStage.show();
 
-        //show the stage
+        // Start the game loop
+        //startGameLoop(primaryStage);
+
+    }
+
+    //create animation timer which calls the update method
+    protected void startGameLoop(Stage primaryStage) {
         Scene game = new Scene(new Group(player.getImage()),1366,768);
 
-        //jump event handler TO DO: EVELYNNE TAKE CARE OF THIS :)
+        //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
                 player.setIsJumping(true);
                 player.setY(GROUND_Y-1);
             }
         });
+
         primaryStage.setScene(game);
         primaryStage.show();
 
-        // Start the game loop
-        startGameLoop();
 
-    }
-
-    //create animation timer which calls the update method
-    protected void startGameLoop() {
         new AnimationTimer() {
             @Override
             public void handle(long now) {

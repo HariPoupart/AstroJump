@@ -1,39 +1,34 @@
 package com.example.astrojumppseudocode;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Planet {
     //planet attributes
     float gravity;
-    ImageView background;
-    ImageView[] obstacles;
+    float jumpForce;
+
 
     //constructor
-//    Planet() {
-//        this.gravity = gravity;
-//        this.background = background;
-//        this. obstacles = obstacles;
-//    }
+    Planet(float gravity, float jumpForce) {
+        this.gravity = gravity;
+        this.jumpForce = jumpForce;
+
+    }
 
     //planet mutators and accessors
     public void setGravity(float gravity) {
         this.gravity = gravity;
     }
-    public void setBackground(ImageView background) {
-        this.background = background;
-    }
-    public void setObstacles(ImageView[] obstacles) {
-        this.obstacles = obstacles;
+    public void setjumpForce(float jumpForce) {
+        this.jumpForce = jumpForce;
     }
 
     public float getGravity() {
         return gravity;
     }
-    public ImageView getBackground() {
-        return background;
-    }
-    public ImageView[] getObstacles() {
-        return obstacles;
+    public float getjumpForce() {
+        return jumpForce;
     }
 
 
