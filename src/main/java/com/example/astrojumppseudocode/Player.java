@@ -13,7 +13,7 @@ public class Player implements Collidable{
     //jumping
     private boolean isOnGround;
     private boolean isJumping;
-    private final float INITIAL_JUMP_SPEED = 10;
+    private final float INITIAL_JUMP_SPEED = -180;
     private long startJumpTime;
 
     //animation constants
@@ -131,8 +131,8 @@ public class Player implements Collidable{
     public long getStartJumpTime(){
         return this.startJumpTime;
     }
-    public long getJumpTimeElapsed(){
-        return (System.currentTimeMillis()-this.startJumpTime)/1000;
+    public double getJumpTimeElapsed(){
+        return (System.currentTimeMillis()-this.startJumpTime)/1000.0;
     }
 
     public float getINITIAL_JUMP_SPEED() {
