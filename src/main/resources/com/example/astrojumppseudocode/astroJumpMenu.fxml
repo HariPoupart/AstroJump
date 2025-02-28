@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.astrojumppseudocode.MenuController">
+<BorderPane maxHeight="200.0" maxWidth="400.0" minHeight="300.0" minWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.astrojumppseudocode.MenuController">
    <center>
        <VBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
            <children>
