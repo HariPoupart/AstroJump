@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -26,10 +27,12 @@ public class AstroJump extends Application {
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateTime = 0;
     private long lastUpdateTimePlanetTimer = 0;
-    public int screenHight;
-    public int screenWidth;
+    public int screenHeight = 500;
+    public int screenWidth = 1000;
     public Planet currentPlanet;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
+    public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
+    public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
 
 
     //game objects
@@ -53,6 +56,7 @@ public class AstroJump extends Application {
         Planet saturn = new Planet(-95f,30f,30f);
         Planet uranus = new Planet(-80f,30f,30f);
         Planet neptune = new Planet(-115f,30f,30f);
+        planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
         planetArray.add(earth);
@@ -66,16 +70,24 @@ public class AstroJump extends Application {
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("AstroJump");
 
-        //listener
+        //listeners for action events in MenuController
         startLoopListener.addListener(e -> {
             startGameLoop(primaryStage);
             startLoopListener = new SimpleBooleanProperty(false);
+        });
+        tutorialListener.addListener(e -> {
+            showTutorial(primaryStage);
+            tutorialListener = new SimpleBooleanProperty(false);
+        });
+        settingsListener.addListener(e -> {
+            showSettings(primaryStage);
+            settingsListener = new SimpleBooleanProperty(false);
         });
 
         //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
-        Scene scene = new Scene(loader.load(), 1000,500);
+        Scene scene = new Scene(loader.load(), screenWidth,screenHeight);
 
         //create player
         createPlayer();
@@ -91,10 +103,42 @@ public class AstroJump extends Application {
         //startGameLoop(primaryStage);
 
     }
+    protected void showTutorial(Stage primaryStage) {
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),1366,768);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        //add listener to go back to main menu
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                try {
+                    start(primaryStage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+    //showTutorial method
+    protected void showSettings(Stage primaryStage) {
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),1366,768);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+//add listener
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                try {
+                    start(primaryStage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
 
     //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
-        Scene game = new Scene(new Group(player.getImage()),1000,500);
+        Scene game = new Scene(new Group(player.getImage()),screenWidth,screenHeight);
 
         //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {

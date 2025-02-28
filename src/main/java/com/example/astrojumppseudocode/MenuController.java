@@ -21,13 +21,13 @@ public class MenuController {
     //action handler tutorialButton
     @FXML
     protected void tutorialButton(ActionEvent event) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.png")),1366,768);
+        AstroJump.tutorialListener.setValue(true);
     }
 
     //action handler settingButton
     @FXML
     protected void settingButton(ActionEvent event) {
-        Scene scene = new Scene(new Pane(new ImageView("settings.png")),320,240);
+        AstroJump.settingsListener.setValue(true);
     }
 
     //action handler settingButton
