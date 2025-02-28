@@ -98,6 +98,11 @@ public class AstroJump extends Application {
             }
         });
 
+        // when mouse is clicked create a net
+        game.setOnMouseClicked(event -> {
+            createNet(event.getX(),event.getY(),-160,100);
+        });
+
         //show game scene
         primaryStage.setScene(game);
         primaryStage.show();
@@ -130,7 +135,7 @@ public class AstroJump extends Application {
 
         //update player jump
         if(player.getIsJumping()){
-            playerJump(-120f); //TASK: EVELYNE: change -9.8 to planets gravity
+            playerJump(-120,-180); //TASK: EVELYNE: change -9.8 to planets gravity
         }
         player.updateIsOnGround(GROUND_Y);
 
@@ -172,19 +177,19 @@ public class AstroJump extends Application {
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y);
     }
-    private void playerJump(float gravitationalForce){
+    private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
         player.setAnimationState(Player.JUMP); // TO DO: move to action event
 
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
-        double baseDisplacement = timeElapsed*player.getINITIAL_JUMP_SPEED();
+        double baseDisplacement = timeElapsed*initialJumpSpeed;
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
         //if the player is back on the floor set is jumping to false
         if(player.getY()>=(GROUND_Y+player.getHeight()))
-          player.setIsJumping(false);
+            player.setIsJumping(false);
     }
 
     private void planetChange(long now) {
@@ -205,6 +210,24 @@ public class AstroJump extends Application {
                 }
 
         }
+    }
+
+    public void createNet(double mouseX,double mouseY,float gravity, float netForce){
+        //calculate the inital position of the net
+        double initalPosX = player.getX()+player.getWidth();
+        double initalPosY = player.getY()+0.5*player.getHeight();
+
+        //calculate the angle of the throw
+        double angle = Math.atan((mouseY-initalPosY)/(mouseX-initalPosX));
+
+        //calculate the speed in each axis
+        double initialSpeedX = netForce* Math.cos(angle);
+        double initialSpeedY = -1*netForce* Math.sin(angle);
+
+        //create net
+        //TO DO: ADD WIND RESITANCE DURING STORM
+        nets.add(new Net(new ImageView("Net.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
+
     }
 
 }
