@@ -25,7 +25,6 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateTime = 0;
-    private long lastUpdateTimePlanetTimer = 0;
     public int screenHight;
     public int screenWidth;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
@@ -36,8 +35,7 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private ArrayList<Net> nets;
-    protected static ArrayList<Planet> planetArray;
-    public Planet currentPlanet;
+    protected static Planet[] planetArray;
 
     //game pane propreties
     private static final int GROUND_Y = 200;
@@ -53,14 +51,7 @@ public class AstroJump extends Application {
         Planet saturn = new Planet(-95f,30f,30f);
         Planet uranus = new Planet(-80f,30f,30f);
         Planet neptune = new Planet(-115f,30f,30f);
-        planetArray.add(mercury);
-        planetArray.add(venus);
-        planetArray.add(earth);
-        planetArray.add(mars);
-        planetArray.add(jupiter);
-        planetArray.add(saturn);
-        planetArray.add(uranus);
-        planetArray.add(neptune);
+        planetArray = new Planet[]{earth};
     }
 
     public void start(Stage primaryStage) throws IOException {
@@ -72,11 +63,10 @@ public class AstroJump extends Application {
             startLoopListener = new SimpleBooleanProperty(false);
         });
 
-        //load menuGUI
+        //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
+
         Scene scene = new Scene(loader.load(), 1366,768);
-        primaryStage.setScene(scene);
-        primaryStage.show();
 
         //create player
         createPlayer();
@@ -85,11 +75,16 @@ public class AstroJump extends Application {
         nets = new ArrayList<>();
 
 
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        // Start the game loop
+        //startGameLoop(primaryStage);
+
     }
 
     //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
-        //create game scene
         Scene game = new Scene(new Group(player.getImage()),1366,768);
 
         //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
@@ -99,20 +94,15 @@ public class AstroJump extends Application {
                 player.setY(GROUND_Y-1);
             }
         });
-
         // when mouse is clicked create a net
         game.setOnMouseClicked(event -> {
             createNet(event.getX(),event.getY(),-160,100);
         });
 
-        //show game scene
         primaryStage.setScene(game);
         primaryStage.show();
 
-        //create timer to switch planet
-        planetChange(System.currentTimeMillis());
 
-        //animation timer to update character
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -178,6 +168,8 @@ public class AstroJump extends Application {
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y);
+        player.getImage().setFitWidth(50);
+        player.getImage().setFitHeight(50);
     }
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
@@ -194,24 +186,8 @@ public class AstroJump extends Application {
             player.setIsJumping(false);
     }
 
-    private void planetChange(long now) {
-        long threshhold = 45000; //represents time between planets
+    private void planetChange() {
 
-        while(true){
-             now = System.currentTimeMillis();
-                // Calculate the time elapsed since the last frame
-                if (lastUpdateTimePlanetTimer > 0) {
-                    long elapsedTime = now - lastUpdateTimePlanetTimer;
-                    // If enough time has passed, call update and save lastUpdateTime
-                    if (elapsedTime >= threshhold) {
-                        currentPlanet = planetArray.get((int) (Math.random() * 10));
-                        lastUpdateTimePlanetTimer = now;
-                    }
-                } else {
-                    lastUpdateTimePlanetTimer = now;
-                }
-
-        }
     }
 
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
@@ -233,4 +209,3 @@ public class AstroJump extends Application {
     }
 
 }
-
