@@ -35,7 +35,7 @@ public class AstroJump extends Application {
     private Player player;
     private Obstacle[] obstacles;
     private Star[] star;
-    private Net[] nets;
+    private ArrayList<Net> nets;
     protected static ArrayList<Planet> planetArray;
     public Planet currentPlanet;
 
