@@ -128,11 +128,16 @@ public class AstroJump extends Application {
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
 
+        //update player jump
         if(player.getIsJumping()){
             playerJump(-120f); //TASK: EVELYNE: change -9.8 to planets gravity
         }
         player.updateIsOnGround(GROUND_Y);
 
+        //update net position
+        for(int i =0; i<nets.size();i++){
+            nets.get(i).updatePosition();
+        }
     }
 
     private void createPlayer(){
