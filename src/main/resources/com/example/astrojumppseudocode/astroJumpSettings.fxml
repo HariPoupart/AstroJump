@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="500.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox prefHeight="300.0" prefWidth="100.0" spacing="40.0">
+         <children>
+            <Label alignment="CENTER" text="ACTION:">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="20.0" />
+               </padding></Label>
+            <Label text="Jump:" />
+            <Label text="Throw:" />
+            <Label text="Exit:" />
+            <Label text="Aim:" />
+         </children>
+         <HBox.margin>
+            <Insets left="20.0" top="10.0" />
+         </HBox.margin>
+      </VBox>
+      <VBox prefHeight="300.0" prefWidth="150.0">
+         <children>
+            <Label text="CONTROL:">
+               <padding>
+                  <Insets left="40.0" />
+               </padding></Label>
+            <TextField>
+               <VBox.margin>
+                  <Insets top="35.0" />
+               </VBox.margin></TextField>
+            <TextField>
+               <VBox.margin>
+                  <Insets top="35.0" />
+               </VBox.margin></TextField>
+            <TextField>
+               <VBox.margin>
+                  <Insets top="35.0" />
+               </VBox.margin></TextField>
+            <TextField>
+               <VBox.margin>
+                  <Insets top="35.0" />
+               </VBox.margin>
+            </TextField>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <HBox.margin>
+            <Insets top="10.0" />
+         </HBox.margin>
+      </VBox>
+      <VBox prefHeight="300.0" prefWidth="250.0" spacing="5.0">
+         <children>
+            <Label text="SOUND SETTING:">
+               <VBox.margin>
+                  <Insets left="70.0" />
+               </VBox.margin></Label>
+            <Label text="Music:">
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin></Label>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0">
+               <children>
+                  <Slider />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="100%" />
+               </children>
+            </HBox>
+            <Label text="Sound Effects:" />
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Slider />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="100%" />
+               </children>
+            </HBox>
+         </children>
+         <HBox.margin>
+            <Insets top="10.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+</HBox>
