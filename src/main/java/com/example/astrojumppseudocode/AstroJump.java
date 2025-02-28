@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AstroJump extends Application {
 
@@ -24,6 +25,7 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateTime = 0;
+    private long lastUpdateTimePlanetTimer = 0;
     public int screenHight;
     public int screenWidth;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
@@ -34,7 +36,8 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private Net[] nets;
-    protected static Planet[] planetArray;
+    protected static ArrayList<Planet> planetArray;
+    public Planet currentPlanet;
 
     //game pane propreties
     private static final int GROUND_Y = 200;
@@ -42,14 +45,22 @@ public class AstroJump extends Application {
     public static void main(String[] args) {
         launch(args);
         //initiate planetArray
-        Planet mercury = new Planet(-9.8f,30f);
-        Planet venus = new Planet(-9.8f,30f);
-        Planet earth = new Planet(-9.8f,30f);
-        Planet mars = new Planet(-9.8f,30f);
-        Planet jupiter = new Planet(-9.8f,30f);
-        Planet saturn = new Planet(-9.8f,30f);
-        Planet uranus = new Planet(-9.8f,30f);
-        planetArray = new Planet[]{earth};
+        Planet mercury = new Planet(-10f,30f,30f);
+        Planet venus = new Planet(-90f,30f,30f);
+        Planet earth = new Planet(-100f,30f,30f);
+        Planet mars = new Planet(-10f,30f,30f);
+        Planet jupiter = new Planet(-160f,30f,30f);
+        Planet saturn = new Planet(-95f,30f,30f);
+        Planet uranus = new Planet(-80f,30f,30f);
+        Planet neptune = new Planet(-115f,30f,30f);
+        planetArray.add(mercury);
+        planetArray.add(venus);
+        planetArray.add(earth);
+        planetArray.add(mars);
+        planetArray.add(jupiter);
+        planetArray.add(saturn);
+        planetArray.add(uranus);
+        planetArray.add(neptune);
     }
 
     public void start(Stage primaryStage) throws IOException {
@@ -61,34 +72,22 @@ public class AstroJump extends Application {
             startLoopListener = new SimpleBooleanProperty(false);
         });
 
-        //link to FXML file
+        //load menuGUI
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
-
         Scene scene = new Scene(loader.load(), 1366,768);
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
-//        //create player object and imageview
-        createPlayer();
-//
-//        //show the stage
-//        Scene game = new Scene(new Group(player.getImage()),1366,768);
-//
-//        //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
-//        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-//            if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
-//                player.setIsJumping(true);
-//                player.setY(GROUND_Y-1);
-//            }
-//        });
-       primaryStage.setScene(scene);
-       primaryStage.show();
-
-        // Start the game loop
-        //startGameLoop(primaryStage);
-
+        //listener to start game loop (called from start event handler from MenuController class)
+        startLoopListener.addListener(e -> {
+            startGameLoop(primaryStage);
+            startLoopListener = new SimpleBooleanProperty(false);
+        });
     }
 
     //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
+        //create game scene
         Scene game = new Scene(new Group(player.getImage()),1366,768);
 
         //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
@@ -99,10 +98,14 @@ public class AstroJump extends Application {
             }
         });
 
+        //show game scene
         primaryStage.setScene(game);
         primaryStage.show();
 
+        //create timer to switch planet
+        planetChange(System.currentTimeMillis());
 
+        //animation timer to update character
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -179,8 +182,24 @@ public class AstroJump extends Application {
           player.setIsJumping(false);
     }
 
-    private void planetChange() {
+    private void planetChange(long now) {
+        long threshhold = 45000; //represents time between planets
 
+        while(true){
+             now = System.currentTimeMillis();
+                // Calculate the time elapsed since the last frame
+                if (lastUpdateTimePlanetTimer > 0) {
+                    long elapsedTime = now - lastUpdateTimePlanetTimer;
+                    // If enough time has passed, call update and save lastUpdateTime
+                    if (elapsedTime >= threshhold) {
+                        currentPlanet = planetArray.get((int) (Math.random() * 10));
+                        lastUpdateTimePlanetTimer = now;
+                    }
+                } else {
+                    lastUpdateTimePlanetTimer = now;
+                }
+
+        }
     }
 
 }
