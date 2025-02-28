@@ -28,12 +28,16 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private Net[] nets;
+    protected static Planet[] planetArray;
 
     //game pane propreties
     private static final int GROUND_Y = 200;
 
     public static void main(String[] args) {
         launch(args);
+//        //initiate planetArray
+//        Planet earth = new Planet();
+//        planetArray = new Planet[]{earth};
     }
 
     public void start(Stage primaryStage) throws IOException {
@@ -42,13 +46,13 @@ public class AstroJump extends Application {
         //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
-        Scene scene = new Scene(loader.load(), 320, 240);
+        Scene scene = new Scene(loader.load(), 1366,768);
 
         //create player object and imageview
         createPlayer();
 
         //show the stage
-        Scene game = new Scene(new Group(player.getImage()),340,240);
+        Scene game = new Scene(new Group(player.getImage()),1366,768);
 
         //jump event handler TO DO: EVELYNNE TAKE CARE OF THIS :)
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -141,6 +145,10 @@ public class AstroJump extends Application {
         //if the player is back on the floor set is jumping to false
         if(player.getY()>=(GROUND_Y+player.getHeight()))
           player.setIsJumping(false);
+    }
+
+    private void planetChange() {
+
     }
 
 }

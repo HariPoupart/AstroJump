@@ -21,7 +21,7 @@ public class MenuController {
     //action handler tutorialButton
     @FXML
     protected void tutorialButton(ActionEvent event) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.png")),320,240);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.png")),1366,768);
     }
 
     //action handler settingButton
