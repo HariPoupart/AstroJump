@@ -105,7 +105,7 @@ public class Net implements Collidable{
     public long getCREATION_TIME(){
         return this.CREATION_TIME;
     }
-    public long getTimeElapsed(){
+    public double getTimeElapsed(){
         return (System.currentTimeMillis()-this.CREATION_TIME)/1000;
     }
 

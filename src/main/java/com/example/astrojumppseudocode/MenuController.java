@@ -1,5 +1,6 @@
 package com.example.astrojumppseudocode;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -14,14 +15,13 @@ public class MenuController {
     @FXML
     protected void startButton(ActionEvent event) {
         // Start the game loop
-        game = new AstroJump();
-        game.startGameLoop();
+        AstroJump.startLoopListener.setValue(true);
 }
 
     //action handler tutorialButton
     @FXML
     protected void tutorialButton(ActionEvent event) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.png")),320,240);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.png")),1366,768);
     }
 
     //action handler settingButton
