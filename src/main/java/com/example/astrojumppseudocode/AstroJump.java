@@ -78,11 +78,13 @@ public class AstroJump extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        //listener to start game loop (called from start event handler from MenuController class)
-        startLoopListener.addListener(e -> {
-            startGameLoop(primaryStage);
-            startLoopListener = new SimpleBooleanProperty(false);
-        });
+        //create player
+        createPlayer();
+
+        //create empty net array
+        nets = new ArrayList<>();
+
+
     }
 
     //create animation timer which calls the update method
