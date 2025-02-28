@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class AstroJump extends Application {
 
@@ -33,7 +34,7 @@ public class AstroJump extends Application {
     private Player player;
     private Obstacle[] obstacles;
     private Star[] star;
-    private Net[] nets;
+    private ArrayList<Net> nets;
     protected static Planet[] planetArray;
 
     //game pane propreties
@@ -66,19 +67,13 @@ public class AstroJump extends Application {
 
         Scene scene = new Scene(loader.load(), 1366,768);
 
-//        //create player object and imageview
+        //create player
         createPlayer();
-//
-//        //show the stage
-//        Scene game = new Scene(new Group(player.getImage()),1366,768);
-//
-//        //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
-//        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-//            if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
-//                player.setIsJumping(true);
-//                player.setY(GROUND_Y-1);
-//            }
-//        });
+
+        //create empty net array
+        nets = new ArrayList<>();
+
+
        primaryStage.setScene(scene);
        primaryStage.show();
 
@@ -97,6 +92,10 @@ public class AstroJump extends Application {
                 player.setIsJumping(true);
                 player.setY(GROUND_Y-1);
             }
+        });
+        // when mouse is clicked create a net
+        game.setOnMouseClicked(event -> {
+            createNet(event.getX(),event.getY(),-160,100);
         });
 
         primaryStage.setScene(game);
@@ -126,7 +125,7 @@ public class AstroJump extends Application {
         //example:
 
         if(player.getIsJumping()){
-            playerJump(-120f); //TASK: EVELYNE: change -9.8 to planets gravity
+            playerJump(-120,-180); //TASK: EVELYNE: change -9.8 to planets gravity
         }
         player.updateIsOnGround(GROUND_Y);
 
@@ -163,14 +162,16 @@ public class AstroJump extends Application {
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y);
+        player.getImage().setFitWidth(50);
+        player.getImage().setFitHeight(50);
     }
-    private void playerJump(float gravitationalForce){
+    private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
         player.setAnimationState(Player.JUMP); // TO DO: move to action event
 
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
-        double baseDisplacement = timeElapsed*player.getINITIAL_JUMP_SPEED();
+        double baseDisplacement = timeElapsed*initialJumpSpeed;
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
@@ -180,6 +181,24 @@ public class AstroJump extends Application {
     }
 
     private void planetChange() {
+
+    }
+
+    public void createNet(double mouseX,double mouseY,float gravity, float netForce){
+        //calculate the inital position of the net
+        double initalPosX = player.getX()+player.getWidth();
+        double initalPosY = player.getY()+0.5*player.getHeight();
+
+        //calculate the angle of the throw
+        double angle = Math.atan((mouseY-initalPosY)/(mouseX-initalPosX));
+
+        //calculate the speed in each axis
+        double initialSpeedX = netForce* Math.cos(angle);
+        double initialSpeedY = -1*netForce* Math.sin(angle);
+
+        //create net
+        //TO DO: ADD WIND RESITANCE DURING STORM
+        nets.add(new Net(new ImageView("Net.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
 
     }
 
