@@ -25,8 +25,10 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateTime = 0;
+    private long lastUpdateTimePlanetTimer = 0;
     public int screenHight;
     public int screenWidth;
+    public Planet currentPlanet;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
 
 
@@ -35,7 +37,7 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private ArrayList<Net> nets;
-    protected static Planet[] planetArray;
+    protected static ArrayList<Planet> planetArray;
 
     //game pane propreties
     private static final int GROUND_Y = 200;
@@ -51,7 +53,14 @@ public class AstroJump extends Application {
         Planet saturn = new Planet(-95f,30f,30f);
         Planet uranus = new Planet(-80f,30f,30f);
         Planet neptune = new Planet(-115f,30f,30f);
-        planetArray = new Planet[]{earth};
+        planetArray.add(mercury);
+        planetArray.add(venus);
+        planetArray.add(earth);
+        planetArray.add(mars);
+        planetArray.add(jupiter);
+        planetArray.add(saturn);
+        planetArray.add(uranus);
+        planetArray.add(neptune);
     }
 
     public void start(Stage primaryStage) throws IOException {
@@ -187,7 +196,23 @@ public class AstroJump extends Application {
     }
 
     private void planetChange() {
+        long threshhold = 45000; //represents time between planets
 
+        while(true){
+            long now = System.currentTimeMillis();
+            // Calculate the time elapsed since the last frame
+            if (lastUpdateTimePlanetTimer > 0) {
+                long elapsedTime = now - lastUpdateTimePlanetTimer;
+                // If enough time has passed, call update and save lastUpdateTime
+                if (elapsedTime >= threshhold) {
+                    currentPlanet = planetArray.get((int) (Math.random() * 10));
+                    lastUpdateTimePlanetTimer = now;
+                }
+            } else {
+                lastUpdateTimePlanetTimer = now;
+            }
+
+        }
     }
 
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
