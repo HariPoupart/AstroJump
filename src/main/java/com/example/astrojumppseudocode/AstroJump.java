@@ -181,7 +181,7 @@ public class AstroJump extends Application {
 
         //update player jump
         if(player.getIsJumping()){
-            playerJump(-120,-180); //TASK: EVELYNE: change values depending on planet
+            playerJump(-140,-300); //TASK: EVELYNE: change values depending on planet
         }
         player.updateIsOnGround(GROUND_Y);
 
