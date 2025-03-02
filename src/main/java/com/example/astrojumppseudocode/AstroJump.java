@@ -16,6 +16,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+//import javafx.scene.media.Media;
+//import javafx.scene.media.MediaPlayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class AstroJump extends Application {
     private long lastUpdateTimePlanetTimer = 0;
     public int screenHeight = 500;
     public int screenWidth = 1000;
-    public int currentPlanetInt;
+    public int currentPlanetInt = -1;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
@@ -102,6 +104,7 @@ public class AstroJump extends Application {
 
         // Start the game loop
         //startGameLoop(primaryStage);
+        //
 
     }
     protected void showTutorial(Stage primaryStage) {
@@ -303,5 +306,12 @@ public class AstroJump extends Application {
         nets.get(nets.size()-1).getImage().setY(initalPosY);
 
     }
+
+//    //music player method
+//    protected void musicPlayer() {
+//        Media m = new Media(planetArray.get(currentPlanetInt) + ".mp3");
+//        MediaPlayer player = new MediaPlayer(m);
+//        player.play();
+//    }
 
 }
