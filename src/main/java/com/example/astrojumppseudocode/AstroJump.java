@@ -29,7 +29,7 @@ public class AstroJump extends Application {
     private long lastUpdateTimePlanetTimer = 0;
     public int screenHeight = 500;
     public int screenWidth = 1000;
-    public Planet currentPlanet;
+    public int currentPlanetInt;
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
@@ -105,7 +105,7 @@ public class AstroJump extends Application {
 
     }
     protected void showTutorial(Stage primaryStage) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),1366,768);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -121,7 +121,7 @@ public class AstroJump extends Application {
         });
     }
     protected void showSettings(Stage primaryStage) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),1366,768);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
 //add listener
@@ -269,7 +269,7 @@ public class AstroJump extends Application {
                 long elapsedTime = now - lastUpdateTimePlanetTimer;
                 // If enough time has passed, call update and save lastUpdateTime
                 if (elapsedTime >= threshhold) {
-                    currentPlanet = planetArray.get((int) (Math.random() * 10));
+                    currentPlanetInt = (int) (Math.random() * 8);
                     lastUpdateTimePlanetTimer = now;
                 }
             } else {
