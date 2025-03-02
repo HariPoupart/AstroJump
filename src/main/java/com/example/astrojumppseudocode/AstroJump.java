@@ -44,7 +44,7 @@ public class AstroJump extends Application {
     protected static ArrayList<Planet> planetArray;
 
     //game pane propreties
-    private static final int GROUND_Y = 400;
+    private static final int GROUND_Y = 350;
 
     public static void main(String[] args) {
         launch(args);
@@ -181,7 +181,7 @@ public class AstroJump extends Application {
 
         //update player jump
         if(player.getIsJumping()){
-            playerJump(-140,-300); //TASK: EVELYNE: change values depending on planet
+            playerJump(-1200,-900); //TASK: EVELYNE: change values depending on planet
         }
         player.updateIsOnGround(GROUND_Y);
 
@@ -216,7 +216,7 @@ public class AstroJump extends Application {
         final int STARTING_ROW = Player.RUN;
         //beginning offset
         final int OFFSET_X = 0;
-        final int OFFSET_Y = 1;
+        final int OFFSET_Y = 0;
         //size of one image
         final int WIDTH = 32;
         final int HEIGHT = 32;
@@ -240,8 +240,8 @@ public class AstroJump extends Application {
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y);
-        player.getImage().setFitWidth(50);
-        player.getImage().setFitHeight(50);
+        player.getImage().setFitWidth(100);
+        player.getImage().setFitHeight(100);
     }
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
@@ -251,6 +251,7 @@ public class AstroJump extends Application {
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
+        System.out.println(baseDisplacement+" "+acceleratedDisplacement+" "+timeElapsed);
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
         //if the player is back on the floor set is jumping to false
