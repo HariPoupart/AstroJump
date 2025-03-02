@@ -38,13 +38,13 @@ public class AstroJump extends Application {
     //game objects
     private Player player;
     private Obstacle[] obstacles;
-    private Star[] star;
+    private Star star;
     private ArrayList<Net> nets;
     private Group gameObjects;
     protected static ArrayList<Planet> planetArray;
 
     //game pane propreties
-    private static final int GROUND_Y = 200;
+    private static final int GROUND_Y = 400;
 
     public static void main(String[] args) {
         launch(args);
@@ -120,7 +120,6 @@ public class AstroJump extends Application {
             }
         });
     }
-    //showTutorial method
     protected void showSettings(Stage primaryStage) {
         Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),1366,768);
         primaryStage.setScene(scene);
@@ -136,8 +135,6 @@ public class AstroJump extends Application {
             }
         });
     }
-
-    //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
 
         //game scene setup
@@ -153,13 +150,13 @@ public class AstroJump extends Application {
         });
         // when mouse is clicked create a net
         game.setOnMouseClicked(event -> {
-            createNet(event.getX(),event.getY(),-160,300);
+            createNet(event.getX(),event.getY(),-160,400);
         });
 
         primaryStage.setScene(game);
         primaryStage.show();
 
-
+        //create and animationTimer to call to update method
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -184,13 +181,31 @@ public class AstroJump extends Application {
 
         //update player jump
         if(player.getIsJumping()){
-            playerJump(-120,-180); //TASK: EVELYNE: change -9.8 to planets gravity
+            playerJump(-120,-180); //TASK: EVELYNE: change values depending on planet
         }
         player.updateIsOnGround(GROUND_Y);
 
-        //update net position
+        //net updates
         for(int i =0; i<nets.size();i++){
-            nets.get(i).updatePosition();
+            Net net = nets.get(i);
+
+            //update position
+            net.updatePosition();
+
+            //check for collision with a star
+            if(star!=null){
+                if(net.isCollidingWith(star.getImage())){
+                    //TO DO: code star-net interaction
+                }
+            }
+            //check for collision with ground
+            if(net.getY()+net.getHeight()>=GROUND_Y){
+                //delete game object
+                gameObjects.getChildren().remove(net.getImage());
+                nets.remove(net);
+            }
+
+
         }
     }
 

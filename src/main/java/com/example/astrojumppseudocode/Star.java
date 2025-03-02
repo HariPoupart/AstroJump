@@ -17,11 +17,6 @@ public class Star extends SimpleMovingImage implements Collidable{
         return this.ScoreValue;
     }
 
-    /**
-     * Checks for collisions
-     * @param other other object's imageview
-     * @return if they are colliding or not
-     */
     public boolean isCollidingWith(ImageView other){
         boolean isColliding = false;
         if(this.getImage().getBoundsInParent().intersects(other.getBoundsInParent())){
