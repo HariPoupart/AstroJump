@@ -309,8 +309,8 @@ public class AstroJump extends Application {
 
 //    //music player method
 //    protected void musicPlayer() {
-//        Media m = new Media(planetArray.get(currentPlanetInt) + ".mp3");
-//        MediaPlayer player = new MediaPlayer(m);
+//        Media music = new Media (planetArray.get(currentPlanetInt) + ".mp3");
+//        MediaPlayer player = new MediaPlayer(music);
 //        player.play();
 //    }
 
