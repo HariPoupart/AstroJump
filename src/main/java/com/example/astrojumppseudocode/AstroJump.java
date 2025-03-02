@@ -40,6 +40,7 @@ public class AstroJump extends Application {
     private Obstacle[] obstacles;
     private Star[] star;
     private ArrayList<Net> nets;
+    private Group gameObjects;
     protected static ArrayList<Planet> planetArray;
 
     //game pane propreties
@@ -138,7 +139,10 @@ public class AstroJump extends Application {
 
     //create animation timer which calls the update method
     protected void startGameLoop(Stage primaryStage) {
-        Scene game = new Scene(new Group(player.getImage()),screenWidth,screenHeight);
+
+        //game scene setup
+        gameObjects = new Group(player.getImage());
+        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -149,7 +153,7 @@ public class AstroJump extends Application {
         });
         // when mouse is clicked create a net
         game.setOnMouseClicked(event -> {
-            createNet(event.getX(),event.getY(),-160,100);
+            createNet(event.getX(),event.getY(),-160,300);
         });
 
         primaryStage.setScene(game);
@@ -197,7 +201,7 @@ public class AstroJump extends Application {
         final int STARTING_ROW = Player.RUN;
         //beginning offset
         final int OFFSET_X = 0;
-        final int OFFSET_Y = 0;
+        final int OFFSET_Y = 1;
         //size of one image
         final int WIDTH = 32;
         final int HEIGHT = 32;
@@ -240,7 +244,7 @@ public class AstroJump extends Application {
     }
 
     private void planetChange() {
-        long threshhold = 45000; //represents time between planets
+        long threshhold = 45000; //represents time between planets in milliseconds
 
         while(true){
             long now = System.currentTimeMillis();
@@ -262,18 +266,25 @@ public class AstroJump extends Application {
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
         //calculate the inital position of the net
         double initalPosX = player.getX()+player.getWidth();
-        double initalPosY = player.getY()+0.5*player.getHeight();
+        double initalPosY = player.getY()+(0.5*player.getHeight());
 
         //calculate the angle of the throw
         double angle = Math.atan((mouseY-initalPosY)/(mouseX-initalPosX));
 
         //calculate the speed in each axis
         double initialSpeedX = netForce* Math.cos(angle);
-        double initialSpeedY = -1*netForce* Math.sin(angle);
+        double initialSpeedY = netForce* Math.sin(angle);
 
+        System.out.println(initialSpeedX+" "+initialSpeedY);
         //create net
         //TO DO: ADD WIND RESITANCE DURING STORM
-        nets.add(new Net(new ImageView("Net.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
+        //adds a new net to the nets array
+        nets.add(new Net(new ImageView("test.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
+        //adds the last net added to nets to the game object group
+        gameObjects.getChildren().add(nets.get(nets.size()-1).getImage());
+        //set its initial Positions to the nets initial positions
+        nets.get(nets.size()-1).getImage().setX(initalPosX);
+        nets.get(nets.size()-1).getImage().setY(initalPosY);
 
     }
 

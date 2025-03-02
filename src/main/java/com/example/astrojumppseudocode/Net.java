@@ -49,12 +49,13 @@ public class Net implements Collidable{
         //update x
         double baseDisplacementX = getTimeElapsed()*INITIAL_SPEED_X;
         double acceleratedDisplacementX = -0.5*accelerationX*Math.pow(getTimeElapsed(),2);
-        setX(INITIAL_POS_X+baseDisplacementX+acceleratedDisplacementX);
+        this.setX(INITIAL_POS_X+baseDisplacementX+acceleratedDisplacementX);
 
         //update y
         double baseDisplacementY = getTimeElapsed()*INITIAL_SPEED_Y;
         double acceleratedDisplacementY = -0.5*accelerationY*Math.pow(getTimeElapsed(),2);
-        setY(INITIAL_POS_Y+baseDisplacementY+acceleratedDisplacementY);
+        this.setY(INITIAL_POS_Y+baseDisplacementY+acceleratedDisplacementY);
+
     }
 
     //acceleration accessors and mutators
@@ -106,7 +107,7 @@ public class Net implements Collidable{
         return this.CREATION_TIME;
     }
     public double getTimeElapsed(){
-        return (System.currentTimeMillis()-this.CREATION_TIME)/1000;
+        return (System.currentTimeMillis() - this.CREATION_TIME) /1000.0;
     }
 
 }
