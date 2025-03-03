@@ -254,7 +254,7 @@ public class AstroJump extends Application {
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
-        System.out.println(baseDisplacement+" "+acceleratedDisplacement+" "+timeElapsed);
+
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
         //if the player is back on the floor set is jumping to false
