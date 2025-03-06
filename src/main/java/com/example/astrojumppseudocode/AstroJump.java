@@ -14,11 +14,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 //import javafx.scene.media.Media;
 //import javafx.scene.media.MediaPlayer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -90,7 +94,34 @@ public class AstroJump extends Application {
         //link to FXML file
         FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
-        Scene scene = new Scene(loader.load(), screenWidth,screenHeight);
+        //music from Menu
+        Media media;
+        MediaPlayer med;
+        MediaView mv;
+        Pane pane = new Pane();
+        pane.setMaxSize(1,1);
+        try{
+            File file = new File("MenuMusic.mp3");
+            media = new Media(file.toURI().toString());
+            med = new MediaPlayer(media);
+            mv = new MediaView();
+            pane.getChildren().add(mv);
+            mv.setMediaPlayer(med);
+            med.play();
+
+        }
+
+        catch(NullPointerException e) {
+            System.out.print("error NULL");
+        }
+        catch(Exception e) {
+            System.out.print(e);
+        }
+
+        //scene
+        Pane generalPane = new Pane(loader.load(), pane);
+
+        Scene scene = new Scene(generalPane,screenWidth,screenHeight);
 
         //create player
         createPlayer();
