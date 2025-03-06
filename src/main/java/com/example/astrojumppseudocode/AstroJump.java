@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -99,7 +100,6 @@ public class AstroJump extends Application {
         MediaPlayer med;
         MediaView mv;
         Pane pane = new Pane();
-        pane.setMaxSize(1,1);
         try{
             File file = new File("MenuMusic.mp3");
             media = new Media(file.toURI().toString());
@@ -119,7 +119,7 @@ public class AstroJump extends Application {
         }
 
         //scene
-        Pane generalPane = new Pane(loader.load(), pane);
+        StackPane generalPane = new StackPane(loader.load(), pane);
 
         Scene scene = new Scene(generalPane,screenWidth,screenHeight);
 
