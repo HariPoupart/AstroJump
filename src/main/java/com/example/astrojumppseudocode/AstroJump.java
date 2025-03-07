@@ -44,7 +44,7 @@ public class AstroJump extends Application {
 
     //game objects
     private Player player;
-    private Obstacle[] obstacles;
+    private ArrayList<Obstacle> obstacles;
     private Star star;
     private ArrayList<Net> nets;
     private Group gameObjects;
@@ -126,9 +126,9 @@ public class AstroJump extends Application {
         //create player
         createPlayer();
 
-        //create empty net array
+        //initialize arrayLists of game objects
         nets = new ArrayList<>();
-
+        obstacles = new ArrayList<>();
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -331,10 +331,10 @@ public class AstroJump extends Application {
         //adds a new net to the nets array
         nets.add(new Net(new ImageView("test.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
         //adds the last net added to nets to the game object group
-        gameObjects.getChildren().add(nets.get(nets.size()-1).getImage());
+        gameObjects.getChildren().add(nets.getLast().getImage());
         //set its initial Positions to the nets initial positions
-        nets.get(nets.size()-1).getImage().setX(initalPosX);
-        nets.get(nets.size()-1).getImage().setY(initalPosY);
+        nets.getLast().setX(initalPosX);
+        nets.getLast().setY(initalPosY);
 
     }
 
@@ -344,5 +344,24 @@ public class AstroJump extends Application {
 //        MediaPlayer player = new MediaPlayer(music);
 //        player.play();
 //    }
+    public void createSpike(float speedX, float speedY){
+        //add new obstacle
+        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),speedX,speedY));
+
+        //change image view
+        ImageView imgV = obstacles.getLast().getImage();
+        Obstacle obstacle = obstacles.getLast();
+
+        //set to the right spike image (random spike on the current planet)
+        imgV.setViewport(new Rectangle2D((int)(Math.random()*6),currentPlanetInt*32,21,32));
+
+        //add imageView to game objects
+        gameObjects.getChildren().add(imgV);
+
+        //set obstacle to the right position
+        obstacle.setY(GROUND_Y-obstacle.getHeight());
+        obstacle.setX(screenWidth);//CHECK
+
+    }
 
 }

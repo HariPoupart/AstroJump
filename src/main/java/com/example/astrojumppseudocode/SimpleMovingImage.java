@@ -66,11 +66,10 @@ public abstract class SimpleMovingImage {
     public ImageView getImage(){
         return this.image;
     }
-    public void updatePosition(){
-        final int frameRate = 60;
+    public void updatePosition(double deltaTime){
         //update x
-        setX(getX()+speedX/frameRate);
+        setX(getX()+speedX*deltaTime);
         //update y
-        setY(getY()+speedY/frameRate);
+        setY(getY()+speedY*deltaTime);
     }
 }
