@@ -119,7 +119,7 @@ public class AstroJump extends Application {
         }
 
         //scene
-        StackPane generalPane = new StackPane(loader.load(), pane);
+        StackPane generalPane = new StackPane(pane, loader.load());
 
         Scene scene = new Scene(generalPane,screenWidth,screenHeight);
 
