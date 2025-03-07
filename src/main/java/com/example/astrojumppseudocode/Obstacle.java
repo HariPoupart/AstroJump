@@ -4,8 +4,8 @@ import javafx.scene.image.ImageView;
 
 public class Obstacle extends SimpleMovingImage implements Collidable{
 
-    Obstacle(ImageView img,float speedX,float speedY){
-        super(img,speedX,speedY);
+    Obstacle(ImageView img,int width, int height,float speedX,float speedY){
+        super(img,width,height,speedX,speedY);
     }
 
     //check if this works

@@ -6,8 +6,8 @@ public class Background extends SimpleMovingImage {
     private final int TOTAL_WIDTH;
 
 
-    Background(ImageView img,float speedX,int totalWidth){
-        super(img,speedX,0);
+    Background(ImageView img,int width, int height,float speedX,int totalWidth){
+        super(img,width,height,speedX,0);
         this.TOTAL_WIDTH = totalWidth;
     }
 

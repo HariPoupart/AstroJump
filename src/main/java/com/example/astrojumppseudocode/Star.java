@@ -4,8 +4,8 @@ import javafx.scene.image.ImageView;
 
 public class Star extends SimpleMovingImage implements Collidable{
     private double ScoreValue;
-    Star(ImageView img,float speedX,float speedY,double scoreValue){
-        super(img,speedX,speedY);
+    Star(ImageView img,int width, int height,float speedX,float speedY,double scoreValue){
+        super(img,width,height,speedX,speedY);
         this.ScoreValue = scoreValue;
     }
 

@@ -20,8 +20,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-//import javafx.scene.media.Media;
-//import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,16 +42,29 @@ public class AstroJump extends Application {
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
 
 
-    //game objects
-    private Player player;
-    private ArrayList<Obstacle> obstacles;
-    private Star star;
-    private ArrayList<Net> nets;
+    //GAME OBJECTS
     private Group gameObjects;
+
+    //player
+    private Player player;
+
+    //obstacles
+    private ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private final int SPIKE_WIDTH = 42;
+    private final int SPIKE_HEIGHT = 64;
+
+    //star
+    private Star star;
+
+    //net
+    private ArrayList<Net> nets = new ArrayList<>();
+    private final int NET_WIDTH = 32;
+
+    //planets
     protected static ArrayList<Planet> planetArray;
 
-    //game pane propreties
-    private static final int GROUND_Y = 350;
+    //game pane properties
+    private static final int GROUND_Y = 450;
 
     public static void main(String[] args) {
         launch(args);
@@ -107,7 +120,7 @@ public class AstroJump extends Application {
             mv = new MediaView();
             pane.getChildren().add(mv);
             mv.setMediaPlayer(med);
-            med.play();
+            //med.play();
 
         }
 
@@ -126,16 +139,10 @@ public class AstroJump extends Application {
         //create player
         createPlayer();
 
-        //initialize arrayLists of game objects
-        nets = new ArrayList<>();
-        obstacles = new ArrayList<>();
 
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Start the game loop
-        //startGameLoop(primaryStage);
-        //
 
     }
     protected void showTutorial(Stage primaryStage) {
@@ -217,6 +224,7 @@ public class AstroJump extends Application {
         if(player.getIsJumping()){
             playerJump(-1200,-900); //TASK: EVELYNE: change values depending on planet
         }
+        //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
 
         //net updates
@@ -238,11 +246,22 @@ public class AstroJump extends Application {
                 gameObjects.getChildren().remove(net.getImage());
                 nets.remove(net);
             }
+        }
 
+        //obstacle updates
+        for(int i =0;i<obstacles.size();i++){
+            Obstacle obstacle = obstacles.get(i);
 
+            //update position
+            obstacle.updatePosition(deltaTime);
+
+            //check for collisions with player
+            if(obstacle.isCollidingWith(player.getImage()))
+                System.out.print("GAME OVER!");//TO DO: IMPLEMENT GAME OVER
         }
     }
 
+    //PLAYER METHODS
     private void createPlayer(){
         final Image IMAGE = new Image("playerSpriteSheet.png");
         //number of columns in the spriteSheet
@@ -252,11 +271,15 @@ public class AstroJump extends Application {
         final int OFFSET_X = 0;
         final int OFFSET_Y = 0;
         //size of one image
-        final int WIDTH = 32;
-        final int HEIGHT = 32;
+        final int SPRITE_WIDTH = 32;
+        final int SPRITE_HEIGHT = 32;
+        final int IMAGE_WIDTH=100;
+        final int IMAGE_HEIGHT=100;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
-        playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, WIDTH, HEIGHT));
+        playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT));
+        playerIV.setFitWidth(IMAGE_WIDTH);
+        playerIV.setFitHeight(IMAGE_HEIGHT);
 
         //animation player imageview
         final Duration PLAYER_ANIM_DURATION= Duration.millis(1000);
@@ -265,17 +288,18 @@ public class AstroJump extends Application {
                 PLAYER_ANIM_DURATION,
                 STARTING_ROW, COLUMNS,
                 OFFSET_X, OFFSET_Y,
-                WIDTH, HEIGHT
+                SPRITE_WIDTH, SPRITE_HEIGHT
         );
         playerAnimation.setCycleCount(Animation.INDEFINITE);
         playerAnimation.play();
 
         //create player object
+
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
-        player.setY(GROUND_Y);
-        player.getImage().setFitWidth(100);
-        player.getImage().setFitHeight(100);
+        player.setY(GROUND_Y-player.getHeight());
+        player.setX(0);
+
     }
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
@@ -289,10 +313,63 @@ public class AstroJump extends Application {
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
 
         //if the player is back on the floor set is jumping to false
-        if(player.getY()>=(GROUND_Y+player.getHeight()))
+        if(player.getY()>=(GROUND_Y-player.getHeight())){
             player.setIsJumping(false);
+            //adjust player y values to ground
+            player.setY(GROUND_Y-player.getHeight());
+        }
     }
 
+    //NET METHOD
+    public void createNet(double mouseX,double mouseY,float gravity, float netForce){
+        //calculate the inital position of the net
+        double initialPosX = player.getX()+player.getWidth();
+        double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5*NET_WIDTH);
+
+        //calculate the angle of the throw
+        double angle = Math.atan((mouseY-initialPosY)/(mouseX-initialPosX));
+
+        //calculate the speed in each axis
+        double initialSpeedX = netForce* Math.cos(angle);
+        double initialSpeedY = netForce* Math.sin(angle);
+
+        //create net
+        //TO DO: ADD WIND RESISTANCE DURING STORM
+        //adds a new net to the nets array
+        nets.add(new Net(new ImageView("Net.png"),initialPosX,initialPosY,initialSpeedX,initialSpeedY,gravity,0));
+        //adds the last net added to nets to the game object group
+        gameObjects.getChildren().add(nets.getLast().getImage());
+        //set its initial Positions to the nets initial positions
+        nets.getLast().setX(initialPosX);
+        nets.getLast().setY(initialPosY);
+
+        currentPlanetInt=0;
+        createSpike(-100f,0f);
+
+    }
+
+    //OBSTACLE METHODS
+    public void createSpike(float speedX, float speedY){
+        //add new obstacle
+        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),SPIKE_WIDTH,SPIKE_HEIGHT,speedX,speedY));
+
+        //change image view
+        ImageView imgV = obstacles.getLast().getImage();
+        Obstacle obstacle = obstacles.getLast();
+
+        //set to the right spike image (random spike on the current planet)
+        imgV.setViewport(new Rectangle2D((int)(Math.random()*6),currentPlanetInt*32,21,32));
+
+        //add imageView to game objects
+        gameObjects.getChildren().add(imgV);
+
+        //set obstacle to the right position
+        obstacle.setY(GROUND_Y-obstacle.getHeight());
+        obstacle.setX(screenWidth);//CHECK
+
+    }
+
+    //PLANET METHOD
     private void planetChange() {
         long threshhold = 45000; //represents time between planets in milliseconds
 
@@ -313,55 +390,12 @@ public class AstroJump extends Application {
         }
     }
 
-    public void createNet(double mouseX,double mouseY,float gravity, float netForce){
-        //calculate the inital position of the net
-        double initalPosX = player.getX()+player.getWidth();
-        double initalPosY = player.getY()+(0.5*player.getHeight());
-
-        //calculate the angle of the throw
-        double angle = Math.atan((mouseY-initalPosY)/(mouseX-initalPosX));
-
-        //calculate the speed in each axis
-        double initialSpeedX = netForce* Math.cos(angle);
-        double initialSpeedY = netForce* Math.sin(angle);
-
-        System.out.println(initialSpeedX+" "+initialSpeedY);
-        //create net
-        //TO DO: ADD WIND RESITANCE DURING STORM
-        //adds a new net to the nets array
-        nets.add(new Net(new ImageView("test.png"),initalPosX,initalPosY,initialSpeedX,initialSpeedY,gravity,0));
-        //adds the last net added to nets to the game object group
-        gameObjects.getChildren().add(nets.getLast().getImage());
-        //set its initial Positions to the nets initial positions
-        nets.getLast().setX(initalPosX);
-        nets.getLast().setY(initalPosY);
-
-    }
-
-//    //music player method
+    //MUSIC METHODS
 //    protected void musicPlayer() {
 //        Media music = new Media (planetArray.get(currentPlanetInt) + ".mp3");
 //        MediaPlayer player = new MediaPlayer(music);
 //        player.play();
 //    }
-    public void createSpike(float speedX, float speedY){
-        //add new obstacle
-        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),speedX,speedY));
 
-        //change image view
-        ImageView imgV = obstacles.getLast().getImage();
-        Obstacle obstacle = obstacles.getLast();
-
-        //set to the right spike image (random spike on the current planet)
-        imgV.setViewport(new Rectangle2D((int)(Math.random()*6),currentPlanetInt*32,21,32));
-
-        //add imageView to game objects
-        gameObjects.getChildren().add(imgV);
-
-        //set obstacle to the right position
-        obstacle.setY(GROUND_Y-obstacle.getHeight());
-        obstacle.setX(screenWidth);//CHECK
-
-    }
 
 }

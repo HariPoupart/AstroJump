@@ -10,12 +10,12 @@ public abstract class SimpleMovingImage {
     private float speedX;
     private float speedY;
 
-    SimpleMovingImage(ImageView img, float speedX, float speedY){
+    SimpleMovingImage(ImageView img,int width, int height, float speedX, float speedY){
         this.image = img;
-        this.width = img.getFitWidth();
-        this.height = img.getFitHeight();
         this.speedX = speedX;
         this.speedY = speedY;
+        this.setWidth(width);
+        this.setHeight(height);
     }
     //position & speed accessors and mutators
     public void setX(double x){
