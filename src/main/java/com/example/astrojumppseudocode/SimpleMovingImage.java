@@ -72,4 +72,6 @@ public abstract class SimpleMovingImage {
         //update y
         setY(getY()+speedY*deltaTime);
     }
+
+    public abstract void UpdatePosition(double deltaTime);
 }

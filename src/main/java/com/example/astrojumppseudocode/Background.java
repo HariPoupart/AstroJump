@@ -15,4 +15,16 @@ public class Background extends SimpleMovingImage {
         return (getX() <=-0.5*TOTAL_WIDTH);
     }
 
+    @Override
+    public void UpdatePosition(double deltaTime){
+        //update x
+        setX(getX()+this.getSpeedX()*deltaTime);
+        //update y
+        setY(getY()+this.getSpeedY()*deltaTime);
+
+        //reset position if it is halfway its width
+        if(this.getX()<=TOTAL_WIDTH*-0.5)
+            this.setX(0);
+    }
+
 }
