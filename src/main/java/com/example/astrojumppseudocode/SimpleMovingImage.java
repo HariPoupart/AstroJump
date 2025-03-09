@@ -3,7 +3,7 @@ package com.example.astrojumppseudocode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public abstract class SimpleMovingImage {
+public class SimpleMovingImage {
     private ImageView image;
     private double width;
     private double height;
@@ -72,6 +72,4 @@ public abstract class SimpleMovingImage {
         //update y
         setY(getY()+speedY*deltaTime);
     }
-
-    public abstract void UpdatePosition(double deltaTime);
 }

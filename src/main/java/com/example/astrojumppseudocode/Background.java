@@ -16,7 +16,7 @@ public class Background extends SimpleMovingImage {
     }
 
     @Override
-    public void UpdatePosition(double deltaTime){
+    public void updatePosition(double deltaTime){
         //update x
         setX(getX()+this.getSpeedX()*deltaTime);
         //update y
