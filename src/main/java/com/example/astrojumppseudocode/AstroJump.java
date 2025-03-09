@@ -358,7 +358,7 @@ public class AstroJump extends Application {
         Obstacle obstacle = obstacles.getLast();
 
         //set to the right spike image (random spike on the current planet)
-        imgV.setViewport(new Rectangle2D((int)(Math.random()*6),currentPlanetInt*32,21,32));
+        imgV.setViewport(new Rectangle2D((int)(Math.random()*6)*21,currentPlanetInt*32,21,32));
 
         //add imageView to game objects
         gameObjects.getChildren().add(imgV);
