@@ -40,6 +40,7 @@ public class AstroJump extends Application {
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
+    public static boolean stopAnimationTimer = false;
 
 
     //GAME OBJECTS
@@ -176,7 +177,28 @@ public class AstroJump extends Application {
             }
         });
     }
+    protected void showGameOverScreen(Stage primaryStage) {
+        ImageView gameOverScreen = new ImageView("GameOver.bmp");
+        gameOverScreen.setFitHeight(screenHeight);
+        gameOverScreen.setFitWidth(screenWidth);
+        Scene scene = new Scene(new Pane(gameOverScreen),screenWidth,screenHeight);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        //add listener
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                try {
+                    start(primaryStage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
+
     protected void startGameLoop(Stage primaryStage) {
+
+        stopAnimationTimer = false;
 
         //game scene setup
         gameObjects = new Group(player.getImage());
@@ -208,17 +230,23 @@ public class AstroJump extends Application {
 
         primaryStage.setScene(game);
         primaryStage.show();
+        gameObjects.requestFocus();
 
         //create and animationTimer to call to update method
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                 // Calculate the time elapsed since the last frame
+                if(stopAnimationTimer) {
+                    System.out.println("STOPPING ANIMATION");
+                    stopAnimationTimer = false;
+                this.stop();
+                }
                 if (lastUpdateTime > 0) {
                     long elapsedTime = now - lastUpdateTime;
                     // If enough time has passed, call update and save lastUpdateTime
                     if (elapsedTime >= NANOSECONDS_PER_FRAME) {
-                        update(elapsedTime / 1_000_000_000.0); // Convert nanoseconds to seconds
+                        update(elapsedTime / 1_000_000_000.0, primaryStage); // Convert nanoseconds to seconds
                         lastUpdateTime = now;
                     }
                 } else {
@@ -227,7 +255,7 @@ public class AstroJump extends Application {
             }
         }.start();
     }
-    private void update(double deltaTime) {
+    private void update(double deltaTime, Stage stage) {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
@@ -268,8 +296,11 @@ public class AstroJump extends Application {
             obstacle.updatePosition(deltaTime);
 
             //check for collisions with player
-            if(obstacle.isCollidingWith(player.getImage()))
-                System.out.print("GAME OVER!");//TO DO: IMPLEMENT GAME OVER
+            if(obstacle.isCollidingWith(player.getImage())){
+                System.out.print("GAME OVER!");
+                stopAnimationTimer = true;
+                showGameOverScreen(stage);
+                 }
         }
     }
 
