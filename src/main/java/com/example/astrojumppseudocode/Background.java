@@ -36,5 +36,7 @@ public class Background extends SimpleMovingImage {
         this.getImage().setViewport(new Rectangle2D(this.getWidth(),this.getHeight()*planetIndex,this.getWidth(),this.getHeight()));
     }
 
+    //background imageview array
+
 
 }
