@@ -183,7 +183,6 @@ public class AstroJump extends Application {
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //event handlers on scene
-
         //escape event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
                     if (event.getCode() == KeyCode.ESCAPE) {
