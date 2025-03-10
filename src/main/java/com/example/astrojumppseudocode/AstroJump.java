@@ -182,7 +182,20 @@ public class AstroJump extends Application {
         gameObjects = new Group(player.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
-        //jump event handler TO DO: EVELYNE TAKE CARE OF THIS :)
+        //event handlers on scene
+
+        //escape event handler
+        game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+                    if (event.getCode() == KeyCode.ESCAPE) {
+                        try {
+                            start(primaryStage);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
+
+        //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
                 player.setIsJumping(true);
