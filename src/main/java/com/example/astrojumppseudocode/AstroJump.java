@@ -462,10 +462,11 @@ public class AstroJump extends Application {
 
     //PLANET METHOD
     private void planetChange() {
-        long threshhold = 45000; //represents time between planets in milliseconds
+        long threshhold = 300; //represents time between planets in milliseconds
 
         while(true){
             long now = System.currentTimeMillis();
+            System.out.println("Planet Change");
             // Calculate the time elapsed since the last frame
             if (lastUpdateTimePlanetTimer > 0) {
                 long elapsedTime = now - lastUpdateTimePlanetTimer;
@@ -481,12 +482,7 @@ public class AstroJump extends Application {
         }
     }
 
-    //MUSIC METHODS
-//    protected void musicPlayer() {
-//        Media music = new Media (planetArray.get(currentPlanetInt) + ".mp3");
-//        MediaPlayer player = new MediaPlayer(music);
-//        player.play();
-//    }
+
 
 
 }
