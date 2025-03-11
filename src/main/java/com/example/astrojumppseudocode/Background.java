@@ -34,7 +34,7 @@ public class Background extends SimpleMovingImage {
         setY(getY()+this.getSpeedY()*deltaTime);
 
         //reset position if it is halfway its width
-        if(this.getX()<=WIDTH*-0.5)
+        if(this.getX()<=this.getWidth()*-0.5)
             this.setX(0);
     }
     public void changePlanet(int planetIndex){

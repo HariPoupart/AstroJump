@@ -483,7 +483,7 @@ public class AstroJump extends Application {
         star.setX(screenWidth);
     }
     public void createBackground(){
-        background = new Background(new ImageView("Background.png"),2000,500,512,128,0 ,512,0);
+        background = new Background(new ImageView("Background.png"),2000,500,512,128,objectSpeed ,512,0);
     }
     public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
         star.setX(x);
