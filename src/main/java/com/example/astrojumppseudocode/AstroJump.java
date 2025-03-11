@@ -51,6 +51,7 @@ public class AstroJump extends Application {
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
     public static boolean stopAnimationTimer = false;
+    public MediaPlayer med;
 
 
     //GAME OBJECTS
@@ -122,7 +123,6 @@ public class AstroJump extends Application {
 
         //music from Menu
         Media media;
-        MediaPlayer med;
         MediaView mv;
         Pane pane = new Pane();
         try{
@@ -216,6 +216,7 @@ public class AstroJump extends Application {
         //game scene setup
         gameObjects = new Group(player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
+
 
         //event handlers on scene
         //escape event handler

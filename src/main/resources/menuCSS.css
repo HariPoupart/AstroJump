@@ -1,3 +1,5 @@
 #pane {
-    background: url("menu.png")
+    -fx-background-color: #C4CFED;
+    -fx-stroke-line-join: miter;
+    -fx-font: 
 }
