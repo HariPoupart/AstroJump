@@ -83,7 +83,6 @@ public class AstroJump extends Application {
     private static final int GROUND_Y = 390;
 
     public static void main(String[] args) {
-        launch(args);
         //initiate planetArray
         Planet mercury = new Planet("mercury", -10f,30f,30f);
         Planet venus = new Planet("venus",-90f,30f,30f);
@@ -102,6 +101,8 @@ public class AstroJump extends Application {
         planetArray.add(saturn);
         planetArray.add(uranus);
         planetArray.add(neptune);
+        //launch args
+        launch(args);
     }
 
     public void start(Stage primaryStage) throws IOException {
@@ -500,10 +501,12 @@ public class AstroJump extends Application {
             currentPlanetInt = (int) (Math.random() * 8);
             background.changePlanet(currentPlanetInt);
 
-//            //Change media for music
-//            mediaPlayer.stop();
-//            mediaPlayer = new MediaPlayer(new Media(planetArray.get(currentPlanetInt).toString() + "Music.mp3"));
-//            mediaPlayer.play();
+            //Change media for music
+            mediaPlayer.stop();
+            File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
+            Media media = new Media(file.toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.play();
 
             //if player dead stop loop
             if(stopAnimationTimer){
