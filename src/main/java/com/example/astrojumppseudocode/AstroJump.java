@@ -53,7 +53,8 @@ public class AstroJump extends Application {
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private final int SPIKE_WIDTH = 42;
     private final int SPIKE_HEIGHT = 64;
-
+    private final int METEO_WIDTH = 88;
+    private final int METEO_HEIGHT = 52;
     //star
     private Star star;
 
@@ -140,6 +141,8 @@ public class AstroJump extends Application {
         //create player
         createPlayer();
 
+        //initialize star
+        initializeStar();
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -201,7 +204,7 @@ public class AstroJump extends Application {
         stopAnimationTimer = false;
 
         //game scene setup
-        gameObjects = new Group(player.getImage());
+        gameObjects = new Group(player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //event handlers on scene
@@ -260,14 +263,14 @@ public class AstroJump extends Application {
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //example:
 
-        //update player jump
+        //update PLAYER jump
         if(player.getIsJumping()){
             playerJump(-1200,-900); //TASK: EVELYNE: change values depending on planet
         }
         //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
 
-        //net updates
+        //NET updates
         for(int i =0; i<nets.size();i++){
             Net net = nets.get(i);
 
@@ -288,7 +291,7 @@ public class AstroJump extends Application {
             }
         }
 
-        //obstacle updates
+        //OBSTACLE updates
         for(int i =0;i<obstacles.size();i++){
             Obstacle obstacle = obstacles.get(i);
 
@@ -302,6 +305,22 @@ public class AstroJump extends Application {
                 showGameOverScreen(stage);
                  }
         }
+
+        //STAR movement and collisions
+        star.updatePosition(deltaTime);
+
+        if(star.isCollidingWith(player.getImage())){
+            player.addOneStar();
+            //modify score
+
+        }
+        //reset the star if it is out of bounds
+        if(star.isOutOfBounds(GROUND_Y)){
+            star.setX(-star.getWidth());
+            star.setSpeedX(0);
+            star.setSpeedY(0);
+        }
+
     }
 
     //PLAYER METHODS
@@ -386,9 +405,11 @@ public class AstroJump extends Application {
         nets.getLast().setX(initialPosX);
         nets.getLast().setY(initialPosY);
 
+        //TO DO: DELETE BELLOW
         currentPlanetInt=0;
         createSpike(-100f,0f);
-
+        spawnStar(screenWidth,Math.random()*GROUND_Y,-100,0,0);
+        createMeteorite(Math.random()*GROUND_Y,-100,0);
     }
 
     //OBSTACLE METHODS
@@ -410,6 +431,33 @@ public class AstroJump extends Application {
         obstacle.setY(GROUND_Y-obstacle.getHeight());
         obstacle.setX(screenWidth);//CHECK
 
+    }
+    public void createMeteorite(double y, float speedX, float speedY){
+        //add new meteorite
+        obstacles.add(new Obstacle(new ImageView("MeteoriteTest.png"),METEO_WIDTH,METEO_HEIGHT,speedX,speedY));
+
+        //change image view
+        ImageView imgV = obstacles.getLast().getImage();
+        Obstacle obstacle = obstacles.getLast();
+
+        //add imageView to game objects
+        gameObjects.getChildren().add(imgV);
+
+        //set obstacle to the right position
+        obstacle.setY(y);
+        obstacle.setX(screenWidth);//CHECK
+    }
+    public void initializeStar(){
+        star = new Star(new ImageView("test.png"),55,48, 0, 0, 0);
+        star.setX(screenWidth);
+    }
+
+    public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
+        star.setX(x);
+        star.setY(y);
+        star.setSpeedX(speedX);
+        star.setSpeedY(speedY);
+        star.setScoreValue(scoreValue);
     }
 
     //PLANET METHOD

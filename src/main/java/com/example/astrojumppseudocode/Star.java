@@ -28,4 +28,5 @@ public class Star extends SimpleMovingImage implements Collidable{
         return (getX() + getWidth() <= 0 || getY() >= groundLevel);
     }
 
+
 }
