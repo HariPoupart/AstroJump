@@ -8,14 +8,15 @@ public class Planet {
     float gravity;
     float jumpForce;
     float netForce;
+    String name;
 
 
     //constructor
-    Planet(float gravity, float jumpForc, float netForce) {
+    Planet(String name, float gravity, float jumpForc, float netForce) {
         this.gravity = gravity;
         this.jumpForce = jumpForce;
         this.netForce = netForce;
-
+        this.name = name;
     }
 
     //planet mutators and accessors
@@ -37,6 +38,9 @@ public class Planet {
     }
     public float getNetForce() {
         return netForce;
+    }
+    public String toString() {
+        return name;
     }
 
 

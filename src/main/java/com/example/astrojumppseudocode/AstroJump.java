@@ -37,7 +37,7 @@ public class AstroJump extends Application {
     private Timeline levelChanger;
 
     private long objectSpeed = -1000;
-    private long score =0;
+    private long score = 0;
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
     private long spawnIntervalDecrement = 5_000;
     private long lastObstacleSpawnTime =0;
@@ -50,9 +50,9 @@ public class AstroJump extends Application {
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
-    public static boolean stopAnimationTimer = false;
-    public MediaPlayer med;
+    public static boolean stopAnimationTimer;
 
+    public MediaPlayer mediaPlayer;
 
     //GAME OBJECTS
     private Group gameObjects;
@@ -85,14 +85,14 @@ public class AstroJump extends Application {
     public static void main(String[] args) {
         launch(args);
         //initiate planetArray
-        Planet mercury = new Planet(-10f,30f,30f);
-        Planet venus = new Planet(-90f,30f,30f);
-        Planet earth = new Planet(-100f,30f,30f);
-        Planet mars = new Planet(-10f,30f,30f);
-        Planet jupiter = new Planet(-160f,30f,30f);
-        Planet saturn = new Planet(-95f,30f,30f);
-        Planet uranus = new Planet(-80f,30f,30f);
-        Planet neptune = new Planet(-115f,30f,30f);
+        Planet mercury = new Planet("mercury", -10f,30f,30f);
+        Planet venus = new Planet("venus",-90f,30f,30f);
+        Planet earth = new Planet("earth",-100f,30f,30f);
+        Planet mars = new Planet("mars",-10f,30f,30f);
+        Planet jupiter = new Planet("jupiter",-160f,30f,30f);
+        Planet saturn = new Planet("saturn",-95f,30f,30f);
+        Planet uranus = new Planet("uranus",-80f,30f,30f);
+        Planet neptune = new Planet("neptune",-115f,30f,30f);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -131,11 +131,11 @@ public class AstroJump extends Application {
         try{
             File file = new File("MenuMusic.mp3");
             media = new Media(file.toURI().toString());
-            med = new MediaPlayer(media);
+            mediaPlayer = new MediaPlayer(media);
             mv = new MediaView();
             pane.getChildren().add(mv);
-            mv.setMediaPlayer(med);
-            //med.play();
+            mv.setMediaPlayer(mediaPlayer);
+            //mediaPlayer.play();
 
         }
 
@@ -217,7 +217,9 @@ public class AstroJump extends Application {
     }
 
     protected void startGameLoop(Stage primaryStage) {
-
+        //start planetchange method
+        planetChange();
+        //resetting all game variables
         stopAnimationTimer = false;
 
         //game scene setup
@@ -251,7 +253,6 @@ public class AstroJump extends Application {
 
         primaryStage.setScene(game);
         primaryStage.show();
-        gameObjects.requestFocus();
 
         //create and animationTimer to call to update method and gameObjectSpawner
         new AnimationTimer() {
@@ -260,7 +261,6 @@ public class AstroJump extends Application {
                 // Calculate the time elapsed since the last frame
                 if(stopAnimationTimer) {
                     System.out.println("STOPPING ANIMATION");
-                    stopAnimationTimer = false;
                 this.stop();
                 }
                 if (lastUpdateMethodTime > 0) {
@@ -495,16 +495,24 @@ public class AstroJump extends Application {
 
     //PLANET METHOD
     private void planetChange() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(45), event -> {
+        levelChanger = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            System.out.println("Change");
             currentPlanetInt = (int) (Math.random() * 8);
             background.changePlanet(currentPlanetInt);
 
-            if(stopAnimationTimer)
-                levelChanger.stop();
+//            //Change media for music
+//            mediaPlayer.stop();
+//            mediaPlayer = new MediaPlayer(new Media(planetArray.get(currentPlanetInt).toString() + "Music.mp3"));
+//            mediaPlayer.play();
+
+            //if player dead stop loop
+            if(stopAnimationTimer){
+                levelChanger.stop();}
         }));
 
         // Set the Timeline to run indefinitely
         levelChanger.setCycleCount(Timeline.INDEFINITE);
+        levelChanger.play();
     }
 
     //GAMEPLAY METHODS
@@ -530,12 +538,6 @@ public class AstroJump extends Application {
         }
     }
 
-    //MUSIC METHODS
-//    protected void musicPlayer() {
-//        Media music = new Media (planetArray.get(currentPlanetInt) + ".mp3");
-//        MediaPlayer player = new MediaPlayer(music);
-//        player.play();
-//    }
 
 
 }
