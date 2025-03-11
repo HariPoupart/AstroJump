@@ -36,10 +36,10 @@ public class AstroJump extends Application {
 
     private Timeline levelChanger;
 
-    private long objectSpeed = -100;
+    private long objectSpeed = -1000;
     private long score =0;
-    private long obstacleSpawnIntervalNano = 1_000_000_000;
-    private long spawnIntervalDecrement = 500_000;
+    private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
+    private long spawnIntervalDecrement = 5_000;
     private long lastObstacleSpawnTime =0;
 
     public int screenHeight = 500;
@@ -321,7 +321,7 @@ public class AstroJump extends Application {
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
-                 }
+            }
         }
 
         //STAR movement and collisions
@@ -506,16 +506,15 @@ public class AstroJump extends Application {
         }
     }
     private void spawnObstacle(){
-        System.out.print("Hi");
+        //REMOVE LATER
+        currentPlanetInt=0;
         int index = (int)(Math.round(Math.random()));
         switch(index){
             case 0: //spawn spike
                 createSpike();
-                System.out.print("Spike");
                 break;
             case 1: //spawn meteor
                 createMeteorite();
-                System.out.print("Meteorite");
                 break;
         }
     }
