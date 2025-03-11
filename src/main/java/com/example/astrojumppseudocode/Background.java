@@ -4,20 +4,26 @@ import javafx.scene.image.ImageView;
 
 public class Background extends SimpleMovingImage {
     //general info
-    private final int TOTAL_WIDTH;
+    private final int WIDTH;
+    private final int HEIGHT;
     private final int INITIAL_PLANET_INDEX;
 
-    Background(ImageView img,int width, int height,float speedX,int totalWidth,int planetIndex){
-        super(img,width,height,speedX,0);
-        this.TOTAL_WIDTH = totalWidth;
+    Background(ImageView img,int fitWidth,int fitHeight,int width, int height,float speedX,int totalWidth,int planetIndex){
+        super(img,fitWidth,fitHeight,speedX,0);
+        this.WIDTH = width;
+        this.HEIGHT = height;
         this.INITIAL_PLANET_INDEX = planetIndex;
 
         //set viewport
         changePlanet(INITIAL_PLANET_INDEX);
+
+        //set coordinates
+        this.setX(0);
+        this.setY(0);
     }
 
     public boolean isHalfway(){
-        return (getX() <=-0.5*TOTAL_WIDTH);
+        return (getX() <=-0.5*WIDTH);
     }
 
     @Override
@@ -28,12 +34,12 @@ public class Background extends SimpleMovingImage {
         setY(getY()+this.getSpeedY()*deltaTime);
 
         //reset position if it is halfway its width
-        if(this.getX()<=TOTAL_WIDTH*-0.5)
+        if(this.getX()<=WIDTH*-0.5)
             this.setX(0);
     }
     public void changePlanet(int planetIndex){
         //set the viewpoint to a rectangle situated at the planet's index
-        this.getImage().setViewport(new Rectangle2D(this.getWidth(),this.getHeight()*planetIndex,this.getWidth(),this.getHeight()));
+        this.getImage().setViewport(new Rectangle2D(0,HEIGHT*planetIndex,WIDTH,HEIGHT));
     }
 
     //background imageview array

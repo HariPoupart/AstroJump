@@ -45,7 +45,7 @@ public class AstroJump extends Application {
     public int screenHeight = 500;
     public int screenWidth = 1000;
 
-    public int currentPlanetInt = -1;
+    public int currentPlanetInt = 0;
 
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
@@ -66,6 +66,7 @@ public class AstroJump extends Application {
     private final int SPIKE_HEIGHT = 64;
     private final int METEO_WIDTH = 88;
     private final int METEO_HEIGHT = 52;
+
     //star
     private Star star;
 
@@ -73,11 +74,13 @@ public class AstroJump extends Application {
     private ArrayList<Net> nets = new ArrayList<>();
     private final int NET_WIDTH = 32;
 
+    //Background
+    Background background;
     //planets
     protected static ArrayList<Planet> planetArray;
 
     //game pane properties
-    private static final int GROUND_Y = 450;
+    private static final int GROUND_Y = 390;
 
     public static void main(String[] args) {
         launch(args);
@@ -154,6 +157,10 @@ public class AstroJump extends Application {
         //initialize star
         initializeStar();
 
+        //create background
+        createBackground();
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -214,7 +221,7 @@ public class AstroJump extends Application {
         stopAnimationTimer = false;
 
         //game scene setup
-        gameObjects = new Group(player.getImage(),star.getImage());
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
 
@@ -277,7 +284,7 @@ public class AstroJump extends Application {
 
         //update PLAYER jump
         if(player.getIsJumping()){
-            playerJump(-1200,-900); //TASK: EVELYNE: change values depending on planet
+            playerJump(-1200,-850); //TASK: EVELYNE: change values depending on planet
         }
         //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
@@ -339,12 +346,16 @@ public class AstroJump extends Application {
             spawnStar(screenWidth,0,0,0,0);
         }
 
+        //background update
+        background.updatePosition(deltaTime);
+
     }
 
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
         obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - spawnIntervalDecrement); // Don't go below 0.2 seconds
     }
+
     //PLAYER METHODS
     private void createPlayer(){
         final Image IMAGE = new Image("playerSpriteSheet.png");
@@ -428,10 +439,7 @@ public class AstroJump extends Application {
         nets.getLast().setY(initialPosY);
 
         //TO DO: DELETE BELLOW
-        currentPlanetInt=0;
-        createSpike();
         spawnStar(screenWidth,Math.random()*GROUND_Y,-100,0,0);
-        createMeteorite();
     }
 
     //OBSTACLE METHODS
@@ -474,7 +482,9 @@ public class AstroJump extends Application {
         star = new Star(new ImageView("test.png"),55,48, 0, 0, 0);
         star.setX(screenWidth);
     }
-
+    public void createBackground(){
+        background = new Background(new ImageView("Background.png"),2000,500,512,128,0 ,512,0);
+    }
     public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
         star.setX(x);
         star.setY(y);
@@ -487,6 +497,7 @@ public class AstroJump extends Application {
     private void planetChange() {
         levelChanger = new Timeline(new KeyFrame(Duration.seconds(45), event -> {
             currentPlanetInt = (int) (Math.random() * 8);
+            background.changePlanet(currentPlanetInt);
 
             if(stopAnimationTimer)
                 levelChanger.stop();
