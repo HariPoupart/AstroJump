@@ -2,6 +2,8 @@ package com.example.astrojumppseudocode;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -20,8 +22,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,11 +32,21 @@ public class AstroJump extends Application {
     //gameloop method propreties
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
-    private long lastUpdateTime = 0;
-    private long lastUpdateTimePlanetTimer = 0;
+    private long lastUpdateMethodTime = 0;
+
+    private Timeline levelChanger;
+
+    private long objectSpeed = -100;
+    private long score =0;
+    private long obstacleSpawnIntervalNano = 1_000_000_000;
+    private long spawnIntervalDecrement = 500_000;
+    private long lastObstacleSpawnTime =0;
+
     public int screenHeight = 500;
     public int screenWidth = 1000;
+
     public int currentPlanetInt = -1;
+
     public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
@@ -235,7 +245,7 @@ public class AstroJump extends Application {
         primaryStage.show();
         gameObjects.requestFocus();
 
-        //create and animationTimer to call to update method
+        //create and animationTimer to call to update method and gameObjectSpawner
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -245,15 +255,16 @@ public class AstroJump extends Application {
                     stopAnimationTimer = false;
                 this.stop();
                 }
-                if (lastUpdateTime > 0) {
-                    long elapsedTime = now - lastUpdateTime;
+                if (lastUpdateMethodTime > 0) {
+                    long elapsedTime = now - lastUpdateMethodTime;
                     // If enough time has passed, call update and save lastUpdateTime
                     if (elapsedTime >= NANOSECONDS_PER_FRAME) {
                         update(elapsedTime / 1_000_000_000.0, primaryStage); // Convert nanoseconds to seconds
-                        lastUpdateTime = now;
+                        gameObjectSpawner(now);
+                        lastUpdateMethodTime = now;
                     }
                 } else {
-                    lastUpdateTime = now;
+                    lastUpdateMethodTime = now;
                 }
             }
         }.start();
@@ -280,7 +291,11 @@ public class AstroJump extends Application {
             //check for collision with a star
             if(star!=null){
                 if(net.isCollidingWith(star.getImage())){
-                    //TO DO: code star-net interaction
+                    player.addOneStar();
+                    //modify score
+
+                    //reset star
+                    spawnStar(screenWidth,0,0,0,0);
                 }
             }
             //check for collision with ground
@@ -289,6 +304,8 @@ public class AstroJump extends Application {
                 gameObjects.getChildren().remove(net.getImage());
                 nets.remove(net);
             }
+
+            //spawn obstacles
         }
 
         //OBSTACLE updates
@@ -313,16 +330,20 @@ public class AstroJump extends Application {
             player.addOneStar();
             //modify score
 
+            //reset star
+            spawnStar(screenWidth,0,0,0,0);
         }
         //reset the star if it is out of bounds
         if(star.isOutOfBounds(GROUND_Y)){
-            star.setX(-star.getWidth());
-            star.setSpeedX(0);
-            star.setSpeedY(0);
+            spawnStar(screenWidth,0,0,0,0);
         }
 
     }
 
+    private void increaseSpawnSpeed() {
+        // Decrease the spawn interval (make it faster)
+        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - spawnIntervalDecrement); // Don't go below 0.2 seconds
+    }
     //PLAYER METHODS
     private void createPlayer(){
         final Image IMAGE = new Image("playerSpriteSheet.png");
@@ -407,15 +428,15 @@ public class AstroJump extends Application {
 
         //TO DO: DELETE BELLOW
         currentPlanetInt=0;
-        createSpike(-100f,0f);
+        createSpike();
         spawnStar(screenWidth,Math.random()*GROUND_Y,-100,0,0);
-        createMeteorite(Math.random()*GROUND_Y,-100,0);
+        createMeteorite();
     }
 
     //OBSTACLE METHODS
-    public void createSpike(float speedX, float speedY){
+    public void createSpike(){
         //add new obstacle
-        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),SPIKE_WIDTH,SPIKE_HEIGHT,speedX,speedY));
+        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),SPIKE_WIDTH,SPIKE_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
@@ -432,9 +453,9 @@ public class AstroJump extends Application {
         obstacle.setX(screenWidth);//CHECK
 
     }
-    public void createMeteorite(double y, float speedX, float speedY){
+    public void createMeteorite(){
         //add new meteorite
-        obstacles.add(new Obstacle(new ImageView("MeteoriteTest.png"),METEO_WIDTH,METEO_HEIGHT,speedX,speedY));
+        obstacles.add(new Obstacle(new ImageView("MeteoriteTest.png"),METEO_WIDTH,METEO_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
@@ -444,7 +465,8 @@ public class AstroJump extends Application {
         gameObjects.getChildren().add(imgV);
 
         //set obstacle to the right position
-        obstacle.setY(y);
+        //
+        obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
         obstacle.setX(screenWidth);//CHECK
     }
     public void initializeStar(){
@@ -462,22 +484,38 @@ public class AstroJump extends Application {
 
     //PLANET METHOD
     private void planetChange() {
-        long threshhold = 45000; //represents time between planets in milliseconds
+        levelChanger = new Timeline(new KeyFrame(Duration.seconds(45), event -> {
+            currentPlanetInt = (int) (Math.random() * 8);
 
-        while(true){
-            long now = System.currentTimeMillis();
-            // Calculate the time elapsed since the last frame
-            if (lastUpdateTimePlanetTimer > 0) {
-                long elapsedTime = now - lastUpdateTimePlanetTimer;
-                // If enough time has passed, call update and save lastUpdateTime
-                if (elapsedTime >= threshhold) {
-                    currentPlanetInt = (int) (Math.random() * 8);
-                    lastUpdateTimePlanetTimer = now;
-                }
-            } else {
-                lastUpdateTimePlanetTimer = now;
-            }
+            if(stopAnimationTimer)
+                levelChanger.stop();
+        }));
 
+        // Set the Timeline to run indefinitely
+        levelChanger.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    //GAMEPLAY METHODS
+    private void gameObjectSpawner(long now){
+        // Spawn a new obstacle if the spawn interval has passed
+        if (now - lastObstacleSpawnTime >= obstacleSpawnIntervalNano) {
+            spawnObstacle();
+            lastObstacleSpawnTime = now;
+            increaseSpawnSpeed(); // Gradually increase spawn speed
+        }
+    }
+    private void spawnObstacle(){
+        System.out.print("Hi");
+        int index = (int)(Math.round(Math.random()));
+        switch(index){
+            case 0: //spawn spike
+                createSpike();
+                System.out.print("Spike");
+                break;
+            case 1: //spawn meteor
+                createMeteorite();
+                System.out.print("Meteorite");
+                break;
         }
     }
 
