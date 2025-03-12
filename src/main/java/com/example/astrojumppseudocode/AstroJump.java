@@ -440,7 +440,7 @@ public class AstroJump extends Application {
         nets.getLast().setY(initialPosY);
 
         //TO DO: DELETE BELLOW
-        spawnStar(screenWidth,Math.random()*GROUND_Y,-100,0,0);
+        spawnStar(screenWidth,Math.random()*GROUND_Y,objectSpeed,0,0);
     }
 
     //OBSTACLE METHODS
