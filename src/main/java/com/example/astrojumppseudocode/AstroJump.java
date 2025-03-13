@@ -42,7 +42,8 @@ public class AstroJump extends Application {
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
     private long spawnIntervalDecrement = 5_000;
     private long lastObstacleSpawnTime =0;
-
+    private long lastStarSpawnTime = 0;
+    private long starSpawnIntervalNano= (long)30*1_000_000_000;
     public int screenHeight = 500;
     public int screenWidth = 1000;
 
@@ -238,6 +239,8 @@ public class AstroJump extends Application {
         gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
+        //initialize the next star spawning
+        randomizeStarSpawnTime();
 
         //event handlers on scene
         //escape event handler
@@ -451,8 +454,6 @@ public class AstroJump extends Application {
         nets.getLast().setX(initialPosX);
         nets.getLast().setY(initialPosY);
 
-        //TO DO: DELETE BELLOW
-        spawnStar(screenWidth,Math.random()*GROUND_Y,objectSpeed,0,0);
     }
 
     //OBSTACLE METHODS
@@ -496,7 +497,7 @@ public class AstroJump extends Application {
         star.setX(screenWidth);
     }
     public void createBackground(){
-        background = new Background(new ImageView("Background.png"),2000,500,512,128,objectSpeed ,512,0);
+        background = new Background(new ImageView("Background.png"),2000,500,512,128,objectSpeed ,512,currentPlanetInt);
     }
     public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
         star.setX(x);
@@ -528,6 +529,9 @@ public class AstroJump extends Application {
             mediaPlayer = new MediaPlayer(media);
             //mediaPlayer.play();
 
+            //update background
+            //background.changePlanet(currentPlanetInt);
+
             //if player dead stop loop
             if(stopAnimationTimer){
                 levelChanger.stop();}
@@ -546,10 +550,21 @@ public class AstroJump extends Application {
             lastObstacleSpawnTime = now;
             increaseSpawnSpeed(); // Gradually increase spawn speed
         }
+        // Spawn a new star if the spawn interval has passed
+        if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
+            //give a score value based on time passed
+            long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
+            System.out.println(scoreValue);
+            spawnStar(screenWidth,Math.random()*(GROUND_Y-star.getHeight()),objectSpeed,0,scoreValue);
+            lastStarSpawnTime = now;
+            randomizeStarSpawnTime(); // Gradually increase spawn speed
+        }
+
+
     }
     private void spawnObstacle(){
         //REMOVE LATER
-        currentPlanetInt=0;
+        //currentPlanetInt=0;
         int index = (int)(Math.round(Math.random()));
         switch(index){
             case 0: //spawn spike
@@ -560,7 +575,9 @@ public class AstroJump extends Application {
                 break;
         }
     }
-
+    public void randomizeStarSpawnTime(){
+        starSpawnIntervalNano = (long)(((Math.random()*35)+10)*1_000_000_000);
+    }
 
 
 }
