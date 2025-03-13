@@ -38,7 +38,7 @@ public class AstroJump extends Application {
 
     private long objectSpeed = -1000;
     private long score = 0;
-    private String planetsDiscovered = "00000000";
+    private StringBuilder planetsDiscovered = new StringBuilder("00000000");
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
     private long spawnIntervalDecrement = 5_000;
     private long lastObstacleSpawnTime =0;
@@ -223,12 +223,7 @@ public class AstroJump extends Application {
         //add first planet to planetsDiscovered
         //add planet to planetsDiscovered
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
-            //change bitString to int to add
-            int bitString = Integer.parseInt(planetsDiscovered);
-            //add
-            bitString += 1*10^(8 - currentPlanetInt);
-            //change string
-            planetsDiscovered = bitString + "";
+            planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
         //start planetChange method
         planetChange();
@@ -343,7 +338,7 @@ public class AstroJump extends Application {
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
-                IOMethods saveData = new IOMethods(player.getStarsCaught(), IOMethods.getTotalStarsCollected() + player.getStarsCaught(), Integer.parseInt(planetsDiscovered));
+//                IOMethods saveData = new IOMethods(player.getStarsCaught(), IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
             }
         }
 
@@ -511,26 +506,20 @@ public class AstroJump extends Application {
     private void planetChange() {
         levelChanger = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             System.out.println("Change");
-            currentPlanetInt = (int) (Math.random() * 8);
+            currentPlanetInt = (int) (Math.random() * 7);
+
+            //update background
             background.changePlanet(currentPlanetInt);
             //add planet to planetsDiscovered
-//            if(planetsDiscovered.charAt(currentPlanetInt-1) == '0') {
-//                //change bitString to int to add
-//                int bitString = Integer.parseInt(planetsDiscovered);
-//                //add
-//                bitString += 1*10^(8 - currentPlanetInt);
-//                //change string
-//                planetsDiscovered = bitString + "";
-//            }
+            if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
+                planetsDiscovered.setCharAt(currentPlanetInt, '1');
+            }
             //Change media for music
             mediaPlayer.stop();
             File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             //mediaPlayer.play();
-
-            //update background
-            //background.changePlanet(currentPlanetInt);
 
             //if player dead stop loop
             if(stopAnimationTimer){
