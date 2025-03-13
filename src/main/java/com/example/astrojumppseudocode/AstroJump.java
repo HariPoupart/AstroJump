@@ -33,7 +33,7 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
-
+//hi
     private Timeline levelChanger;
 
     private long objectSpeed = -1000;
