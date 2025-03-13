@@ -508,18 +508,19 @@ public class AstroJump extends Application {
 
     //PLANET METHOD
     private void planetChange() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(20), event -> {
+        levelChanger = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             System.out.println("Change");
             currentPlanetInt = (int) (Math.random() * 8);
+            background.changePlanet(currentPlanetInt);
             //add planet to planetsDiscovered
-            if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
-                //change bitString to int to add
-                int bitString = Integer.parseInt(planetsDiscovered);
-                //add
-                bitString += 1*10^(8 - currentPlanetInt);
-                //change string
-                planetsDiscovered = bitString + "";
-            }
+//            if(planetsDiscovered.charAt(currentPlanetInt-1) == '0') {
+//                //change bitString to int to add
+//                int bitString = Integer.parseInt(planetsDiscovered);
+//                //add
+//                bitString += 1*10^(8 - currentPlanetInt);
+//                //change string
+//                planetsDiscovered = bitString + "";
+//            }
             //Change media for music
             mediaPlayer.stop();
             File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
