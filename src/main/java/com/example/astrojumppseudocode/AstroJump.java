@@ -488,7 +488,10 @@ public class AstroJump extends Application {
         obstacle.setX(screenWidth);//CHECK
     }
     public void initializeStar(){
-        star = new Star(new ImageView("test.png"),55,48, 0, 0, 0);
+        //changin lin
+        star = new Star(new ImageView("StarSheet.png"),26,32, 0, 0, 0);
+
+        //star = new Star(new ImageView("test"),55,48, 0, 0, 0);
         star.setX(screenWidth);
     }
     public void createBackground(){
