@@ -118,7 +118,7 @@ public class AstroJump extends Application {
         VBox vBox1 = new VBox();
         vBox1.setAlignment(Pos.CENTER);
         vBox1.setSpacing(20);
-        vBox1.setPadding(new Insets(0, 0, 0, 150));
+        vBox1.setPadding(new Insets(50, 0, 0, 150));
         Label lbScore = new Label("High Score:");
         TextField tfScore = new TextField();
         tfScore.setEditable(false);
@@ -132,6 +132,7 @@ public class AstroJump extends Application {
         VBox vBox2 = new VBox();
         vBox2.setAlignment(Pos.CENTER);
         vBox2.setSpacing(20);
+        vBox2.setPadding(new Insets(50,0,0,0));
 
         // Start button
         Button btStart = new Button("Start");
@@ -159,7 +160,7 @@ public class AstroJump extends Application {
         VBox vBox3 = new VBox();
         vBox3.setAlignment(Pos.CENTER);
         vBox3.setSpacing(20);
-        vBox3.setPadding(new Insets(0, 150, 0, 0));
+        vBox3.setPadding(new Insets(50, 150, 0, 0));
         Label lbPlanets = new Label("Planets Discovered:");
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
