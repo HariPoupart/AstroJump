@@ -12,7 +12,7 @@ public class Planet {
 
 
     //constructor
-    Planet(String name, float gravity, float jumpForc, float netForce) {
+    Planet(String name, float gravity, float jumpForce, float netForce) {
         this.gravity = gravity;
         this.jumpForce = jumpForce;
         this.netForce = netForce;

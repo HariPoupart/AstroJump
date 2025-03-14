@@ -89,15 +89,15 @@ public class AstroJump extends Application {
     private static final int GROUND_Y = 390;
 
     public static void main(String[] args) {
-        //initiate planetArray
-        Planet mercury = new Planet("mercury", -1000f,-800f,300f);
-        Planet venus = new Planet("venus",-900f,-800f,300f);
-        Planet earth = new Planet("earth",-1000f,-800f,300f);
-        Planet mars = new Planet("mars",-1000f,-800f,300f);
-        Planet jupiter = new Planet("jupiter",-1600f,-800f,300f);
-        Planet saturn = new Planet("saturn",-950f,-800f,300f);
-        Planet uranus = new Planet("uranus",-800f,-800f,300f);
-        Planet neptune = new Planet("neptune",-1150f,-800f,300f);
+        //initiate planetArray with gravities from NSSDC
+        Planet mercury = new Planet("mercury", -567f,-1000f,300f);
+        Planet venus = new Planet("venus",-1382f,-1000f,300f);
+        Planet earth = new Planet("earth",-1524f,-1000f,300f);
+        Planet mars = new Planet("mars",-574f,-1000f,300f);
+        Planet jupiter = new Planet("jupiter",-3596f,-1000f,300f);
+        Planet saturn = new Planet("saturn",-1396f,-1000f,300f);
+        Planet uranus = new Planet("uranus",-1355f,-1000f,300f);
+        Planet neptune = new Planet("neptune",-1707f,-1000f,300f);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -336,6 +336,7 @@ public class AstroJump extends Application {
     }
 
     protected void startGameLoop(Stage primaryStage) {
+        objectSpeed = -500;
         //add first planet to planetsDiscovered
         //add planet to planetsDiscovered
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
@@ -413,8 +414,8 @@ public class AstroJump extends Application {
 
         //update PLAYER jump
         if(player.getIsJumping()){
-            playerJump(-1200,-850); //TASK: EVELYNE: change values depending on planet
-            //playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
+            //playerJump(-1200,-850); //TASK: EVELYNE: change values depending on planet
+            playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
         }
         //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
