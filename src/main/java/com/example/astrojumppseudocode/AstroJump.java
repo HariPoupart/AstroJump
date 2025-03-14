@@ -8,15 +8,19 @@ import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -108,6 +112,111 @@ public class AstroJump extends Application {
     }
 
     public void start(Stage primaryStage) throws IOException {
+        BorderPane borderPane = new BorderPane();
+
+        // High score and total stars collected
+        VBox vBox1 = new VBox();
+        vBox1.setAlignment(Pos.CENTER);
+        vBox1.setSpacing(20);
+        vBox1.setPadding(new Insets(0, 0, 0, 150));
+        Label lbScore = new Label("High Score:");
+        TextField tfScore = new TextField();
+        tfScore.setEditable(false);
+        Label lbStars = new Label("Total Stars Collected:");
+        TextField tfStars = new TextField();
+        tfStars.setEditable(false);
+        vBox1.getChildren().addAll(lbScore, tfScore, lbStars, tfStars);
+        borderPane.setLeft(vBox1);
+
+        // Start, tutorial, settings and exit
+        VBox vBox2 = new VBox();
+        vBox2.setAlignment(Pos.CENTER);
+        vBox2.setSpacing(20);
+
+        // Start button
+        Button btStart = new Button("Start");
+        btStart.setPrefWidth(150);
+        btStart.setPrefHeight(30);
+
+        // Tutorial button
+        Button btTutorial = new Button("Tutorial");
+        btTutorial.setPrefWidth(150);
+        btTutorial.setPrefHeight(30);
+
+        // Settings button
+        Button btSettings = new Button("Settings");
+        btSettings.setPrefWidth(150);
+        btSettings.setPrefHeight(30);
+
+        // Exit button
+        Button btExit = new Button("Exit");
+        btExit.setPrefWidth(150);
+        btExit.setPrefHeight(30);
+        vBox2.getChildren().addAll(btStart, btTutorial, btSettings, btExit);
+        borderPane.setCenter(vBox2);
+
+        // Planets discovered
+        VBox vBox3 = new VBox();
+        vBox3.setAlignment(Pos.CENTER);
+        vBox3.setSpacing(20);
+        vBox3.setPadding(new Insets(0, 150, 0, 0));
+        Label lbPlanets = new Label("Planets Discovered:");
+        GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+
+        // Mercury Image
+        ImageView mercuryImage = new ImageView("file:Mercury.png");
+        mercuryImage.setFitWidth(30);
+        mercuryImage.setFitHeight(30);
+        gridPane.add(mercuryImage, 0, 0);
+
+        // Venus Image
+        ImageView venusImage = new ImageView("file:Venus.png");
+        venusImage.setFitWidth(30);
+        venusImage.setFitHeight(30);
+        gridPane.add(venusImage, 1, 0);
+
+        // Earth Image
+        ImageView earthImage = new ImageView("file:Earth.png");
+        earthImage.setFitWidth(30);
+        earthImage.setFitHeight(30);
+        gridPane.add(earthImage, 2, 0);
+
+        // Mars Image
+        ImageView marsImage = new ImageView("file:Mars.png");
+        marsImage.setFitWidth(30);
+        marsImage.setFitHeight(30);
+        gridPane.add(marsImage, 3, 0);
+
+        // Jupiter Image
+        ImageView jupiterImage = new ImageView("file:Jupiter.png");
+        jupiterImage.setFitWidth(30);
+        jupiterImage.setFitHeight(30);
+        gridPane.add(jupiterImage, 0, 1);
+
+        // Saturn Image
+        ImageView saturnImage = new ImageView("file:Saturn.png");
+        saturnImage.setFitWidth(30);
+        saturnImage.setFitHeight(30);
+        gridPane.add(saturnImage, 1, 1);
+
+        // Uranus Image
+        ImageView uranusImage = new ImageView("file:Uranus.png");
+        uranusImage.setFitWidth(30);
+        uranusImage.setFitHeight(30);
+        gridPane.add(uranusImage, 2, 1);
+
+        // Neptune Image
+        ImageView neptuneImage = new ImageView("file:Neptune.png");
+        neptuneImage.setFitWidth(30);
+        neptuneImage.setFitHeight(30);
+        gridPane.add(neptuneImage, 3, 1);
+
+        vBox3.getChildren().addAll(lbPlanets, gridPane);
+        borderPane.setRight(vBox3);
+
         primaryStage.setTitle("AstroJump");
 
         //listeners for action events in MenuController
@@ -150,7 +259,7 @@ public class AstroJump extends Application {
         }
 
         //scene
-        StackPane generalPane = new StackPane(pane, loader.load());
+        StackPane generalPane = new StackPane(pane, borderPane);
 
         Scene scene = new Scene(generalPane,screenWidth,screenHeight);
 
