@@ -40,7 +40,7 @@ public class AstroJump extends Application {
 //hi
     private Timeline levelChanger;
 
-    private long objectSpeed = -1000;
+    private long objectSpeed = -500;
     private long score = 0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
@@ -90,14 +90,14 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         //initiate planetArray
-        Planet mercury = new Planet("mercury", -10f,30f,30f);
-        Planet venus = new Planet("venus",-90f,30f,30f);
-        Planet earth = new Planet("earth",-100f,30f,30f);
-        Planet mars = new Planet("mars",-10f,30f,30f);
-        Planet jupiter = new Planet("jupiter",-160f,30f,30f);
-        Planet saturn = new Planet("saturn",-95f,30f,30f);
-        Planet uranus = new Planet("uranus",-80f,30f,30f);
-        Planet neptune = new Planet("neptune",-115f,30f,30f);
+        Planet mercury = new Planet("mercury", -1000f,-800f,300f);
+        Planet venus = new Planet("venus",-900f,-800f,300f);
+        Planet earth = new Planet("earth",-1000f,-800f,300f);
+        Planet mars = new Planet("mars",-1000f,-800f,300f);
+        Planet jupiter = new Planet("jupiter",-1600f,-800f,300f);
+        Planet saturn = new Planet("saturn",-950f,-800f,300f);
+        Planet uranus = new Planet("uranus",-800f,-800f,300f);
+        Planet neptune = new Planet("neptune",-1150f,-800f,300f);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -375,6 +375,7 @@ public class AstroJump extends Application {
         // when mouse is clicked create a net
         game.setOnMouseClicked(event -> {
             createNet(event.getX(),event.getY(),-160,400);
+            //createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),400);
         });
 
         primaryStage.setScene(game);
@@ -393,6 +394,8 @@ public class AstroJump extends Application {
                     long elapsedTime = now - lastUpdateMethodTime;
                     // If enough time has passed, call update and save lastUpdateTime
                     if (elapsedTime >= NANOSECONDS_PER_FRAME) {
+                        //update score
+                        score += (-0.0000000001) * elapsedTime * objectSpeed;
                         update(elapsedTime / 1_000_000_000.0, primaryStage); // Convert nanoseconds to seconds
                         gameObjectSpawner(now);
                         lastUpdateMethodTime = now;
@@ -411,6 +414,7 @@ public class AstroJump extends Application {
         //update PLAYER jump
         if(player.getIsJumping()){
             playerJump(-1200,-850); //TASK: EVELYNE: change values depending on planet
+            //playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
         }
         //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
@@ -427,6 +431,7 @@ public class AstroJump extends Application {
                 if(net.isCollidingWith(star.getImage())){
                     player.addOneStar();
                     //modify score
+
                     //reset star
                     spawnStar(screenWidth,0,0,0,0);
                 }
@@ -454,7 +459,7 @@ public class AstroJump extends Application {
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
-                IOMethods saveData = new IOMethods(player.getStarsCaught(), IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
+                IOMethods saveData = new IOMethods(score, player.getStarsCaught() + player.getStarsCaught(), planetsDiscovered);
             }
         }
 
@@ -463,8 +468,6 @@ public class AstroJump extends Application {
 
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
-            //modify score
-
             //reset star
             spawnStar(screenWidth,0,0,0,0);
         }
@@ -623,10 +626,10 @@ public class AstroJump extends Application {
 
     //PLANET METHOD
     private void planetChange() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
-            System.out.println("Change");
+        levelChanger = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
+            System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
             currentPlanetInt = (int) (Math.random() * 7);
-
+            objectSpeed = (long) (objectSpeed * 1.2);
             //update background
             background.changePlanet(currentPlanetInt);
             //add planet to planetsDiscovered
@@ -662,7 +665,7 @@ public class AstroJump extends Application {
         if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
-            System.out.println(scoreValue);
+            System.out.println(scoreValue + "scoreValue");
             spawnStar(screenWidth,Math.random()*(GROUND_Y-star.getHeight()),objectSpeed,0,scoreValue);
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
@@ -685,6 +688,15 @@ public class AstroJump extends Application {
     }
     public void randomizeStarSpawnTime(){
         starSpawnIntervalNano = (long)(((Math.random()*35)+10)*1_000_000_000);
+    }
+
+    public ImageView isBlackedOut(int planetInt) {
+        if(IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0') {
+            return new ImageView(planetArray.get(planetInt).name + "BlackedOut.png");
+        }
+        else {
+            return new ImageView(planetArray.get(planetInt).name + ".png");
+        }
     }
 
 

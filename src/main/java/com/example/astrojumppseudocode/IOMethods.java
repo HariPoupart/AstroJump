@@ -5,19 +5,19 @@ import java.io.*;
 public class IOMethods {
 
     //old/player attributes
-    private  static int playerHighScore;
+    private  static long playerHighScore;
     private static int playerTotalStarsCollected;
     private static StringBuilder playerPlanetsDiscovered;
 
     //current attributes
-    private static int currentHighScore = 0;
+    private static long currentHighScore = 0;
     private static int currentStarsCollected = 0;
     //bit string of 8 digits, nth bit is 0 if player has yet to encounter it, turned into a 1 when player encounters
     private static StringBuilder planetsDiscoveredBitString;
 
 
     //constructor
-    IOMethods(int currentHighScore, int newStarsCollected, StringBuilder planetsDiscoveredBitString) {
+    IOMethods(long currentHighScore, int newStarsCollected, StringBuilder planetsDiscoveredBitString) {
         //set attributes
         this.currentHighScore = currentHighScore;
         this.currentStarsCollected = newStarsCollected;
@@ -39,8 +39,8 @@ public class IOMethods {
     }
 
     //accessor methods
-    public static int getHighScore() {
-        File fileHS = new File("highScoreHERE.txt");
+    public static long getHighScore() {
+        File fileHS = new File("highScore.txt");
         try {
             FileInputStream fileStreamHS = new FileInputStream(fileHS);
             DataInputStream inputHS = new DataInputStream(fileStreamHS);
@@ -54,7 +54,7 @@ public class IOMethods {
         return playerHighScore;
     }
     public static int getTotalStarsCollected() {
-        File fileTS = new File("totalNumberStarHERE.txt");
+        File fileTS = new File("totalNumberStar.txt");
         try {
             FileInputStream fileStreamTS = new FileInputStream(fileTS);
             DataInputStream inputTS = new DataInputStream(fileStreamTS);
@@ -67,7 +67,7 @@ public class IOMethods {
         return playerTotalStarsCollected;
     }
     public static StringBuilder getPlanetsDiscovered() {
-        File filePD = new File("planetsDiscoveredHERE.txt");
+        File filePD = new File("planetsDiscovered.txt");
         if(filePD.exists()) {
         try {
             FileInputStream fileStreamPD = new FileInputStream(filePD);
@@ -88,14 +88,13 @@ public class IOMethods {
     }
 
     //mutator methods
-    public static void setHighScore(int newHighScore) {
+    public static void setHighScore(long newHighScore) {
         if(currentHighScore > playerHighScore) {
             File file = new File("highScore.txt");
             try {
                 FileOutputStream fileStream = new FileOutputStream(file);
-                DataOutputStream output = new DataOutputStream(fileStream) {
-                };
-                output.write(newHighScore);
+                DataOutputStream output = new DataOutputStream(fileStream);
+                output.write((int)newHighScore);
             } catch (FileNotFoundException e) {
                 System.out.println("highScore.txt file not found IOMethods setHighScore");
             } catch (IOException e) {
@@ -107,8 +106,7 @@ public class IOMethods {
         File file = new File("totalNumberStar.txt");
         try {
             FileOutputStream fileStream = new FileOutputStream(file);
-            DataOutputStream output = new DataOutputStream(fileStream) {
-            };
+            DataOutputStream output = new DataOutputStream(fileStream);
             output.write(currentStarsCollected + playerTotalStarsCollected);
         } catch (FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods setTotalStarsCollected");
@@ -132,9 +130,9 @@ public class IOMethods {
         File file = new File("planetsDiscovered.txt");
         try {
             FileOutputStream fileStream = new FileOutputStream(file);
-            DataOutputStream output = new DataOutputStream(fileStream) {
-            };
-            output.write(Integer.parseInt(mergedPlanets.toString()));
+            BufferedOutputStream output = new BufferedOutputStream(fileStream);
+            output.write(mergedPlanets.toString().getBytes());
+
         }
         catch(FileNotFoundException e) {
             System.out.println("planetsDiscovered.txt file not found IOMethods setPlanetsDiscoveredBitString");
