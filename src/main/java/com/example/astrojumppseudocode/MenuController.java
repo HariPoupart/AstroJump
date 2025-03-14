@@ -15,26 +15,26 @@ public class MenuController {
 
     //action handler startButton
     @FXML
-    protected void startButton(ActionEvent event) {
+    protected static void startButton() {
         // Start the game loop
         AstroJump.startLoopListener.setValue(true);
 }
 
     //action handler tutorialButton
     @FXML
-    protected void tutorialButton(ActionEvent event) {
+    public static void tutorialButton() {
         AstroJump.tutorialListener.setValue(true);
     }
 
     //action handler settingButton
     @FXML
-    protected void settingButton(ActionEvent event) {
+    public static void settingButton() {
         AstroJump.settingsListener.setValue(true);
     }
 
     //action handler settingButton
     @FXML
-    protected void exitButton(ActionEvent event) {
+    public static void exitButton() {
         System.exit(0);
     }
 

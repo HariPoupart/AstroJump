@@ -220,7 +220,13 @@ public class AstroJump extends Application {
 
         primaryStage.setTitle("AstroJump");
 
+        //buttons action handler
+                btStart.setOnAction(e -> MenuController.startButton());
+                btTutorial.setOnAction(e -> MenuController.tutorialButton());
+                btSettings.setOnAction(e -> MenuController.settingButton());
+                btExit.setOnAction(e -> MenuController.exitButton());
         //listeners for action events in MenuController
+
         startLoopListener.addListener(e -> {
             startGameLoop(primaryStage);
             startLoopListener = new SimpleBooleanProperty(false);
@@ -448,7 +454,7 @@ public class AstroJump extends Application {
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
-//                IOMethods saveData = new IOMethods(player.getStarsCaught(), IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
+                IOMethods saveData = new IOMethods(player.getStarsCaught(), IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
             }
         }
 
