@@ -70,8 +70,8 @@ public class AstroJump extends Application {
     private ArrayList<Obstacle> obstacles = new ArrayList<>();
     private final int SPIKE_WIDTH = 42;
     private final int SPIKE_HEIGHT = 64;
-    private final int METEO_WIDTH = 88;
-    private final int METEO_HEIGHT = 52;
+    private final int METEO_WIDTH = 38*2;
+    private final int METEO_HEIGHT = 32*2;
 
     //star
     private Star star;
@@ -90,12 +90,12 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("mercury", -567f,-1000f,300f);
-        Planet venus = new Planet("venus",-1382f,-1000f,300f);
+        Planet mercury = new Planet("mercury", -567f,-600f,300f);
+        Planet venus = new Planet("venus",-1382f,-900f,300f);
         Planet earth = new Planet("earth",-1524f,-1000f,300f);
-        Planet mars = new Planet("mars",-574f,-1000f,300f);
-        Planet jupiter = new Planet("jupiter",-3596f,-1000f,300f);
-        Planet saturn = new Planet("saturn",-1396f,-1000f,300f);
+        Planet mars = new Planet("mars",-574f,-600f,300f);
+        Planet jupiter = new Planet("jupiter",-3596f,-1500f,300f);
+        Planet saturn = new Planet("saturn",-1396f,-900f,300f);
         Planet uranus = new Planet("uranus",-1355f,-1000f,300f);
         Planet neptune = new Planet("neptune",-1707f,-1000f,300f);
         planetArray = new ArrayList<>();
@@ -482,10 +482,7 @@ public class AstroJump extends Application {
 
     }
 
-    private void increaseSpawnSpeed() {
-        // Decrease the spawn interval (make it faster)
-        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - spawnIntervalDecrement); // Don't go below 0.2 seconds
-    }
+
 
     //PLAYER METHODS
     private void createPlayer(){
@@ -593,23 +590,23 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        obstacles.add(new Obstacle(new ImageView("MeteoriteTest.png"),METEO_WIDTH,METEO_HEIGHT,objectSpeed,0));
+        obstacles.add(new Obstacle(new ImageView("MeteoriteSheet.png"),METEO_WIDTH,METEO_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
-        Obstacle obstacle = obstacles.getLast();
+        imgV.setViewport(new Rectangle2D(0,0,38,32));
 
         //add imageView to game objects
         gameObjects.getChildren().add(imgV);
 
         //set obstacle to the right position
-        //
+        Obstacle obstacle = obstacles.getLast();
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
         obstacle.setX(screenWidth);//CHECK
     }
     public void initializeStar(){
         //changin lin
-        star = new Star(new ImageView("StarSheet.png"),26,32, 0, 0, 0);
+        star = new Star(new ImageView("StarSheet.png"),52,32, 0, 0, 0);
 
         //star = new Star(new ImageView("test"),55,48, 0, 0, 0);
         star.setX(screenWidth);
@@ -631,6 +628,7 @@ public class AstroJump extends Application {
             System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
             currentPlanetInt = (int) (Math.random() * 7);
             objectSpeed = (long) (objectSpeed * 1.2);
+            updateGameObjectsSpeed();
             //update background
             background.changePlanet(currentPlanetInt);
             //add planet to planetsDiscovered
@@ -666,7 +664,7 @@ public class AstroJump extends Application {
         if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
-            System.out.println(scoreValue + "scoreValue");
+            //System.out.println(scoreValue + "scoreValue");
             spawnStar(screenWidth,Math.random()*(GROUND_Y-star.getHeight()),objectSpeed,0,scoreValue);
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
@@ -689,6 +687,22 @@ public class AstroJump extends Application {
     }
     public void randomizeStarSpawnTime(){
         starSpawnIntervalNano = (long)(((Math.random()*35)+10)*1_000_000_000);
+    }
+    private void increaseSpawnSpeed() {
+        // Decrease the spawn interval (make it faster)
+        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - spawnIntervalDecrement); // Don't go below 0.2 seconds
+    }
+    private void updateGameObjectsSpeed(){
+        //update background
+        background.setSpeedX(objectSpeed);
+        //update obstacles
+        for(int i =0;i<obstacles.size();i++){
+            obstacles.get(i).setSpeedX(objectSpeed);
+        }
+        //update star
+        if(star.getSpeedX()!=0)
+            star.setSpeedY(objectSpeed);
+
     }
 
     public ImageView isBlackedOut(int planetInt) {
