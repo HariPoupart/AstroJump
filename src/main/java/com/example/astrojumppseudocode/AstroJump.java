@@ -417,7 +417,6 @@ public class AstroJump extends Application {
         //increase object speeds
         objectSpeed += (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
-        System.out.println(objectSpeed);
 
 
         //update PLAYER jump
@@ -470,6 +469,16 @@ public class AstroJump extends Application {
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
             }
+
+            //if the obstacle is out of bounds delete it
+            if(obstacle.isOutOfBounds(GROUND_Y)){
+                gameObjects.getChildren().remove(obstacle.getImage());
+                obstacle=null;
+                obstacles.remove(i);
+
+            }
+
+
         }
 
         //STAR movement and collisions
@@ -707,7 +716,7 @@ public class AstroJump extends Application {
         }
         //update star
         if(star.getSpeedX()!=0)
-            star.setSpeedY(objectSpeed);
+            star.setSpeedX(objectSpeed);
 
     }
 
