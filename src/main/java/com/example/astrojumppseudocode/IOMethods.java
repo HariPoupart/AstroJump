@@ -27,7 +27,6 @@ public class IOMethods {
         playerHighScore = getHighScore();
         playerTotalStarsCollected = getTotalStarsCollected();
         playerPlanetsDiscovered = getPlanetsDiscovered();
-        //assuring well parsed
         //setting currentHighScore
         setHighScore();
 
@@ -39,17 +38,6 @@ public class IOMethods {
 
         //TAKEOFF
         System.out.println("Highscore: " + playerHighScore + " TotalStars: " + playerTotalStarsCollected + " Planets: " + playerPlanetsDiscovered);
-    }
-
-    IOMethods() {
-        //setting currentHighScore
-        setHighScore();
-
-        //setting currentTotalStarsCollected
-        setTotalStarsCollected();
-
-        //setting planetsDiscoveredBitString
-        setPlanetsDiscoveredBitString();
     }
 
     //accessor methods
@@ -135,7 +123,7 @@ public class IOMethods {
         try {
             FileOutputStream fileStream = new FileOutputStream(file);
             DataOutputStream output = new DataOutputStream(fileStream);
-            output.writeInt(currentStarsCollected + playerTotalStarsCollected);
+            output.writeInt((playerTotalStarsCollected + currentStarsCollected));
             output.close();
         } catch (FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods setTotalStarsCollected");

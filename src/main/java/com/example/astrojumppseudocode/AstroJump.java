@@ -37,7 +37,6 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
-//hi
     private Timeline levelChanger;
 
     private float objectSpeed;
@@ -57,6 +56,7 @@ public class AstroJump extends Application {
     public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
     public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
     public static boolean stopAnimationTimer;
+    private int tutorialPageNumber = 0;
 
     public MediaPlayer mediaPlayer;
 
@@ -286,7 +286,7 @@ public class AstroJump extends Application {
 
     }
     protected void showTutorial(Stage primaryStage) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial" + tutorialPageNumber +".bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -300,12 +300,27 @@ public class AstroJump extends Application {
                 }
             }
         });
+        //add listener to switch pages to the left
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode() == KeyCode.LEFT & tutorialPageNumber > 0) {
+                tutorialPageNumber--;
+                primaryStage.setScene(new Scene(new Pane(new ImageView("tutorial" + tutorialPageNumber +".bmp")),screenWidth,screenHeight));
+            }
+        });
+        //add listener to switch pages to the right
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode() == KeyCode.RIGHT & tutorialPageNumber < 4) {
+                tutorialPageNumber++;
+                primaryStage.setScene(new Scene(new Pane(new ImageView("tutorial" + tutorialPageNumber +".bmp")),screenWidth,screenHeight));
+            }
+        });
     }
     protected void showSettings(Stage primaryStage) {
+        //TAKEOFF
         Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
-//add listener
+        //add listener
         scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 try {
@@ -317,6 +332,8 @@ public class AstroJump extends Application {
         });
     }
     protected void showGameOverScreen(Stage primaryStage) {
+        //updateIOMethods
+        IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
         ImageView gameOverScreen = new ImageView("GameOver.bmp");
         gameOverScreen.setFitHeight(screenHeight);
         gameOverScreen.setFitWidth(screenWidth);
@@ -336,21 +353,9 @@ public class AstroJump extends Application {
     }
 
     protected void startGameLoop(Stage primaryStage) {
-        objectSpeed = -500;
-        //add first planet to planetsDiscovered
-        if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
-            planetsDiscovered = IOMethods.getPlanetsDiscovered();
-        }
-        planetsDiscovered = IOMethods.getPlanetsDiscovered();
-        //add planet to planetsDiscovered
-        if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
-            planetsDiscovered.setCharAt(currentPlanetInt, '1');
-        }
-        //start planetChange method
-        planetChange();
-        //resetting all game variables
-        stopAnimationTimer = false;
-
+        //reset variables
+        resetVariables();
+        //TAKEOFF
         //game scene setup
         gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
@@ -412,12 +417,14 @@ public class AstroJump extends Application {
         }.start();
     }
     private void update(double deltaTime, Stage stage) {
+        if(stopAnimationTimer) {
+            return;
+        }
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //increase object speeds
         objectSpeed += (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
-
 
         //update PLAYER jump
         if(player.getIsJumping()){
@@ -464,7 +471,6 @@ public class AstroJump extends Application {
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
                 //game over methods
-                IOMethods saveData = new IOMethods(score, IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
@@ -642,7 +648,10 @@ public class AstroJump extends Application {
     //PLANET METHOD
     private void planetChange() {
         levelChanger = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
-            System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
+            //if player dead stop loop
+            if(stopAnimationTimer){
+                levelChanger.stop();}
+
             currentPlanetInt = (int) (Math.random() * 7);
             //update background
             background.changePlanet(currentPlanetInt);
@@ -656,10 +665,6 @@ public class AstroJump extends Application {
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             //mediaPlayer.play();
-
-            //if player dead stop loop
-            if(stopAnimationTimer){
-                levelChanger.stop();}
         }));
 
         // Set the Timeline to run indefinitely
@@ -728,6 +733,25 @@ public class AstroJump extends Application {
             return new ImageView(planetArray.get(planetInt).name + ".png");
         }
     }
+    public void resetVariables() {
+        //reset object speed
+        objectSpeed = -500;
+        //reset players stars caught
+        player.resetStars();
+        //add first planet to planetsDiscovered
+        if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
+            planetsDiscovered = IOMethods.getPlanetsDiscovered();
+        }
+        planetsDiscovered = IOMethods.getPlanetsDiscovered();
+        //add planet to planetsDiscovered
+        if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
+            planetsDiscovered.setCharAt(currentPlanetInt, '1');
+        }
+        //start planetChange method
+        planetChange();
+        //resetting all game variables
+        stopAnimationTimer = false;
 
+    }
 
 }
