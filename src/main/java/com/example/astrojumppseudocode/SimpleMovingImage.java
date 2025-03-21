@@ -3,7 +3,7 @@ package com.example.astrojumppseudocode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class SimpleMovingImage {
+public class SimpleMovingImage implements Collidable{
     private ImageView image;
     private double width;
     private double height;
@@ -71,5 +71,15 @@ public class SimpleMovingImage {
         setX(getX()+speedX*deltaTime);
         //update y
         setY(getY()+speedY*deltaTime);
+    }
+    public boolean isCollidingWith(ImageView other){
+        boolean isColliding = false;
+        if(this.getImage().getBoundsInParent().intersects(other.getBoundsInParent())){
+            isColliding = true;
+        }
+        return isColliding;
+    }
+    public boolean isOutOfBounds(double groundLevel){
+        return (getX() + getWidth() <= 0 || getY() >= groundLevel);
     }
 }

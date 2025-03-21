@@ -67,7 +67,7 @@ public class AstroJump extends Application {
     private Player player;
 
     //obstacles
-    private ArrayList<Obstacle> obstacles = new ArrayList<>();
+    private ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
     private final int SPIKE_WIDTH = 42;
     private final int SPIKE_HEIGHT = 64;
     private final int METEO_WIDTH = 38*2;
@@ -456,7 +456,7 @@ public class AstroJump extends Application {
 
         //OBSTACLE updates
         for(int i =0;i<obstacles.size();i++){
-            Obstacle obstacle = obstacles.get(i);
+            SimpleMovingImage obstacle = obstacles.get(i);
 
             //update position
             obstacle.updatePosition(deltaTime);
@@ -588,11 +588,11 @@ public class AstroJump extends Application {
     //OBSTACLE METHODS
     public void createSpike(){
         //add new obstacle
-        obstacles.add(new Obstacle(new ImageView("Obstacle3.png"),SPIKE_WIDTH,SPIKE_HEIGHT,objectSpeed,0));
+        obstacles.add(new SimpleMovingImage(new ImageView("Obstacle3.png"),SPIKE_WIDTH,SPIKE_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
-        Obstacle obstacle = obstacles.getLast();
+        SimpleMovingImage obstacle = obstacles.getLast();
 
         //set to the right spike image (random spike on the current planet)
         imgV.setViewport(new Rectangle2D((int)(Math.random()*6)*21,currentPlanetInt*32,21,32));
@@ -607,7 +607,7 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        obstacles.add(new Obstacle(new ImageView("MeteoriteSheet.png"),METEO_WIDTH,METEO_HEIGHT,objectSpeed,0));
+        obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet.png"),METEO_WIDTH,METEO_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
@@ -617,7 +617,7 @@ public class AstroJump extends Application {
         gameObjects.getChildren().add(imgV);
 
         //set obstacle to the right position
-        Obstacle obstacle = obstacles.getLast();
+        SimpleMovingImage obstacle = obstacles.getLast();
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
         obstacle.setX(screenWidth);//CHECK
     }
