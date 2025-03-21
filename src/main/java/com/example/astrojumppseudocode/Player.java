@@ -69,14 +69,17 @@ public class Player implements Collidable{
     }
 
     //stars accessor and mutator
-    public void setStarsCaught(int starsCaught){
-        this.starsCaught=starsCaught;
+    public void setStarsCaught(int newstarsCaught){
+        this.starsCaught=newstarsCaught;
     }
     public void addOneStar(){
         this.starsCaught++;
     }
     public int getStarsCaught(){
         return this.starsCaught;
+    }
+    public void resetStars() {
+        starsCaught = 0;
     }
 
     //check if this works
