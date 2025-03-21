@@ -1,6 +1,7 @@
 package com.example.astrojumppseudocode;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class IOMethods {
 
@@ -49,7 +50,7 @@ public class IOMethods {
         catch(FileNotFoundException e) {
             System.out.println("highScore.txt file not found IOMethods constructor");
         } catch (IOException e) {
-//            throw new RuntimeException(e);
+            System.out.print("error getHighScore");
         }
         return playerHighScore;
     }
@@ -71,15 +72,20 @@ public class IOMethods {
         if(filePD.exists()) {
         try {
             FileInputStream fileStreamPD = new FileInputStream(filePD);
-//            DataInputStream inputPD = new DataInputStream(fileStreamPD);
             BufferedInputStream inputt = new BufferedInputStream(fileStreamPD);
-            playerPlanetsDiscovered = new StringBuilder(new String(inputt.readAllBytes()));
+            if(inputt.available() == 0){
+                String planetsByteToString = new String(inputt.readAllBytes(), StandardCharsets.UTF_8);
+                System.out.println(planetsByteToString);
+            playerPlanetsDiscovered = new StringBuilder(planetsByteToString);}
+            else{
+                playerPlanetsDiscovered = new StringBuilder("00000000");
+            }
             System.out.println(playerPlanetsDiscovered);
-//            playerPlanetsDiscovered = new StringBuilder(inputPD.readInt() + "");
         } catch (FileNotFoundException e) {
             System.out.println("planetsDiscovered.txt file not found IOMethods constructor");
         } catch (IOException e) {
-//            throw new RuntimeException(e);
+            System.out.print("error getPlanetDiscovered");
+            playerPlanetsDiscovered = new StringBuilder("00000000");
         }}
         else {
             playerPlanetsDiscovered = new StringBuilder("00000000");
@@ -94,11 +100,11 @@ public class IOMethods {
             try {
                 FileOutputStream fileStream = new FileOutputStream(file);
                 DataOutputStream output = new DataOutputStream(fileStream);
-                output.write((int)newHighScore);
+                output.writeInt((int)newHighScore);
             } catch (FileNotFoundException e) {
                 System.out.println("highScore.txt file not found IOMethods setHighScore");
             } catch (IOException e) {
-//                throw new RuntimeException(e);
+                System.out.print("error setHighScore");
             }
         }
     }
@@ -107,12 +113,12 @@ public class IOMethods {
         try {
             FileOutputStream fileStream = new FileOutputStream(file);
             DataOutputStream output = new DataOutputStream(fileStream);
-            output.write(currentStarsCollected + playerTotalStarsCollected);
+            output.writeInt(currentStarsCollected + playerTotalStarsCollected);
         } catch (FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods setTotalStarsCollected");
         } catch (IOException e) {
-//            throw new RuntimeException(e);
-        }
+            System.out.print("error setStars");
+            }
     }
     public static void setPlanetsDiscoveredBitString() {
         //merge both bit strings current and total
@@ -125,8 +131,10 @@ public class IOMethods {
             }
             else {
                 mergedPlanets.setCharAt(i, currentPlanets.charAt(i));
+                System.out.println("mergedPlanets: " + mergedPlanets.toString());
             }
         }
+        //write new mergedPlanets into file
         File file = new File("planetsDiscovered.txt");
         try {
             FileOutputStream fileStream = new FileOutputStream(file);
@@ -137,7 +145,7 @@ public class IOMethods {
         catch(FileNotFoundException e) {
             System.out.println("planetsDiscovered.txt file not found IOMethods setPlanetsDiscoveredBitString");
         } catch (IOException e) {
-//            throw new RuntimeException(e);
+            System.out.print("error setPlanet");
         }
     }
     }

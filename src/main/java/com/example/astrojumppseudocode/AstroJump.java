@@ -338,6 +338,9 @@ public class AstroJump extends Application {
     protected void startGameLoop(Stage primaryStage) {
         objectSpeed = -500;
         //add first planet to planetsDiscovered
+        if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
+            planetsDiscovered = IOMethods.getPlanetsDiscovered();
+        }
         //add planet to planetsDiscovered
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
@@ -457,10 +460,10 @@ public class AstroJump extends Application {
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
                 //game over methods
+                IOMethods saveData = new IOMethods(score, IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
-                IOMethods saveData = new IOMethods(score, player.getStarsCaught() + player.getStarsCaught(), planetsDiscovered);
             }
         }
 
