@@ -73,7 +73,7 @@ public class IOMethods {
         try {
             FileInputStream fileStreamPD = new FileInputStream(filePD);
             BufferedInputStream inputt = new BufferedInputStream(fileStreamPD);
-            if(inputt.available() == 0){
+            if(inputt.available() != 0){
                 String planetsByteToString = new String(inputt.readAllBytes(), StandardCharsets.UTF_8);
                 System.out.println(planetsByteToString);
             playerPlanetsDiscovered = new StringBuilder(planetsByteToString);}
@@ -85,11 +85,7 @@ public class IOMethods {
             System.out.println("planetsDiscovered.txt file not found IOMethods constructor");
         } catch (IOException e) {
             System.out.print("error getPlanetDiscovered");
-            playerPlanetsDiscovered = new StringBuilder("00000000");
         }}
-        else {
-            playerPlanetsDiscovered = new StringBuilder("00000000");
-        }
         return playerPlanetsDiscovered;
     }
 
@@ -117,6 +113,7 @@ public class IOMethods {
         } catch (FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods setTotalStarsCollected");
         } catch (IOException e) {
+
             System.out.print("error setStars");
             }
     }

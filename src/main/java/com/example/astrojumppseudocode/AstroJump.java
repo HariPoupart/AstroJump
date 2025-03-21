@@ -341,6 +341,7 @@ public class AstroJump extends Application {
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
         }
+        planetsDiscovered = IOMethods.getPlanetsDiscovered();
         //add planet to planetsDiscovered
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
