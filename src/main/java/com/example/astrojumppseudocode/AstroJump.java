@@ -40,7 +40,7 @@ public class AstroJump extends Application {
 //hi
     private Timeline levelChanger;
 
-    private long objectSpeed = -500;
+    private float objectSpeed;
     private long score = 0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
@@ -414,7 +414,11 @@ public class AstroJump extends Application {
     private void update(double deltaTime, Stage stage) {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
-        //example:
+        //increase object speeds
+        objectSpeed += (objectSpeed*0.01*deltaTime);
+        updateGameObjectsSpeed();
+        System.out.println(objectSpeed);
+
 
         //update PLAYER jump
         if(player.getIsJumping()){
@@ -631,8 +635,6 @@ public class AstroJump extends Application {
         levelChanger = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
             System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
             currentPlanetInt = (int) (Math.random() * 7);
-            objectSpeed = (long) (objectSpeed * 1.2);
-            updateGameObjectsSpeed();
             //update background
             background.changePlanet(currentPlanetInt);
             //add planet to planetsDiscovered
