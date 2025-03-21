@@ -39,6 +39,17 @@ public class IOMethods {
         setPlanetsDiscoveredBitString();
     }
 
+    IOMethods() {
+        //setting currentHighScore
+        setHighScore(currentHighScore);
+
+        //setting currentTotalStarsCollected
+        setTotalStarsCollected();
+
+        //setting planetsDiscoveredBitString
+        setPlanetsDiscoveredBitString();
+    }
+
     //accessor methods
     public static long getHighScore() {
         File fileHS = new File("highScore.txt");
@@ -46,6 +57,7 @@ public class IOMethods {
             FileInputStream fileStreamHS = new FileInputStream(fileHS);
             DataInputStream inputHS = new DataInputStream(fileStreamHS);
             playerHighScore = inputHS.readInt();
+            inputHS.close();
         }
         catch(FileNotFoundException e) {
             System.out.println("highScore.txt file not found IOMethods constructor");
@@ -54,12 +66,14 @@ public class IOMethods {
         }
         return playerHighScore;
     }
+
     public static int getTotalStarsCollected() {
         File fileTS = new File("totalNumberStar.txt");
         try {
             FileInputStream fileStreamTS = new FileInputStream(fileTS);
             DataInputStream inputTS = new DataInputStream(fileStreamTS);
             playerTotalStarsCollected = inputTS.readInt();
+            inputTS.close();
         }
         catch(FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods constructor");
@@ -67,20 +81,22 @@ public class IOMethods {
         }
         return playerTotalStarsCollected;
     }
+
     public static StringBuilder getPlanetsDiscovered() {
         File filePD = new File("planetsDiscovered.txt");
         if(filePD.exists()) {
         try {
             FileInputStream fileStreamPD = new FileInputStream(filePD);
-            BufferedInputStream inputt = new BufferedInputStream(fileStreamPD);
-            if(inputt.available() != 0){
-                String planetsByteToString = new String(inputt.readAllBytes(), StandardCharsets.UTF_8);
+            BufferedInputStream input = new BufferedInputStream(fileStreamPD);
+            if(input.available() != 0){
+                String planetsByteToString = new String(input.readAllBytes(), StandardCharsets.UTF_8);
                 System.out.println(planetsByteToString);
             playerPlanetsDiscovered = new StringBuilder(planetsByteToString);}
             else{
                 playerPlanetsDiscovered = new StringBuilder("00000000");
             }
             System.out.println(playerPlanetsDiscovered);
+            input.close();
         } catch (FileNotFoundException e) {
             System.out.println("planetsDiscovered.txt file not found IOMethods constructor");
         } catch (IOException e) {
@@ -97,6 +113,7 @@ public class IOMethods {
                 FileOutputStream fileStream = new FileOutputStream(file);
                 DataOutputStream output = new DataOutputStream(fileStream);
                 output.writeInt((int)newHighScore);
+                output.close();
             } catch (FileNotFoundException e) {
                 System.out.println("highScore.txt file not found IOMethods setHighScore");
             } catch (IOException e) {
@@ -110,6 +127,7 @@ public class IOMethods {
             FileOutputStream fileStream = new FileOutputStream(file);
             DataOutputStream output = new DataOutputStream(fileStream);
             output.writeInt(currentStarsCollected + playerTotalStarsCollected);
+            output.close();
         } catch (FileNotFoundException e) {
             System.out.println("totalNumberStar.txt file not found IOMethods setTotalStarsCollected");
         } catch (IOException e) {
@@ -137,7 +155,7 @@ public class IOMethods {
             FileOutputStream fileStream = new FileOutputStream(file);
             BufferedOutputStream output = new BufferedOutputStream(fileStream);
             output.write(mergedPlanets.toString().getBytes());
-
+            output.close();
         }
         catch(FileNotFoundException e) {
             System.out.println("planetsDiscovered.txt file not found IOMethods setPlanetsDiscoveredBitString");
