@@ -76,6 +76,10 @@ public class AstroJump extends Application {
 
     //Background
     Background background;
+
+    //Portal
+    SimpleMovingImage portal;
+
     //planets
     protected static ArrayList<Planet> planetArray;
 
@@ -341,7 +345,7 @@ public class AstroJump extends Application {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
         //start planetChange method
-        planetChange();
+        portalSpawner();
         //resetting all game variables
         stopAnimationTimer = false;
 
@@ -487,6 +491,27 @@ public class AstroJump extends Application {
         //background update
         background.updatePosition(deltaTime);
 
+        //portal collision update and position
+        if(portal!=null){
+            //update pos
+            portal.updatePosition(deltaTime);
+            //out of bounds deletion
+            if(portal.isOutOfBounds(GROUND_Y)){
+                //delete portal
+                gameObjects.getChildren().remove(portal.getImage());
+                portal = null;
+            }
+            //collision detection
+            if(portal.isCollidingWith(player.getImage())){
+                //change planet
+                changePlanet();
+                //delete portal
+                gameObjects.getChildren().remove(portal.getImage());
+                portal = null;
+            }
+
+
+        }
     }
 
     //PLAYER METHODS
@@ -632,32 +657,42 @@ public class AstroJump extends Application {
         star.setScoreValue(scoreValue);
     }
 
-    //PLANET METHOD
-    private void planetChange() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(7), event -> {
-            System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
-            currentPlanetInt = (int) (Math.random() * 7);
-            //update background
-            background.changePlanet(currentPlanetInt);
-            //add planet to planetsDiscovered
-            if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
-                planetsDiscovered.setCharAt(currentPlanetInt, '1');
-            }
-            //Change media for music
-            mediaPlayer.stop();
-            File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
-            Media media = new Media(file.toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            //mediaPlayer.play();
-
-            //if player dead stop loop
-            if(stopAnimationTimer){
-                levelChanger.stop();}
+    //PORTAL METHOD
+    private void portalSpawner() {
+        levelChanger = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            //spawn portal
+            portal = new SimpleMovingImage(new ImageView("Black_hole.png"),96,96,objectSpeed,0);
+            portal.setX(screenWidth);
+            portal.setY(GROUND_Y-portal.getHeight());
+            gameObjects.getChildren().add(portal.getImage());
         }));
 
         // Set the Timeline to run indefinitely
         levelChanger.setCycleCount(Timeline.INDEFINITE);
         levelChanger.play();
+    }
+
+    //PLANET CHANGE METHOD
+    private void changePlanet(){
+        System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
+        currentPlanetInt = (int) (Math.random() * 7);
+        //update background
+        background.changePlanet(currentPlanetInt);
+        //add planet to planetsDiscovered
+        if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
+            planetsDiscovered.setCharAt(currentPlanetInt, '1');
+        }
+        //Change media for music
+        mediaPlayer.stop();
+        File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
+        Media media = new Media(file.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        //mediaPlayer.play();
+
+        //if player dead stop loop
+        if(stopAnimationTimer){
+            levelChanger.stop();
+        }
     }
 
     //GAMEPLAY METHODS
