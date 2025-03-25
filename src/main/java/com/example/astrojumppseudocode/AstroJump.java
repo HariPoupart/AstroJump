@@ -43,10 +43,9 @@ public class AstroJump extends Application {
     private long score = 0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
     private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
-    private long spawnIntervalDecrement = 5_000;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
-    private long starSpawnIntervalNano= (long)30*1_000_000_000;
+    private long starSpawnIntervalNano= (long)2*1_000_000_000;
     public int screenHeight = 500;
     public int screenWidth = 1000;
 
@@ -416,7 +415,6 @@ public class AstroJump extends Application {
         objectSpeed += (float) (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
 
-
         //update PLAYER jump
         if(player.getIsJumping()){
             playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
@@ -491,27 +489,28 @@ public class AstroJump extends Application {
         //background update
         background.updatePosition(deltaTime);
 
-        //portal collision update and position
-        if(portal!=null){
+        //portal update and position
+        if(portal!=null) {
             //update pos
             portal.updatePosition(deltaTime);
             //out of bounds deletion
-            if(portal.isOutOfBounds(GROUND_Y)){
+            if (portal.isOutOfBounds(GROUND_Y)) {
                 //delete portal
                 gameObjects.getChildren().remove(portal.getImage());
                 portal = null;
             }
-            //collision detection
-            if(portal.isCollidingWith(player.getImage())){
+        }
+        //collision detection
+        if(portal!=null) {
+            if (portal.isCollidingWith(player.getImage())) {
                 //change planet
                 changePlanet();
                 //delete portal
                 gameObjects.getChildren().remove(portal.getImage());
                 portal = null;
             }
-
-
         }
+
     }
 
     //PLAYER METHODS
@@ -623,13 +622,13 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        int METEO_WIDTH = 38 * 2;
-        int METEO_HEIGHT = 32 * 2;
-        obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
+        int METEO_WIDTH = 35 * 3;
+        int METEO_HEIGHT = 10 * 3;
+        obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
-        imgV.setViewport(new Rectangle2D(0,0,38,32));
+        imgV.setViewport(new Rectangle2D(0,((int)(Math.random()*10))*10,35,10));
 
         //add imageView to game objects
         gameObjects.getChildren().add(imgV);
@@ -640,10 +639,13 @@ public class AstroJump extends Application {
         obstacle.setX(screenWidth);//CHECK
     }
     public void initializeStar(){
-        //changin lin
-        star = new Star(new ImageView("StarSheet.png"),52,32, 0, 0, 0);
+        //create star
+        star = new Star(new ImageView("StarAnimationSheet.png"),58,60, 0, 0, 0);
+        //get random index 0-1
+        int index = (int)(Math.round(Math.random()));
+        //randomize the star
+        star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
 
-        //star = new Star(new ImageView("test"),55,48, 0, 0, 0);
         star.setX(screenWidth);
     }
     public void createBackground(){
@@ -655,6 +657,13 @@ public class AstroJump extends Application {
         star.setSpeedX(speedX);
         star.setSpeedY(speedY);
         star.setScoreValue(scoreValue);
+
+        //get random index 0-1
+        int index = (int)(Math.round(Math.random()));
+        //randomize the star image
+        star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
+
+        System.out.println("Star spawned");
     }
 
     //PORTAL METHOD
@@ -708,9 +717,12 @@ public class AstroJump extends Application {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
             //System.out.println(scoreValue + "scoreValue");
-            spawnStar(screenWidth,Math.random()*(GROUND_Y-star.getHeight()),objectSpeed,0,scoreValue);
+            spawnStar(Math.random()*(screenWidth-star.getWidth()),Math.random()*(GROUND_Y-star.getHeight()),0,0,scoreValue);
+
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
+
+            System.out.println("Score value: "+ scoreValue);
         }
 
 
@@ -729,11 +741,12 @@ public class AstroJump extends Application {
         }
     }
     public void randomizeStarSpawnTime(){
-        starSpawnIntervalNano = (long)(((Math.random()*35)+10)*1_000_000_000);
+        starSpawnIntervalNano = (long)(((Math.random()*5)+10)*1_000_000_000);
     }
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
-        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - spawnIntervalDecrement); // Don't go below 0.2 seconds
+        long SPAWN_TIME_DECREMENT = 5_000;
+        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT); // Don't go below 0.2 seconds
     }
     private void updateGameObjectsSpeed(){
         //update background
@@ -743,8 +756,8 @@ public class AstroJump extends Application {
             obstacles.get(i).setSpeedX(objectSpeed);
         }
         //update star
-        if(star.getSpeedX()!=0)
-            star.setSpeedX(objectSpeed);
+       // if(star.getSpeedX()!=0)
+            //star.setSpeedX(objectSpeed);
 
     }
 
