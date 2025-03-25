@@ -110,4 +110,16 @@ public class Net implements Collidable{
         return (System.currentTimeMillis() - this.CREATION_TIME) /1000.0;
     }
 
+    public double getINITIAL_SPEED_X(){
+        return this.INITIAL_SPEED_X;
+    }
+    public double getINITIAL_SPEED_Y(){
+        return this.INITIAL_SPEED_Y;
+    }
+    public double getINITIAL_POS_X(){
+        return this.INITIAL_POS_X;
+    }
+    public double getINITIAL_POS_Y(){
+        return this.INITIAL_POS_Y;
+    }
 }

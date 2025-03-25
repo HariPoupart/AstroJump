@@ -13,6 +13,8 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -24,6 +26,11 @@ import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -72,6 +79,7 @@ public class AstroJump extends Application {
 
     //net
     private ArrayList<Net> nets = new ArrayList<>();
+    Path parabolaPath;
 
     //Background
     Background background;
@@ -87,14 +95,14 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("mercury", -567f,-600f,300f);
-        Planet venus = new Planet("venus",-1382f,-900f,300f);
-        Planet earth = new Planet("earth",-1524f,-1000f,300f);
-        Planet mars = new Planet("mars",-574f,-600f,300f);
-        Planet jupiter = new Planet("jupiter",-3596f,-1500f,300f);
-        Planet saturn = new Planet("saturn",-1396f,-900f,300f);
-        Planet uranus = new Planet("uranus",-1355f,-1000f,300f);
-        Planet neptune = new Planet("neptune",-1707f,-1000f,300f);
+        Planet mercury = new Planet("mercury", -567f,-600f,600f);
+        Planet venus = new Planet("venus",-1382f,-900f,600f);
+        Planet earth = new Planet("earth",-1524f,-1000f,600f);
+        Planet mars = new Planet("mars",-574f,-600f,600f);
+        Planet jupiter = new Planet("jupiter",-3596f,-1500f,600f);
+        Planet saturn = new Planet("saturn",-1396f,-900f,600f);
+        Planet uranus = new Planet("uranus",-1355f,-1000f,600f);
+        Planet neptune = new Planet("neptune",-1707f,-1000f,600f);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -352,6 +360,10 @@ public class AstroJump extends Application {
         gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
+        // Create a path for the parabola
+        //parabolaPath = createParabolaPath(-1,0,0,0);
+        //gameObjects.getChildren().add(parabolaPath);
+
         //initialize the next star spawning
         randomizeStarSpawnTime();
 
@@ -374,10 +386,21 @@ public class AstroJump extends Application {
                 player.setY(GROUND_Y-1);
             }
         });
+
         // when mouse is clicked create a net
         game.setOnMouseClicked(event -> {
-            createNet(event.getX(),event.getY(),-160,400);
-            //createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),400);
+            createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
+            //draw line
+            // Create a path for the parabola
+            Net net = nets.getLast();
+            double k = (Math.pow(net.getINITIAL_SPEED_Y(),2)/(2*net.getAccelerationY()))+net.getINITIAL_POS_Y();
+            double h = net.getINITIAL_SPEED_X()*net.getINITIAL_SPEED_Y()/net.getAccelerationY()+net.getINITIAL_POS_X();
+            System.out.println("k: "+k);
+            System.out.println("h: "+h);
+            Circle test = new Circle(h,k,10, Color.WHITE);
+            gameObjects.getChildren().add(test);
+            parabolaPath = createParabolaPath(-1,200,200,0);
+            gameObjects.getChildren().add(parabolaPath);
         });
 
         primaryStage.setScene(game);
@@ -666,6 +689,35 @@ public class AstroJump extends Application {
         System.out.println("Star spawned");
     }
 
+    private static final double SCALE = 1; // Scale factor for visualization
+
+    private Path createParabolaPath(double a, double h, double k, double startX) {
+        Path path = new Path();
+        path.setStroke(Color.BLUE);
+        path.setStrokeWidth(2);
+        path.setFill(null); // No fill, only the curve
+
+        double centerX = 0;
+        double centerY = screenHeight;
+
+        double prevX = startX;
+        double prevY = a * Math.pow(prevX - h, 2) + k;
+
+        path.getElements().add(new MoveTo(centerX + prevX * SCALE, centerY - prevY * SCALE));
+
+        for (double x = startX + 0.5; x <= 5; x += 0.5) {
+            double y = a * Math.pow(x - h, 2) + k;
+            double controlX = centerX + (prevX + x) / 2 * SCALE;
+            double controlY = centerY - (prevY + y) / 2 * SCALE;
+
+            path.getElements().add(new QuadCurveTo(controlX, controlY, centerX + x * SCALE, centerY - y * SCALE));
+
+            prevX = x;
+            prevY = y;
+        }
+
+        return path;
+    }
     //PORTAL METHOD
     private void portalSpawner() {
         levelChanger = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
