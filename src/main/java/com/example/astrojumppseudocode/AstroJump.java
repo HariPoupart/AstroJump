@@ -13,8 +13,6 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,13 +25,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.QuadCurveTo;
+import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +75,8 @@ public class AstroJump extends Application {
 
     //net
     private ArrayList<Net> nets = new ArrayList<>();
-    Path parabolaPath;
+    private Path parabolaPath;
+    private boolean updatePath = false;
 
     //Background
     Background background;
@@ -387,20 +384,13 @@ public class AstroJump extends Application {
             }
         });
 
-        // when mouse is clicked create a net
-        game.setOnMouseClicked(event -> {
+        // when mouse is released create a net
+        game.setOnMouseReleased(event -> {
+            updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
-            //draw line
-            // Create a path for the parabola
-            Net net = nets.getLast();
-            double k = (Math.pow(net.getINITIAL_SPEED_Y(),2)/(2*net.getAccelerationY()))+net.getINITIAL_POS_Y();
-            double h = net.getINITIAL_SPEED_X()*net.getINITIAL_SPEED_Y()/net.getAccelerationY()+net.getINITIAL_POS_X();
-            System.out.println("k: "+k);
-            System.out.println("h: "+h);
-            Circle test = new Circle(h,k,10, Color.WHITE);
-            gameObjects.getChildren().add(test);
-            parabolaPath = createParabolaPath(-1,200,200,0);
-            gameObjects.getChildren().add(parabolaPath);
+        });
+        game.setOnMousePressed(event -> {
+            updatePath = true;
         });
 
         primaryStage.setScene(game);
@@ -523,7 +513,7 @@ public class AstroJump extends Application {
                 portal = null;
             }
         }
-        //collision detection
+        //collision detection for portal
         if(portal!=null) {
             if (portal.isCollidingWith(player.getImage())) {
                 //change planet
@@ -533,6 +523,49 @@ public class AstroJump extends Application {
                 portal = null;
             }
         }
+
+        //Path updated
+        if(updatePath){
+            //get mouse position
+            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+            Point point = pointerInfo.getLocation();
+            double mouseX = point.getX();
+            double mouseY = point.getY();
+
+            //create net for the calculations
+            createNet(mouseX,mouseY,planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
+
+            //draw line
+            // Create a path for the parabola
+            Net net = nets.getLast();
+            double k = (Math.pow(net.getINITIAL_SPEED_Y(),2)/(2*net.getAccelerationY()))+net.getINITIAL_POS_Y();
+            double h = net.getINITIAL_SPEED_X()*net.getINITIAL_SPEED_Y()/net.getAccelerationY()+net.getINITIAL_POS_X();
+            System.out.println("h: "+h);
+            System.out.println("k: "+k);
+
+            //calculate a
+            //coordinates of the player throw point
+            double pX = net.getX()+net.getWidth();
+            double pY = net.getY()+0.5*net.getHeight();
+
+            double a = (pY-k)/Math.pow((pX-h),2);
+
+            System.out.println("a: "+a);
+
+            //parabolaPath = createParabolaApproximation(net.getAccelerationY(),h,k);
+            parabolaPath = createParabola(parabolaPath,a,h,k,net.getX()+net.getWidth());
+
+            //add parabolaPath if it isn't already there
+            if(!gameObjects.getChildren().contains(parabolaPath))
+                gameObjects.getChildren().add(parabolaPath);
+
+            //delete net for calculations
+            gameObjects.getChildren().remove(net.getImage());
+            net.setImage(null);
+            net = null;
+            nets.remove(nets.getLast());
+        }
+
 
     }
 
@@ -689,31 +722,31 @@ public class AstroJump extends Application {
         System.out.println("Star spawned");
     }
 
-    private static final double SCALE = 1; // Scale factor for visualization
+    //path maker
+    private Path createParabola(Path path,double a, double h, double k,double startX) {
+        //reset the path is if it doesn't exist already
+        if(path==null)
+            path = new Path();
+        else
+            path.getElements().clear();
 
-    private Path createParabolaPath(double a, double h, double k, double startX) {
-        Path path = new Path();
-        path.setStroke(Color.BLUE);
+        // Style the path as a white dotted line
+        path.setStroke(Color.WHITE);
         path.setStrokeWidth(2);
-        path.setFill(null); // No fill, only the curve
+        path.getStrokeDashArray().addAll(5.0, 5.0); // This creates the dotted effect
+        path.setFill(null); // Important for a line (not filled)
 
-        double centerX = 0;
-        double centerY = screenHeight;
+        double endX = screenWidth;    // End at screen width
+        double step = 1;          // Smaller step = smoother curve
 
-        double prevX = startX;
-        double prevY = a * Math.pow(prevX - h, 2) + k;
+        // Move to starting point
+        double startY = a * Math.pow(startX - h, 2) + k;
+        path.getElements().add(new MoveTo(startX, startY));
 
-        path.getElements().add(new MoveTo(centerX + prevX * SCALE, centerY - prevY * SCALE));
-
-        for (double x = startX + 0.5; x <= 5; x += 0.5) {
+        // Create the parabola by adding line segments
+        for (double x = startX + step; x <= endX; x += step) {
             double y = a * Math.pow(x - h, 2) + k;
-            double controlX = centerX + (prevX + x) / 2 * SCALE;
-            double controlY = centerY - (prevY + y) / 2 * SCALE;
-
-            path.getElements().add(new QuadCurveTo(controlX, controlY, centerX + x * SCALE, centerY - y * SCALE));
-
-            prevX = x;
-            prevY = y;
+            path.getElements().add(new LineTo(x, y));
         }
 
         return path;
