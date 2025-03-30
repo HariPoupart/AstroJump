@@ -77,7 +77,8 @@ public class AstroJump extends Application {
     private ArrayList<Net> nets = new ArrayList<>();
     private Path parabolaPath;
     private boolean updatePath = false;
-
+    private double lastKnownMouseX;
+    private double lastKnownMouseY;
     //Background
     Background background;
 
@@ -223,10 +224,10 @@ public class AstroJump extends Application {
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
-                btStart.setOnAction(e -> MenuController.startButton());
-                btTutorial.setOnAction(e -> MenuController.tutorialButton());
-                btSettings.setOnAction(e -> MenuController.settingButton());
-                btExit.setOnAction(e -> MenuController.exitButton());
+        btStart.setOnAction(e -> MenuController.startButton());
+        btTutorial.setOnAction(e -> MenuController.tutorialButton());
+        btSettings.setOnAction(e -> MenuController.settingButton());
+        btExit.setOnAction(e -> MenuController.exitButton());
         //listeners for action events in MenuController
 
         startLoopListener.addListener(e -> {
@@ -367,14 +368,14 @@ public class AstroJump extends Application {
         //event handlers on scene
         //escape event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-                    if (event.getCode() == KeyCode.ESCAPE) {
-                        try {
-                            start(primaryStage);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
+            if (event.getCode() == KeyCode.ESCAPE) {
+                try {
+                    start(primaryStage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -386,11 +387,21 @@ public class AstroJump extends Application {
 
         // when mouse is released create a net
         game.setOnMouseReleased(event -> {
+            System.out.println("Mouse X "+event.getX()+" "+lastKnownMouseX);
+            System.out.println("Mouse Y "+event.getY()+" "+lastKnownMouseY);
             updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
         game.setOnMousePressed(event -> {
             updatePath = true;
+            //update mouse positions
+            lastKnownMouseX = event.getX();
+            lastKnownMouseY = event.getY();
+        });
+        game.setOnMouseDragged(event -> {
+            //update mouse
+            lastKnownMouseX = event.getX();
+            lastKnownMouseY = event.getY();
         });
 
         primaryStage.setScene(game);
@@ -403,14 +414,14 @@ public class AstroJump extends Application {
                 // Calculate the time elapsed since the last frame
                 if(stopAnimationTimer) {
                     System.out.println("STOPPING ANIMATION");
-                this.stop();
+                    this.stop();
                 }
                 if (lastUpdateMethodTime > 0) {
                     long elapsedTime = now - lastUpdateMethodTime;
                     // If enough time has passed, call update and save lastUpdateTime
                     if (elapsedTime >= NANOSECONDS_PER_FRAME) {
                         //update score
-                        score += (-0.0000000001) * elapsedTime * objectSpeed;
+                        score += (long) ((-0.0000000001) * elapsedTime * objectSpeed);
                         update(elapsedTime / 1_000_000_000.0, primaryStage); // Convert nanoseconds to seconds
                         gameObjectSpawner(now);
                         lastUpdateMethodTime = now;
@@ -458,8 +469,6 @@ public class AstroJump extends Application {
                 gameObjects.getChildren().remove(net.getImage());
                 nets.remove(net);
             }
-
-            //spawn obstacles
         }
 
         //OBSTACLE updates
@@ -526,44 +535,34 @@ public class AstroJump extends Application {
 
         //Path updated
         if(updatePath){
-            //get mouse position
-            PointerInfo pointerInfo = MouseInfo.getPointerInfo();
-            Point point = pointerInfo.getLocation();
-            double mouseX = point.getX();
-            double mouseY = point.getY();
+            //calculate the inital position of the net
+            double initialPosX = player.getX()+player.getWidth();
+            double initialPosY = player.getY()+(0.5*player.getHeight())-(Net.WIDTH*0.5);
 
-            //create net for the calculations
-            createNet(mouseX,mouseY,planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
+            //calculate the angle of the throw
+            double angle = Math.atan((lastKnownMouseY-initialPosY)/(lastKnownMouseX-initialPosX));
+
+            //calculate the speed in each axis
+            double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
+            double initialSpeedY = planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
+            //get acceleration
+            double accelerationY = planetArray.get(currentPlanetInt).getGravity();
 
             //draw line
             // Create a path for the parabola
-            Net net = nets.getLast();
-            double k = (Math.pow(net.getINITIAL_SPEED_Y(),2)/(2*net.getAccelerationY()))+net.getINITIAL_POS_Y();
-            double h = net.getINITIAL_SPEED_X()*net.getINITIAL_SPEED_Y()/net.getAccelerationY()+net.getINITIAL_POS_X();
-            System.out.println("h: "+h);
-            System.out.println("k: "+k);
+            double k = (Math.pow(initialSpeedY,2)/(2*accelerationY))+initialPosY;
+            double h = initialSpeedX*initialSpeedY/accelerationY+initialPosX;
 
             //calculate a
-            //coordinates of the player throw point
-            double pX = net.getX()+net.getWidth();
-            double pY = net.getY()+0.5*net.getHeight();
-
-            double a = (pY-k)/Math.pow((pX-h),2);
-
-            System.out.println("a: "+a);
+            double a = (initialPosY-k)/Math.pow((initialPosX-h),2);
 
             //parabolaPath = createParabolaApproximation(net.getAccelerationY(),h,k);
-            parabolaPath = createParabola(parabolaPath,a,h,k,net.getX()+net.getWidth());
+            parabolaPath = createParabola(parabolaPath,a,h,k,initialPosX);
 
             //add parabolaPath if it isn't already there
             if(!gameObjects.getChildren().contains(parabolaPath))
                 gameObjects.getChildren().add(parabolaPath);
 
-            //delete net for calculations
-            gameObjects.getChildren().remove(net.getImage());
-            net.setImage(null);
-            net = null;
-            nets.remove(nets.getLast());
         }
 
 
@@ -740,12 +739,12 @@ public class AstroJump extends Application {
         double step = 1;          // Smaller step = smoother curve
 
         // Move to starting point
-        double startY = a * Math.pow(startX - h, 2) + k;
+        double startY = a * Math.pow(startX - h, 2) + k+ Net.WIDTH*0.5;
         path.getElements().add(new MoveTo(startX, startY));
 
         // Create the parabola by adding line segments
         for (double x = startX + step; x <= endX; x += step) {
-            double y = a * Math.pow(x - h, 2) + k;
+            double y = a * Math.pow(x - h, 2) + k + Net.WIDTH*0.5;
             path.getElements().add(new LineTo(x, y));
         }
 
@@ -841,8 +840,8 @@ public class AstroJump extends Application {
             obstacles.get(i).setSpeedX(objectSpeed);
         }
         //update star
-       // if(star.getSpeedX()!=0)
-            //star.setSpeedX(objectSpeed);
+        // if(star.getSpeedX()!=0)
+        //star.setSpeedX(objectSpeed);
 
     }
 
