@@ -836,8 +836,8 @@ public class AstroJump extends Application {
         //update background
         background.setSpeedX(objectSpeed);
         //update obstacles
-        for(int i =0;i<obstacles.size();i++){
-            obstacles.get(i).setSpeedX(objectSpeed);
+        for (SimpleMovingImage obstacle : obstacles) {
+            obstacle.setSpeedX(objectSpeed);
         }
         //update star
         // if(star.getSpeedX()!=0)
