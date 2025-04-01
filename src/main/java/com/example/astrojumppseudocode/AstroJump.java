@@ -444,7 +444,10 @@ public class AstroJump extends Application {
         objectSpeed = -500;
         if(gameObjects!=null)
             gameObjects.getChildren().clear();
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
+
+        //create label
+        Label label = new Label("HELLO WORLD!");
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(),label);
 
         //clear nets, obstacles
         nets.clear();
@@ -502,7 +505,6 @@ public class AstroJump extends Application {
             public void handle(long now) {
                 // Calculate the time elapsed since the last frame
                 if(stopAnimationTimer) {
-                    System.out.println("STOPPING ANIMATION");
                     this.stop();
                 }
                 if (lastUpdateMethodTime > 0) {
@@ -571,7 +573,6 @@ public class AstroJump extends Application {
 
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
-                System.out.println(obstacle.getX()+" "+obstacle.getY()+" "+obstacle.getHeight());
                 //game over methods
                 IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
                 stopAnimationTimer = true;
@@ -811,8 +812,6 @@ public class AstroJump extends Application {
         int index = (int)(Math.round(Math.random()));
         //randomize the star image
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
-
-        System.out.println("Star spawned");
     }
 
     //path maker
@@ -894,13 +893,11 @@ public class AstroJump extends Application {
         if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
-            //System.out.println(scoreValue + "scoreValue");
+
             spawnStar(Math.random()*(screenWidth-star.getWidth()),Math.random()*(GROUND_Y-star.getHeight()),0,0,scoreValue);
 
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
-
-            System.out.println("Score value: "+ scoreValue);
         }
 
 
