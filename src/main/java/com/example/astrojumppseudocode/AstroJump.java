@@ -15,6 +15,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
@@ -97,14 +98,14 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("mercury", -567f,-600f,600f);
-        Planet venus = new Planet("venus",-1382f,-900f,600f);
-        Planet earth = new Planet("earth",-1524f,-1000f,600f);
-        Planet mars = new Planet("mars",-574f,-600f,600f);
-        Planet jupiter = new Planet("jupiter",-3596f,-1500f,600f);
-        Planet saturn = new Planet("saturn",-1396f,-900f,600f);
-        Planet uranus = new Planet("uranus",-1355f,-1000f,600f);
-        Planet neptune = new Planet("neptune",-1707f,-1000f,600f);
+        Planet mercury = new Planet("mercury", -567f,-600f,600f,0,0);
+        Planet venus = new Planet("venus",-1382f,-900f,600f,-6,0);
+        Planet earth = new Planet("earth",-1524f,-1000f,600f,-8,0);
+        Planet mars = new Planet("mars",-574f,-600f,600f,0,0);
+        Planet jupiter = new Planet("jupiter",-3596f,-1500f,600f,0,0);
+        Planet saturn = new Planet("saturn",-1396f,-900f,600f,-5,-16.5);
+        Planet uranus = new Planet("uranus",-1355f,-1000f,600f,-7.5,-2.5);
+        Planet neptune = new Planet("neptune",-1707f,-1000f,600f,0,0);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -172,6 +173,8 @@ public class AstroJump extends Application {
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
         gridPane.setVgap(5);
+
+        //
 
         // Mercury
         VBox vbMercury = new VBox();
@@ -438,6 +441,7 @@ public class AstroJump extends Application {
 
         //game scene setup
         gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
+
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         // Create a path for the parabola
@@ -563,7 +567,7 @@ public class AstroJump extends Application {
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
                 //game over methods
-                IOMethods saveData = new IOMethods(score, IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
+                IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
                 System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
                 showGameOverScreen(stage);
