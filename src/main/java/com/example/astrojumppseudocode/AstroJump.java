@@ -424,7 +424,6 @@ public class AstroJump extends Application {
     }
 
     protected void startGameLoop(Stage primaryStage) {
-        objectSpeed = -500;
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -434,19 +433,24 @@ public class AstroJump extends Application {
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
-        //start planetChange method
+
+        //start spawning portals method
         portalSpawner();
-        //resetting all game variables
+
+        //start all timers
         stopAnimationTimer = false;
 
         //game scene setup
+        objectSpeed = -500;
+        if(gameObjects!=null)
+            gameObjects.getChildren().clear();
         gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
 
-        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
+        //clear nets, obstacles
+        nets.clear();
+        obstacles.clear();
 
-        // Create a path for the parabola
-        //parabolaPath = createParabolaPath(-1,0,0,0);
-        //gameObjects.getChildren().add(parabolaPath);
+        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //initialize the next star spawning
         randomizeStarSpawnTime();
@@ -467,14 +471,13 @@ public class AstroJump extends Application {
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
                 player.setIsJumping(true);
-                player.setY(GROUND_Y-1);
+                player.setY(GROUND_Y-1-player.getHeight());
             }
         });
 
         // when mouse is released create a net
         game.setOnMouseReleased(event -> {
-            System.out.println("Mouse X "+event.getX()+" "+lastKnownMouseX);
-            System.out.println("Mouse Y "+event.getY()+" "+lastKnownMouseY);
+            parabolaPath.getElements().clear();
             updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
@@ -544,7 +547,7 @@ public class AstroJump extends Application {
                 if(net.isCollidingWith(star.getImage())){
                     player.addOneStar();
                     //modify score
-
+                    score+= (long) star.getScoreValue();
                     //reset star
                     spawnStar(screenWidth,0,0,0,0);
                 }
@@ -554,6 +557,8 @@ public class AstroJump extends Application {
                 //delete game object
                 gameObjects.getChildren().remove(net.getImage());
                 nets.remove(net);
+                net=null;
+                i--;
             }
         }
 
@@ -566,11 +571,12 @@ public class AstroJump extends Application {
 
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
+                System.out.println(obstacle.getX()+" "+obstacle.getY()+" "+obstacle.getHeight());
                 //game over methods
                 IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
-                System.out.print("GAME OVER!");
                 stopAnimationTimer = true;
-                showGameOverScreen(stage);
+                player.setAnimationState(Player.DEAD);
+                //showGameOverScreen(stage);
             }
 
             //if the obstacle is out of bounds delete it
@@ -578,6 +584,7 @@ public class AstroJump extends Application {
                 gameObjects.getChildren().remove(obstacle.getImage());
                 obstacle=null;
                 obstacles.remove(i);
+                i--;
             }
         }
 
@@ -586,6 +593,7 @@ public class AstroJump extends Application {
 
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
+            score+=(long)star.getScoreValue();
             //reset star
             spawnStar(screenWidth,0,0,0,0);
         }
@@ -767,17 +775,17 @@ public class AstroJump extends Application {
         int METEO_HEIGHT = 10 * 3;
         obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
-        //change image view
-        ImageView imgV = obstacles.getLast().getImage();
-        imgV.setViewport(new Rectangle2D(0,((int)(Math.random()*10))*10,35,10));
-
-        //add imageView to game objects
-        gameObjects.getChildren().add(imgV);
-
         //set obstacle to the right position
         SimpleMovingImage obstacle = obstacles.getLast();
+
+        //change image view
+        ImageView imgV = obstacle.getImage();
+        imgV.setViewport(new Rectangle2D(0,(Math.round(Math.random()))*10,35,10));
+
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
         obstacle.setX(screenWidth);//CHECK
+        //add imageView to game objects
+        gameObjects.getChildren().add(obstacles.getLast().getImage());
     }
     public void initializeStar(){
         //create star
