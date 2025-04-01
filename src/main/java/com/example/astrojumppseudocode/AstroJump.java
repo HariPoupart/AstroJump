@@ -13,11 +13,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,6 +29,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -68,6 +70,8 @@ public class AstroJump extends Application {
 
     //GAME OBJECTS
     private Group gameObjects;
+    private Label lbGameInfo;
+    private Text txGameOver;
 
     //player
     private Player player;
@@ -349,10 +353,21 @@ public class AstroJump extends Application {
         objectSpeed = -500;
         if(gameObjects!=null)
             gameObjects.getChildren().clear();
+        score = 0;
 
-        //create label
-        Label label = new Label("HELLO WORLD!");
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(),label);
+        //initialise lbGameInfo
+        lbGameInfo = new Label( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        lbGameInfo.setTextFill(Color.LIGHTGRAY);
+        lbGameInfo.setAlignment(Pos.TOP_LEFT);
+        txGameOver = new Text("");
+        txGameOver.setFont(Font.font(35));
+        txGameOver.setFill(Color.LIGHTGRAY);
+        txGameOver.setX(35);
+        txGameOver.setY(170);
+        txGameOver.setTextAlignment(CENTER);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), lbGameInfo, txGameOver);
+
 
         //clear nets, obstacles
         nets.clear();
@@ -370,6 +385,15 @@ public class AstroJump extends Application {
                 try {
                     start(primaryStage);
                 } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.R) {
+                try {
+                    startGameLoop(primaryStage);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -435,6 +459,9 @@ public class AstroJump extends Application {
         objectSpeed += (float) (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
 
+        //update lbGameInfo
+        lbGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+
         //update PLAYER jump
         if(player.getIsJumping()){
             playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
@@ -482,6 +509,7 @@ public class AstroJump extends Application {
                 IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
                 stopAnimationTimer = true;
                 player.setAnimationState(Player.DEAD);
+                txGameOver.setText("GAME OVER\nPRESS ESCAPE TO EXIT TO MAIN MENU OR R TO RESTART");
                 //showGameOverScreen(stage);
             }
 
