@@ -128,10 +128,12 @@ public class AstroJump extends Application {
         vBox1.setSpacing(20);
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
-        TextField tfScore = new TextField();
+        TextField tfScore = new TextField(IOMethods.getHighScore() + "");
+        tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
-        TextField tfStars = new TextField();
+        TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
+        tfStars.setAlignment(Pos.CENTER);
         tfStars.setEditable(false);
         vBox1.getChildren().addAll(lbScore, tfScore, lbStars, tfStars);
         borderPane.setLeft(vBox1);
@@ -145,6 +147,7 @@ public class AstroJump extends Application {
         Button btStart = new Button("Start");
         btStart.setPrefWidth(150);
         btStart.setPrefHeight(30);
+
 
         // Tutorial button
         Button btTutorial = new Button("Tutorial");
@@ -160,6 +163,7 @@ public class AstroJump extends Application {
         Button btExit = new Button("Exit");
         btExit.setPrefWidth(150);
         btExit.setPrefHeight(30);
+
         vBox2.getChildren().addAll(btStart, btTutorial, btSettings, btExit);
         borderPane.setCenter(vBox2);
 
@@ -208,7 +212,6 @@ public class AstroJump extends Application {
 
         vBox3.getChildren().addAll(lbPlanets, gridPane);
         borderPane.setRight(vBox3);
-
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
@@ -230,9 +233,6 @@ public class AstroJump extends Application {
             showSettings(primaryStage);
             settingsListener = new SimpleBooleanProperty(false);
         });
-
-        //link to FXML file
-        FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
         //music from Menu
         Media media;
@@ -257,9 +257,11 @@ public class AstroJump extends Application {
         }
 
         //scene
-        StackPane generalPane = new StackPane(pane, borderPane);
-
+        Image menuImage = new Image("file:menuScreen.bmp");
+        borderPane.setBackground(new javafx.scene.layout.Background(new BackgroundImage(menuImage,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(screenWidth,screenHeight,true,true,true,true))));
+        StackPane generalPane = new StackPane(pane,borderPane);
         Scene scene = new Scene(generalPane,screenWidth,screenHeight);
+        generalPane.requestFocus();
 
         //create player
         createPlayer();
