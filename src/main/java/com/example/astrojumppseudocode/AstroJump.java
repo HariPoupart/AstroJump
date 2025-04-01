@@ -98,14 +98,14 @@ public class AstroJump extends Application {
 
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("mercury", -567f,-600f,600f,0,0);
-        Planet venus = new Planet("venus",-1382f,-900f,600f,-6,0);
-        Planet earth = new Planet("earth",-1524f,-1000f,600f,-8,0);
-        Planet mars = new Planet("mars",-574f,-600f,600f,0,0);
-        Planet jupiter = new Planet("jupiter",-3596f,-1500f,600f,0,0);
-        Planet saturn = new Planet("saturn",-1396f,-900f,600f,-5,-16.5);
-        Planet uranus = new Planet("uranus",-1355f,-1000f,600f,-7.5,-2.5);
-        Planet neptune = new Planet("neptune",-1707f,-1000f,600f,0,0);
+        Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
+        Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
+        Planet earth = new Planet("Earth",-1524f,-1000f,600f,-8,0,30);
+        Planet mars = new Planet("Mars",-574f,-600f,600f,0,0,30);
+        Planet jupiter = new Planet("Jupiter",-3596f,-1500f,600f,0,0,30);
+        Planet saturn = new Planet("Saturn",-1396f,-900f,600f,-5,-16.5,64);
+        Planet uranus = new Planet("Uranus",-1355f,-1000f,600f,-7.5,-2.5,36);
+        Planet neptune = new Planet("Neptune",-1707f,-1000f,600f,0,0,30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -174,134 +174,37 @@ public class AstroJump extends Application {
         gridPane.setHgap(10);
         gridPane.setVgap(5);
 
-        //
+        //Setting planet image
+        for(int i = 0; i < 8; i++) {
+            VBox vbPlanet = new VBox();
+            vbPlanet.setAlignment(Pos.CENTER);
+            vbPlanet.setSpacing(5);
+            ImageView planetImage = new ImageView("file:" + planetArray.get(i).toString() + ".png");
+            planetImage.setFitWidth(planetArray.get(i).getSize());
+            planetImage.setFitHeight(planetArray.get(i).getSize());
+            ColorAdjust blackout = new ColorAdjust();
+            blackout.setBrightness(-1);
+            planetImage.setTranslateX(planetArray.get(i).getSetTranslateX());
 
-        // Mercury
-        VBox vbMercury = new VBox();
-        vbMercury.setAlignment(Pos.CENTER);
-        vbMercury.setSpacing(5);
-        ImageView mercuryImage = new ImageView("file:Mercury.png");
-        mercuryImage.setFitWidth(30);
-        mercuryImage.setFitHeight(30);
-        ColorAdjust blackout = new ColorAdjust();
-        blackout.setBrightness(-1.0);
-        mercuryImage.setEffect(blackout);
-        Tooltip tooltipMercury = new Tooltip("Gravitational acceleration\nof Mercury: 3.70 m/s²");
-        tooltipMercury.setTextAlignment(CENTER);
-        Tooltip.install(mercuryImage, tooltipMercury);
-        //Tooltip.uninstall(mercuryImage, tooltipMercury);
-        // Label lbMercury = new Label("Mercury");
-        Label lbMercury = new Label("???");
-        vbMercury.getChildren().addAll(mercuryImage, lbMercury);
-        gridPane.add(vbMercury, 0, 0);
-
-        // Venus Image
-        VBox vbVenus = new VBox();
-        vbVenus.setAlignment(Pos.CENTER);
-        vbVenus.setSpacing(5);
-        ImageView venusImage = new ImageView("file:Venus.png");
-        venusImage.setFitWidth(30);
-        venusImage.setFitHeight(30);
-        venusImage.setTranslateX(-6);
-        Tooltip tooltipVenus = new Tooltip("Gravitational acceleration\nof Venus: 8.87 m/s²");
-        tooltipVenus.setTextAlignment(CENTER);
-        Tooltip.install(venusImage, tooltipVenus);
-        Label lbVenus = new Label("Venus");
-        lbVenus.setTranslateX(-6);
-        vbVenus.getChildren().addAll(venusImage, lbVenus);
-        gridPane.add(vbVenus, 1, 0);
-
-        // Earth Image
-        VBox vbEarth = new VBox();
-        vbEarth.setAlignment(Pos.CENTER);
-        vbEarth.setSpacing(5);
-        ImageView earthImage = new ImageView("file:Earth.png");
-        earthImage.setFitWidth(30);
-        earthImage.setFitHeight(30);
-        earthImage.setTranslateX(-8);
-        Tooltip tooltipEarth = new Tooltip("Gravitational acceleration\nof Earth: 9.807 m/s²");
-        tooltipEarth.setTextAlignment(CENTER);
-        Tooltip.install(earthImage, tooltipEarth);
-        Label lbEarth = new Label("Earth");
-        lbEarth.setTranslateX(-8);
-        vbEarth.getChildren().addAll(earthImage, lbEarth);
-        gridPane.add(vbEarth, 2, 0);
-
-        // Mars Image
-        VBox vbMars = new VBox();
-        vbMars.setAlignment(Pos.CENTER);
-        vbMars.setSpacing(5);
-        ImageView marsImage = new ImageView("file:Mars.png");
-        marsImage.setFitWidth(30);
-        marsImage.setFitHeight(30);
-        Tooltip tooltipMars = new Tooltip("Gravitational acceleration\nof Mars: 3.73 m/s²");
-        tooltipMars.setTextAlignment(CENTER);
-        Tooltip.install(marsImage, tooltipMars);
-        Label lbMars = new Label("Mars");
-        vbMars.getChildren().addAll(marsImage, lbMars);
-        gridPane.add(vbMars, 3, 0);
-
-        // Jupiter Image
-        VBox vbJupiter = new VBox();
-        vbJupiter.setAlignment(Pos.CENTER);
-        vbJupiter.setSpacing(5);
-        ImageView jupiterImage = new ImageView("file:Jupiter.png");
-        jupiterImage.setFitWidth(30);
-        jupiterImage.setFitHeight(30);
-        Tooltip tooltipJupiter = new Tooltip("Gravitational acceleration\nof Jupiter: 24.79 m/s²");
-        tooltipJupiter.setTextAlignment(CENTER);
-        Tooltip.install(jupiterImage, tooltipJupiter);
-        Label lbJupiter = new Label("Jupiter");
-        vbJupiter.getChildren().addAll(jupiterImage, lbJupiter);
-        gridPane.add(vbJupiter, 0, 1);
-
-        // Saturn Image
-        VBox vbSaturn = new VBox();
-        vbSaturn.setAlignment(Pos.CENTER);
-        vbSaturn.setSpacing(5);
-        ImageView saturnImage = new ImageView("file:Saturn.png");
-        saturnImage.setFitWidth(64);
-        saturnImage.setFitHeight(64);
-        saturnImage.setTranslateX(-5);
-        Tooltip tooltipSaturn = new Tooltip("Gravitational acceleration\nof Saturn: 10.44 m/s²");
-        tooltipSaturn.setTextAlignment(CENTER);
-        Tooltip.install(saturnImage, tooltipSaturn);
-        Label lbSaturn = new Label("Saturn");
-        lbSaturn.setTranslateX(-5);
-        lbSaturn.setTranslateY(-16.5);
-        vbSaturn.getChildren().addAll(saturnImage, lbSaturn);
-        gridPane.add(vbSaturn, 1, 1);
-
-        // Uranus Image
-        VBox vbUranus = new VBox();
-        vbUranus.setAlignment(Pos.CENTER);
-        vbUranus.setSpacing(5);
-        ImageView uranusImage = new ImageView("file:Uranus.png");
-        uranusImage.setFitWidth(36);
-        uranusImage.setFitHeight(36);
-        uranusImage.setTranslateX(-7.5);
-        Tooltip tooltipUranus = new Tooltip("Gravitational acceleration\nof Uranus: 8.87 m/s²");
-        tooltipUranus.setTextAlignment(CENTER);
-        Tooltip.install(uranusImage, tooltipUranus);
-        Label lbUranus = new Label("Uranus");
-        lbUranus.setTranslateX(-7.5);
-        lbUranus.setTranslateY(-2.5);
-        vbUranus.getChildren().addAll(uranusImage, lbUranus);
-        gridPane.add(vbUranus, 2, 1);
-
-        // Neptune Image
-        VBox vbNeptune = new VBox();
-        vbNeptune.setAlignment(Pos.CENTER);
-        vbNeptune.setSpacing(5);
-        ImageView neptuneImage = new ImageView("file:Neptune.png");
-        neptuneImage.setFitWidth(30);
-        neptuneImage.setFitHeight(30);
-        Tooltip tooltipNeptune = new Tooltip("Gravitational acceleration\nof Neptune: 11.15 m/s²");
-        tooltipNeptune.setTextAlignment(CENTER);
-        Tooltip.install(neptuneImage, tooltipNeptune);
-        Label lbNeptune = new Label("Neptune");
-        vbNeptune.getChildren().addAll(neptuneImage, lbNeptune);
-        gridPane.add(vbNeptune, 3, 1);
+            if(isBlackedOut(i)){
+                planetImage.setEffect(blackout);
+                Label lbPlanet = new Label("???");
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                vbPlanet.getChildren().addAll(planetImage, lbPlanet);
+            }
+            else {
+                Tooltip tooltipPlanet = new Tooltip("Gravitational acceleration\nof " + planetArray.get(i).toString() + " : " + Math.round(planetArray.get(i).gravity/-1.5551)/100.0 + " m/s²");
+                tooltipPlanet.setTextAlignment(CENTER);
+                Tooltip.install(planetImage, tooltipPlanet);
+                Label lbPlanet = new Label(planetArray.get(i).toString());
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                vbPlanet.getChildren().addAll(planetImage, lbPlanet);
+            }
+            //add to gridpane
+            gridPane.add(vbPlanet, i%4, i/4);
+        }
 
         vBox3.getChildren().addAll(lbPlanets, gridPane);
         borderPane.setRight(vBox3);
@@ -936,12 +839,12 @@ public class AstroJump extends Application {
 
     }
 
-    public ImageView isBlackedOut(int planetInt) {
+    public boolean isBlackedOut(int planetInt) {
         if(IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0') {
-            return new ImageView(planetArray.get(planetInt).name + "BlackedOut.png");
+            return true;
         }
         else {
-            return new ImageView(planetArray.get(planetInt).name + ".png");
+            return false;
         }
     }
 
