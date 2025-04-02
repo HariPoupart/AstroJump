@@ -784,6 +784,14 @@ public class AstroJump extends Application {
             portal.setX(screenWidth);
             portal.setY(GROUND_Y-portal.getHeight());
             gameObjects.getChildren().add(portal.getImage());
+
+            if(stopAnimationTimer) {
+                try {
+                    this.stop();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }));
 
         // Set the Timeline to run indefinitely
