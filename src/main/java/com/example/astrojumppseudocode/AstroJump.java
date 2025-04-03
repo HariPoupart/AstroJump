@@ -30,6 +30,8 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -40,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static javafx.scene.text.TextAlignment.CENTER;
+import static javafx.scene.text.TextAlignment.LEFT;
 
 public class AstroJump extends Application {
 
@@ -70,7 +73,7 @@ public class AstroJump extends Application {
 
     //GAME OBJECTS
     private Group gameObjects;
-    private Label lbGameInfo;
+    private Text txGameInfo;
     private Text txGameOver;
 
     //player
@@ -124,56 +127,63 @@ public class AstroJump extends Application {
     }
 
     public void start(Stage primaryStage) throws IOException {
-        BorderPane borderPane = new BorderPane();
+        GridPane generalPane = new GridPane();
+        Text txFiller = new Text("\n\n\n");
 
         // High score and total stars collected
         VBox vBox1 = new VBox();
-        vBox1.setAlignment(Pos.CENTER);
+        vBox1.setAlignment(Pos.BOTTOM_CENTER);
         vBox1.setSpacing(20);
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
         TextField tfScore = new TextField(IOMethods.getHighScore() + "");
+        tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
         tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
         TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
+        tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
         tfStars.setAlignment(Pos.CENTER);
         tfStars.setEditable(false);
         vBox1.getChildren().addAll(lbScore, tfScore, lbStars, tfStars);
-        borderPane.setLeft(vBox1);
+        generalPane.add(vBox1,0,1);
 
         // Start, tutorial, settings and exit
         VBox vBox2 = new VBox();
-        vBox2.setAlignment(Pos.CENTER);
+        vBox2.setAlignment(Pos.BOTTOM_CENTER);
         vBox2.setSpacing(20);
 
         // Start button
         Button btStart = new Button("Start");
         btStart.setPrefWidth(150);
         btStart.setPrefHeight(30);
+        btStart.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
 
         // Tutorial button
         Button btTutorial = new Button("Tutorial");
         btTutorial.setPrefWidth(150);
         btTutorial.setPrefHeight(30);
+        btTutorial.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
         // Settings button
         Button btSettings = new Button("Settings");
         btSettings.setPrefWidth(150);
         btSettings.setPrefHeight(30);
+        btSettings.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
         // Exit button
         Button btExit = new Button("Exit");
         btExit.setPrefWidth(150);
         btExit.setPrefHeight(30);
+        btExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
-        vBox2.getChildren().addAll(btStart, btTutorial, btSettings, btExit);
-        borderPane.setCenter(vBox2);
+        vBox2.getChildren().addAll(txFiller, btStart, btTutorial, btSettings, btExit);
+        generalPane.add(vBox2, 1,1);
 
         // Planets discovered
         VBox vBox3 = new VBox();
-        vBox3.setAlignment(Pos.CENTER);
+        vBox3.setAlignment(Pos.BOTTOM_CENTER);
         vBox3.setSpacing(20);
         vBox3.setPadding(new Insets(0, 150, 0, 0));
         Label lbPlanets = new Label("Planets Discovered:");
@@ -214,8 +224,8 @@ public class AstroJump extends Application {
             gridPane.add(vbPlanet, i%4, i/4);
         }
 
-        vBox3.getChildren().addAll(lbPlanets, gridPane);
-        borderPane.setRight(vBox3);
+        vBox3.getChildren().addAll(txFiller, lbPlanets, gridPane);
+        generalPane.add(vBox3,2,1);
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
@@ -261,11 +271,14 @@ public class AstroJump extends Application {
         }
 
         //scene
+        generalPane.setHgap(125);
+        generalPane.setVgap(100);
+        generalPane.setAlignment(Pos.CENTER);
         Image menuImage = new Image("file:menuScreen.bmp");
-        borderPane.setBackground(new javafx.scene.layout.Background(new BackgroundImage(menuImage,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(screenWidth,screenHeight,true,true,true,true))));
-        StackPane generalPane = new StackPane(pane,borderPane);
-        Scene scene = new Scene(generalPane,screenWidth,screenHeight);
-        generalPane.requestFocus();
+        generalPane.setBackground(new javafx.scene.layout.Background(new BackgroundImage(menuImage,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(screenWidth,screenHeight,true,true,true,true))));
+        StackPane mediaAndVisuals = new StackPane(pane,generalPane);
+        Scene scene = new Scene(mediaAndVisuals,screenWidth,screenHeight);
+        mediaAndVisuals.requestFocus();
 
         //create player
         createPlayer();
@@ -355,18 +368,27 @@ public class AstroJump extends Application {
             gameObjects.getChildren().clear();
         score = 0;
 
-        //initialise lbGameInfo
-        lbGameInfo = new Label( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        lbGameInfo.setTextFill(Color.LIGHTGRAY);
-        lbGameInfo.setAlignment(Pos.TOP_LEFT);
+        //initialise txGameInfo
+        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25));
+        txGameInfo.setFill(Color.CORNFLOWERBLUE);
+        txGameInfo.setStrokeWidth(.8);
+        txGameInfo.setStroke(Color.BLACK);
+        txGameInfo.setTextAlignment(LEFT);
+        txGameInfo.setX(6);
+        txGameInfo.setY(22);
+
+        //initialise txGameOver
         txGameOver = new Text("");
-        txGameOver.setFont(Font.font(35));
-        txGameOver.setFill(Color.LIGHTGRAY);
-        txGameOver.setX(35);
+        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 30));
+        txGameOver.setFill(Color.CORNFLOWERBLUE);
+        txGameOver.setStrokeWidth(1.25);
+        txGameOver.setStroke(Color.BLACK);
+        txGameOver.setX(27);
         txGameOver.setY(170);
         txGameOver.setTextAlignment(CENTER);
 
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), lbGameInfo, txGameOver);
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver);
 
 
         //clear nets, obstacles
@@ -459,8 +481,8 @@ public class AstroJump extends Application {
         objectSpeed += (float) (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
 
-        //update lbGameInfo
-        lbGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        //update txGameInfo
+        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
 
         //update PLAYER jump
         if(player.getIsJumping()){
