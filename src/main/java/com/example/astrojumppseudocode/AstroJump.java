@@ -103,6 +103,10 @@ public class AstroJump extends Application {
     //game pane properties
     private static final int GROUND_Y = 390;
 
+    //game controls
+    private static String jumpControl = "SPACE";
+    private String netThrow = "";
+
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
         Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
@@ -907,6 +911,4 @@ public class AstroJump extends Application {
             return false;
         }
     }
-
-
 }
