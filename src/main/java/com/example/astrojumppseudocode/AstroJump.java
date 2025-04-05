@@ -2,12 +2,10 @@ package com.example.astrojumppseudocode;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -16,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -36,7 +33,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,11 +50,16 @@ public class AstroJump extends Application {
 
     private float objectSpeed;
     private long score = 0;
+    private static long startSpawnPortalStarTime =0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
-    private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
+
+    private long obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
+    private long starSpawnIntervalNano= (long)2*1_000_000_000;
+    private long portalSpawnIntervalNano = (long)5*1_000_000_000;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
-    private long starSpawnIntervalNano= (long)2*1_000_000_000;
+    private long lastPortalSpawnTime =0;
+
     public int screenHeight = 500;
     public int screenWidth = 1000;
 
@@ -359,9 +360,6 @@ public class AstroJump extends Application {
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
-
-        //start spawning portals method
-        portalSpawner();
 
         //start all timers
         stopAnimationTimer = false;
@@ -803,26 +801,12 @@ public class AstroJump extends Application {
         return path;
     }
     //PORTAL METHOD
-    private void portalSpawner() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+    private void spawnPortal() {
             //spawn portal
             portal = new SimpleMovingImage(new ImageView("Black_hole.png"),96,96,objectSpeed,0);
             portal.setX(screenWidth);
             portal.setY(GROUND_Y-portal.getHeight());
             gameObjects.getChildren().add(portal.getImage());
-
-            if(stopAnimationTimer) {
-                try {
-                    this.stop();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }));
-
-        // Set the Timeline to run indefinitely
-        levelChanger.setCycleCount(Timeline.INDEFINITE);
-        levelChanger.play();
     }
 
     //PLANET CHANGE METHOD
@@ -850,6 +834,14 @@ public class AstroJump extends Application {
 
     //GAMEPLAY METHODS
     private void gameObjectSpawner(long now){
+
+        //initialize spawning time for star and portal
+        if(startSpawnPortalStarTime ==0) {
+            startSpawnPortalStarTime = now + 1_000_000_000;
+            lastPortalSpawnTime = now;
+            lastStarSpawnTime = now;
+        }
+
         // Spawn a new obstacle if the spawn interval has passed
         if (now - lastObstacleSpawnTime >= obstacleSpawnIntervalNano) {
             spawnObstacle();
@@ -857,7 +849,7 @@ public class AstroJump extends Application {
             increaseSpawnSpeed(); // Gradually increase spawn speed
         }
         // Spawn a new star if the spawn interval has passed
-        if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
+        if (now - lastStarSpawnTime >= starSpawnIntervalNano&&now> startSpawnPortalStarTime) {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
 
@@ -865,6 +857,16 @@ public class AstroJump extends Application {
 
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
+        }
+
+        System.out.println(now);
+
+        // Spawn a new portal if the spawn interval has passed
+        if (now - lastPortalSpawnTime >= portalSpawnIntervalNano && now> startSpawnPortalStarTime) {
+            spawnPortal();
+
+            lastPortalSpawnTime = now;
+            randomizePortalSpawnTime(); // Gradually increase spawn speed
         }
 
 
@@ -884,6 +886,9 @@ public class AstroJump extends Application {
     }
     public void randomizeStarSpawnTime(){
         starSpawnIntervalNano = (long)(((Math.random()*5)+10)*1_000_000_000);
+    }
+    public void randomizePortalSpawnTime(){
+        portalSpawnIntervalNano = (long)(((Math.random()*10)+20)*1_000_000_000);
     }
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
