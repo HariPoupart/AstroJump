@@ -66,9 +66,6 @@ public class AstroJump extends Application {
 
     public int currentPlanetInt = 0;
 
-    public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
-    public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
-    public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
     public static boolean stopAnimationTimer;
 
     public MediaPlayer mediaPlayer;
@@ -239,24 +236,11 @@ public class AstroJump extends Application {
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
-        btStart.setOnAction(e -> MenuController.startButton());
-        btTutorial.setOnAction(e -> MenuController.tutorialButton());
-        btSettings.setOnAction(e -> MenuController.settingButton());
-        btExit.setOnAction(e -> MenuController.exitButton());
-        //listeners for action events in MenuController
+        btStart.setOnAction(e -> startGameLoop(primaryStage));
+        btTutorial.setOnAction(e -> showTutorial(primaryStage));
+        btSettings.setOnAction(e -> showSettings(primaryStage));
+        btExit.setOnAction(e -> System.exit(0));
 
-        startLoopListener.addListener(e -> {
-            startGameLoop(primaryStage);
-            startLoopListener = new SimpleBooleanProperty(false);
-        });
-        tutorialListener.addListener(e -> {
-            showTutorial(primaryStage);
-            tutorialListener = new SimpleBooleanProperty(false);
-        });
-        settingsListener.addListener(e -> {
-            showSettings(primaryStage);
-            settingsListener = new SimpleBooleanProperty(false);
-        });
 
         //music from Menu
         Media media;
