@@ -33,6 +33,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,8 +61,8 @@ public class AstroJump extends Application {
     private long lastStarSpawnTime = 0;
     private long lastPortalSpawnTime =0;
 
-    public int screenHeight = 500;
-    public int screenWidth = 1000;
+    public static double screenHeight = 500;
+    public static double screenWidth = 1000;
 
     public int currentPlanetInt = 0;
 
@@ -109,6 +110,10 @@ public class AstroJump extends Application {
     private String netThrow = "";
 
     public static void main(String[] args) {
+        //get screen resolution
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        screenWidth = screenSize.getWidth();
+        screenHeight = screenSize.getHeight();
         //initiate planetArray with gravities from NSSDC
         Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
         Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
