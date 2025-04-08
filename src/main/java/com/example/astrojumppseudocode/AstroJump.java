@@ -628,7 +628,7 @@ public class AstroJump extends Application {
                     "\nAngle thrown:" + roundTo2Dec(Math.toDegrees(angle)) + "(degrees)" +
                     "\nInitial Speed X:" + (int)initialSpeedX + "(px/s)" +
                     "\nInitial Speed Y:" + (int)-initialSpeedY + "(px/s)" +
-                    "\nAcceleration X:" + accelerationX + "(px/s²)"
+                    "\nAcceleration X:" + accelerationX + "(px/s²)" +
                     "\nAcceleration Y:"+ accelerationY+ "(px/s²)");
         }
     }
