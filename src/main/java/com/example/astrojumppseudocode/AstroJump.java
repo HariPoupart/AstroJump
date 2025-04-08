@@ -54,9 +54,9 @@ public class AstroJump extends Application {
     private static long startSpawnPortalStarTime =0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
 
-    private long obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
-    private long starSpawnIntervalNano= (long)2*1_000_000_000;
-    private long portalSpawnIntervalNano = (long)5*1_000_000_000;
+    private long obstacleSpawnIntervalNano;
+    private long starSpawnIntervalNano;
+    private long portalSpawnIntervalNano;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
     private long lastPortalSpawnTime =0;
@@ -415,6 +415,11 @@ public class AstroJump extends Application {
         //clear nets, obstacles
         nets.clear();
         obstacles.clear();
+
+        //reset timers
+        obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
+        starSpawnIntervalNano= (long)4*1_000_000_000;
+        portalSpawnIntervalNano = (long)30*1_000_000_000;
 
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
