@@ -859,7 +859,7 @@ public class AstroJump extends Application {
             randomizeStarSpawnTime(); // Gradually increase spawn speed
         }
 
-        System.out.println(now);
+        //System.out.println(now);
 
         // Spawn a new portal if the spawn interval has passed
         if (now - lastPortalSpawnTime >= portalSpawnIntervalNano && now> startSpawnPortalStarTime) {
