@@ -4,8 +4,6 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -54,9 +52,9 @@ public class AstroJump extends Application {
     private static long startSpawnPortalStarTime =0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
 
-    private long obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
-    private long starSpawnIntervalNano= (long)2*1_000_000_000;
-    private long portalSpawnIntervalNano = (long)5*1_000_000_000;
+    private long obstacleSpawnIntervalNano;
+    private long starSpawnIntervalNano;
+    private long portalSpawnIntervalNano;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
     private long lastPortalSpawnTime =0;
@@ -74,6 +72,7 @@ public class AstroJump extends Application {
     private Group gameObjects;
     private Text txGameInfo;
     private Text txGameOver;
+    private Text txNetInfo;
 
     //player
     private Player player;
@@ -379,17 +378,30 @@ public class AstroJump extends Application {
         txGameOver.setY(170);
         txGameOver.setTextAlignment(CENTER);
 
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver);
+        //initialise net info text
+        txNetInfo = new Text("");
+        txNetInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 15));
+        txNetInfo.setFill(Color.WHITE);
+        txNetInfo.setStrokeWidth(.8);
+        txNetInfo.setStroke(Color.BLACK);
+        txNetInfo.setTextAlignment(LEFT);
+        txNetInfo.setX(screenWidth-275);
+        txNetInfo.setY(20);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver, txNetInfo);
 
 
         //clear nets, obstacles
         nets.clear();
         obstacles.clear();
 
-        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
+        //reset spawn times
+        obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
+        starSpawnIntervalNano= (long)4*1_000_000_000;
+        portalSpawnIntervalNano = (long)30*1_000_000_000;
 
-        //initialize the next star spawning
-        randomizeStarSpawnTime();
+        //create scene
+        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //event handlers on scene
         //escape event handler
@@ -423,6 +435,7 @@ public class AstroJump extends Application {
         // when mouse is released create a net
         game.setOnMouseReleased(event -> {
             parabolaPath.getElements().clear();
+            txNetInfo.setText("");
             updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
@@ -581,13 +594,18 @@ public class AstroJump extends Application {
             double initialPosY = player.getY()+(0.5*player.getHeight())-(Net.WIDTH*0.5);
 
             //calculate the angle of the throw
-            double angle = Math.atan((lastKnownMouseY-initialPosY)/(lastKnownMouseX-initialPosX));
+            double dx = lastKnownMouseX - initialPosX;
+            double dy = -lastKnownMouseY + initialPosY;
+
+            // Angle from player to point (world angle)
+            double angle = Math.atan2(dy, dx);
 
             //calculate the speed in each axis
             double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
-            double initialSpeedY = planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
+            double initialSpeedY = -planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
             //get acceleration
             double accelerationY = planetArray.get(currentPlanetInt).getGravity();
+            double accelerationX = 0;
 
             //draw line
             // Create a path for the parabola
@@ -604,9 +622,15 @@ public class AstroJump extends Application {
             if(!gameObjects.getChildren().contains(parabolaPath))
                 gameObjects.getChildren().add(parabolaPath);
 
+            //UPDATE NET INFO
+            txNetInfo.setText("NET THROW INFO:\n" +
+                    "Initial Speed:" + planetArray.get(currentPlanetInt).getNetForce()+
+                    "\nAngle thrown:" + roundTo2Dec(Math.toDegrees(angle)) + "(degrees)" +
+                    "\nInitial Speed X:" + (int)initialSpeedX + "(px/s)" +
+                    "\nInitial Speed Y:" + (int)-initialSpeedY + "(px/s)" +
+                    "\nAcceleration X:" + accelerationX + "(px/s²)"
+                    "\nAcceleration Y:"+ accelerationY+ "(px/s²)");
         }
-
-
     }
 
     //PLAYER METHODS
@@ -673,12 +697,21 @@ public class AstroJump extends Application {
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
 
         //calculate the angle of the throw
-        double angle = Math.atan((mouseY-initialPosY)/(mouseX-initialPosX));
+        double dx = lastKnownMouseX - initialPosX;
+        double dy = -lastKnownMouseY + initialPosY;
+
+        // Angle from player to point (world angle)
+        double angle = Math.atan2(dy, dx);
 
         //calculate the speed in each axis
-        double initialSpeedX = netForce* Math.cos(angle);
-        double initialSpeedY = netForce* Math.sin(angle);
+        double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
+        double initialSpeedY = -planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
 
+        //if the player is aiming backwards shot the net like a slingshot
+        if(initialSpeedX<0){
+            initialSpeedX*=-1;
+            initialSpeedY*=-1;
+        }
         //create net
         //TO DO: ADD WIND RESISTANCE DURING STORM
         //adds a new net to the nets array
@@ -906,5 +939,10 @@ public class AstroJump extends Application {
         else {
             return false;
         }
+    }
+
+    //MATH METHOD
+    private double roundTo2Dec(double value){
+        return ((int)(value*100))/100.0;
     }
 }
