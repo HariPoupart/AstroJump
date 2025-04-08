@@ -77,24 +77,24 @@ public class AstroJump extends Application {
 
     //player
     private Player player;
-    private final int PLAYER_WIDTH=100;
-    private final int PLAYER_HEIGHT=100;
+    private static  int PLAYER_WIDTH = 100;
+    private static int PLAYER_HEIGHT = 100;
 
     //obstacles
     private ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
-    private final int SPIKE_WIDTH = 42;
-    private final int SPIKE_HEIGHT = 64;
-    private final int METEO_WIDTH = 105;
-    private final int METEO_HEIGHT = 30;
+    private static int SPIKE_WIDTH = 42;
+    private static int SPIKE_HEIGHT = 64;
+    private static int METEO_WIDTH = 105;
+    private static int METEO_HEIGHT = 30;
 
     //star
     private Star star;
-    private final int STAR_WIDTH = 58;
-    private final int STAR_HEIGHT = 60;
+    private static int STAR_WIDTH = 58;
+    private static int STAR_HEIGHT = 60;
 
     //net
     private ArrayList<Net> nets = new ArrayList<>();
-    private final int NET_WIDTH = 32;
+    private static int NET_WIDTH = 32;
     private Path parabolaPath;
     private boolean updatePath = false;
     private double lastKnownMouseX;
@@ -103,19 +103,20 @@ public class AstroJump extends Application {
 
     //Background
     Background background;
-    private final int BACKGROUND_WIDTH = 2000;
-    private final int BACKGROUND_HEIGHT = 500;
+    private static int BACKGROUND_WIDTH = 2000;
+    private static int BACKGROUND_HEIGHT = 500;
 
     //Portal
     SimpleMovingImage portal;
-    private final int PORTAL_WIDTH = 96;
-    private final int PORTAL_HEIGHT = 96;
+    private static int PORTAL_WIDTH = 96;
+    private static int PORTAL_HEIGHT = 96;
 
     //planets
     protected static ArrayList<Planet> planetArray;
 
     //game pane properties
-    private static final int GROUND_Y = 390;
+    private static int GROUND_Y = 390;
+    private static int definingSize;
 
     //game controls
     private static String jumpControl = "SPACE";
@@ -126,6 +127,30 @@ public class AstroJump extends Application {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.getWidth();
         screenHeight = screenSize.getHeight();
+        //defining "used" width/height
+        if(screenWidth/screenHeight >= 2) {
+            definingSize = (int)screenHeight/500;
+        }
+        else {
+            definingSize = (int) (screenWidth/2)/500;
+        }
+        //ajusting game objects based on screen resolution
+        definingSize *= 2;
+        PLAYER_WIDTH = 100 * definingSize;
+        SPIKE_WIDTH = 42 * definingSize;
+        SPIKE_HEIGHT = 64 * definingSize;
+        METEO_WIDTH = 105 *  definingSize;
+        METEO_HEIGHT = 30 *  definingSize;
+        STAR_WIDTH = 58 *  definingSize;
+        STAR_HEIGHT = 60 *  definingSize;
+        NET_WIDTH = 32 *  definingSize;
+        BACKGROUND_WIDTH = 2000 * definingSize;
+        BACKGROUND_HEIGHT = 500 *  definingSize;
+        PORTAL_WIDTH = 96 *  definingSize;
+        PORTAL_HEIGHT = 96 * definingSize;
+        GROUND_Y = 390 * definingSize;
+        PLAYER_HEIGHT = 100 * definingSize;
+
         //initiate planetArray with gravities from NSSDC
         Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
         Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
@@ -159,6 +184,7 @@ public class AstroJump extends Application {
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
         TextField tfScore = new TextField(IOMethods.getHighScore() + "");
+        double fontSize = 1.8 * definingSize;
         tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
         tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
@@ -361,25 +387,29 @@ public class AstroJump extends Application {
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25));
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25 * definingSize));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
-        txGameInfo.setStrokeWidth(.8);
+        txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
         txGameInfo.setTextAlignment(LEFT);
-        txGameInfo.setX(6);
-        txGameInfo.setY(22);
+        txGameInfo.setX(6 * definingSize);
+        txGameInfo.setY(22 * definingSize);
 
         //initialise txGameOver
         txGameOver = new Text("");
-        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 30));
+        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 20 * definingSize));
         txGameOver.setFill(Color.CORNFLOWERBLUE);
-        txGameOver.setStrokeWidth(1.25);
+        txGameOver.setStrokeWidth(1.25 * definingSize);
         txGameOver.setStroke(Color.BLACK);
-        txGameOver.setX(27);
-        txGameOver.setY(170);
         txGameOver.setTextAlignment(CENTER);
+        BorderPane pane = new BorderPane();
+        pane.setPrefSize(screenWidth,screenHeight);
+        //        txGameOver.setX(screenWidth * 0.5);
+//        txGameOver.setY(screenHeight * 0.3);
+        pane.setCenter(txGameOver);
 
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, pane);
 
 
         //clear nets, obstacles
