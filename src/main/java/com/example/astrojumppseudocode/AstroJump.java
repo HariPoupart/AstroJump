@@ -77,24 +77,39 @@ public class AstroJump extends Application {
 
     //player
     private Player player;
+    private final int PLAYER_WIDTH=100;
+    private final int PLAYER_HEIGHT=100;
 
     //obstacles
     private ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
+    private final int SPIKE_WIDTH = 42;
+    private final int SPIKE_HEIGHT = 64;
+    private final int METEO_WIDTH = 105;
+    private final int METEO_HEIGHT = 30;
 
     //star
     private Star star;
+    private final int STAR_WIDTH = 58;
+    private final int STAR_HEIGHT = 60;
 
     //net
     private ArrayList<Net> nets = new ArrayList<>();
+    private final int NET_WIDTH = 32;
     private Path parabolaPath;
     private boolean updatePath = false;
     private double lastKnownMouseX;
     private double lastKnownMouseY;
+
+
     //Background
     Background background;
+    private final int BACKGROUND_WIDTH = 2000;
+    private final int BACKGROUND_HEIGHT = 500;
 
     //Portal
     SimpleMovingImage portal;
+    private final int PORTAL_WIDTH = 96;
+    private final int PORTAL_HEIGHT = 96;
 
     //planets
     protected static ArrayList<Planet> planetArray;
@@ -289,6 +304,8 @@ public class AstroJump extends Application {
 
 
     }
+
+    //show different stages
     protected void showTutorial(Stage primaryStage) {
         Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
@@ -320,25 +337,8 @@ public class AstroJump extends Application {
             }
         });
     }
-    protected void showGameOverScreen(Stage primaryStage) {
-        ImageView gameOverScreen = new ImageView("GameOver.bmp");
-        gameOverScreen.setFitHeight(screenHeight);
-        gameOverScreen.setFitWidth(screenWidth);
-        Scene scene = new Scene(new Pane(gameOverScreen),screenWidth,screenHeight);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        //add listener
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                try {
-                    start(primaryStage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-    }
 
+    //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
@@ -621,13 +621,11 @@ public class AstroJump extends Application {
         //size of one image
         final int SPRITE_WIDTH = 32;
         final int SPRITE_HEIGHT = 32;
-        final int IMAGE_WIDTH=100;
-        final int IMAGE_HEIGHT=100;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
         playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT));
-        playerIV.setFitWidth(IMAGE_WIDTH);
-        playerIV.setFitHeight(IMAGE_HEIGHT);
+        playerIV.setFitWidth(PLAYER_WIDTH);
+        playerIV.setFitHeight(PLAYER_HEIGHT);
 
         //animation player imageview
         final Duration PLAYER_ANIM_DURATION= Duration.millis(1000);
@@ -670,7 +668,6 @@ public class AstroJump extends Application {
 
     //NET METHOD
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
-        int NET_WIDTH = 32;
         //calculate the inital position of the net
         double initialPosX = player.getX()+player.getWidth();
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
@@ -697,8 +694,6 @@ public class AstroJump extends Application {
     //OBSTACLE METHODS
     public void createSpike(){
         //add new obstacle
-        int SPIKE_WIDTH = 42;
-        int SPIKE_HEIGHT = 64;
         obstacles.add(new SimpleMovingImage(new ImageView("Obstacle3.png"), SPIKE_WIDTH, SPIKE_HEIGHT,objectSpeed,0));
 
         //change image view
@@ -718,8 +713,6 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        int METEO_WIDTH = 35 * 3;
-        int METEO_HEIGHT = 10 * 3;
         obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
         //set obstacle to the right position
@@ -734,18 +727,20 @@ public class AstroJump extends Application {
         //add imageView to game objects
         gameObjects.getChildren().add(obstacles.getLast().getImage());
     }
+
+    //STAR METHODS
     public void initializeStar(){
         //create star
-        star = new Star(new ImageView("StarAnimationSheet.png"),58,60, 0, 0, 0);
+        star = new Star(new ImageView("StarAnimationSheet.png"),STAR_WIDTH, STAR_HEIGHT, 0, 0, 0);
+
         //get random index 0-1
         int index = (int)(Math.round(Math.random()));
+
         //randomize the star
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
 
+        //set position and size
         star.setX(screenWidth);
-    }
-    public void createBackground(){
-        background = new Background(new ImageView("Background.png"),2000,500,512,128,objectSpeed ,512,currentPlanetInt);
     }
     public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
         star.setX(x);
@@ -760,7 +755,12 @@ public class AstroJump extends Application {
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
     }
 
-    //path maker
+    //BACKGROUND METHOD
+    public void createBackground(){
+        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,512,128,objectSpeed ,512,currentPlanetInt);
+    }
+
+    //PATH METHOD
     private Path createParabola(Path path,double a, double h, double k,double startX) {
         //reset the path is if it doesn't exist already
         if(path==null)
@@ -789,10 +789,11 @@ public class AstroJump extends Application {
 
         return path;
     }
+
     //PORTAL METHOD
     private void spawnPortal() {
             //spawn portal
-            portal = new SimpleMovingImage(new ImageView("Black_hole.png"),96,96,objectSpeed,0);
+            portal = new SimpleMovingImage(new ImageView("Black_hole.png"),PORTAL_WIDTH,PORTAL_HEIGHT,objectSpeed,0);
             portal.setX(screenWidth);
             portal.setY(GROUND_Y-portal.getHeight());
             gameObjects.getChildren().add(portal.getImage());
@@ -821,7 +822,7 @@ public class AstroJump extends Application {
         }
     }
 
-    //GAMEPLAY METHODS
+    //GAMEPLAY SPAWNING METHODS
     private void gameObjectSpawner(long now){
 
         //initialize spawning time for star and portal
@@ -897,6 +898,7 @@ public class AstroJump extends Application {
 
     }
 
+    //MENU METHOD
     public boolean isBlackedOut(int planetInt) {
         if(IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0') {
             return true;
