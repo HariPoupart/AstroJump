@@ -47,6 +47,15 @@ public class IOMethods {
     //accessor methods
     public static long getHighScore() {
         File fileHS = new File("highScore.txt");
+        if(!fileHS.exists()) {
+            try{
+            PrintWriter create = new PrintWriter(fileHS);
+            create.write("");
+            create.close();
+            } catch(Exception e) {
+
+            }
+        }
         try {
             FileInputStream fileStreamHS = new FileInputStream(fileHS);
             DataInputStream inputHS = new DataInputStream(fileStreamHS);
@@ -66,6 +75,15 @@ public class IOMethods {
 
     public static int getTotalStarsCollected() {
         File fileTS = new File("totalNumberStar.txt");
+        if(!fileTS.exists()) {
+            try{
+                PrintWriter create = new PrintWriter(fileTS);
+                create.write("");
+                create.close();
+            } catch(Exception e) {
+
+            }
+        }
         try {
             FileInputStream fileStreamTS = new FileInputStream(fileTS);
             DataInputStream inputTS = new DataInputStream(fileStreamTS);
@@ -84,6 +102,15 @@ public class IOMethods {
 
     public static StringBuilder getPlanetsDiscovered() {
         File filePD = new File("planetsDiscovered.txt");
+        if(!filePD.exists()) {
+            try{
+                PrintWriter create = new PrintWriter(filePD);
+                create.write("");
+                create.close();
+            } catch(Exception e) {
+
+            }
+        }
         if (filePD.exists()) {
             try {
                 FileInputStream fileStreamPD = new FileInputStream(filePD);
