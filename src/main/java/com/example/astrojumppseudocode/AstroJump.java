@@ -2,21 +2,19 @@ package com.example.astrojumppseudocode;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,15 +26,19 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import static javafx.scene.text.TextAlignment.CENTER;
+import static javafx.scene.text.TextAlignment.LEFT;
 
 public class AstroJump extends Application {
 
@@ -48,11 +50,16 @@ public class AstroJump extends Application {
 
     private float objectSpeed;
     private long score = 0;
+    private static long startSpawnPortalStarTime =0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
-    private long obstacleSpawnIntervalNano = (long)2*1_000_000_000;
+
+    private long obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
+    private long starSpawnIntervalNano= (long)2*1_000_000_000;
+    private long portalSpawnIntervalNano = (long)5*1_000_000_000;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
-    private long starSpawnIntervalNano= (long)2*1_000_000_000;
+    private long lastPortalSpawnTime =0;
+
     public int screenHeight = 500;
     public int screenWidth = 1000;
 
@@ -67,6 +74,8 @@ public class AstroJump extends Application {
 
     //GAME OBJECTS
     private Group gameObjects;
+    private Text txGameInfo;
+    private Text txGameOver;
 
     //player
     private Player player;
@@ -95,16 +104,20 @@ public class AstroJump extends Application {
     //game pane properties
     private static final int GROUND_Y = 390;
 
+    //game controls
+    private static String jumpControl = "SPACE";
+    private String netThrow = "";
+
     public static void main(String[] args) {
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("mercury", -567f,-600f,600f);
-        Planet venus = new Planet("venus",-1382f,-900f,600f);
-        Planet earth = new Planet("earth",-1524f,-1000f,600f);
-        Planet mars = new Planet("mars",-574f,-600f,600f);
-        Planet jupiter = new Planet("jupiter",-3596f,-1500f,600f);
-        Planet saturn = new Planet("saturn",-1396f,-900f,600f);
-        Planet uranus = new Planet("uranus",-1355f,-1000f,600f);
-        Planet neptune = new Planet("neptune",-1707f,-1000f,600f);
+        Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
+        Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
+        Planet earth = new Planet("Earth",-1524f,-1000f,600f,-8,0,30);
+        Planet mars = new Planet("Mars",-574f,-600f,600f,0,0,30);
+        Planet jupiter = new Planet("Jupiter",-3596f,-1500f,600f,0,0,30);
+        Planet saturn = new Planet("Saturn",-1396f,-900f,600f,-5,-16.5,64);
+        Planet uranus = new Planet("Uranus",-1355f,-1000f,600f,-7.5,-2.5,36);
+        Planet neptune = new Planet("Neptune",-1707f,-1000f,600f,0,0,30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -119,52 +132,63 @@ public class AstroJump extends Application {
     }
 
     public void start(Stage primaryStage) throws IOException {
-        BorderPane borderPane = new BorderPane();
+        GridPane generalPane = new GridPane();
+        Text txFiller = new Text("\n\n\n");
 
         // High score and total stars collected
         VBox vBox1 = new VBox();
-        vBox1.setAlignment(Pos.CENTER);
+        vBox1.setAlignment(Pos.BOTTOM_CENTER);
         vBox1.setSpacing(20);
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
-        TextField tfScore = new TextField();
+        TextField tfScore = new TextField(IOMethods.getHighScore() + "");
+        tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
-        TextField tfStars = new TextField();
+        TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
+        tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        tfStars.setAlignment(Pos.CENTER);
         tfStars.setEditable(false);
         vBox1.getChildren().addAll(lbScore, tfScore, lbStars, tfStars);
-        borderPane.setLeft(vBox1);
+        generalPane.add(vBox1,0,1);
 
         // Start, tutorial, settings and exit
         VBox vBox2 = new VBox();
-        vBox2.setAlignment(Pos.CENTER);
+        vBox2.setAlignment(Pos.BOTTOM_CENTER);
         vBox2.setSpacing(20);
 
         // Start button
         Button btStart = new Button("Start");
         btStart.setPrefWidth(150);
         btStart.setPrefHeight(30);
+        btStart.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+
 
         // Tutorial button
         Button btTutorial = new Button("Tutorial");
         btTutorial.setPrefWidth(150);
         btTutorial.setPrefHeight(30);
+        btTutorial.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
         // Settings button
         Button btSettings = new Button("Settings");
         btSettings.setPrefWidth(150);
         btSettings.setPrefHeight(30);
+        btSettings.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
 
         // Exit button
         Button btExit = new Button("Exit");
         btExit.setPrefWidth(150);
         btExit.setPrefHeight(30);
-        vBox2.getChildren().addAll(btStart, btTutorial, btSettings, btExit);
-        borderPane.setCenter(vBox2);
+        btExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+
+        vBox2.getChildren().addAll(txFiller, btStart, btTutorial, btSettings, btExit);
+        generalPane.add(vBox2, 1,1);
 
         // Planets discovered
         VBox vBox3 = new VBox();
-        vBox3.setAlignment(Pos.CENTER);
+        vBox3.setAlignment(Pos.BOTTOM_CENTER);
         vBox3.setSpacing(20);
         vBox3.setPadding(new Insets(0, 150, 0, 0));
         Label lbPlanets = new Label("Planets Discovered:");
@@ -173,136 +197,40 @@ public class AstroJump extends Application {
         gridPane.setHgap(10);
         gridPane.setVgap(5);
 
-        // Mercury
-        VBox vbMercury = new VBox();
-        vbMercury.setAlignment(Pos.CENTER);
-        vbMercury.setSpacing(5);
-        ImageView mercuryImage = new ImageView("file:Mercury.png");
-        mercuryImage.setFitWidth(30);
-        mercuryImage.setFitHeight(30);
-        ColorAdjust blackout = new ColorAdjust();
-        blackout.setBrightness(-1.0);
-        mercuryImage.setEffect(blackout);
-        Tooltip tooltipMercury = new Tooltip("Gravitational acceleration\nof Mercury: 3.70 m/s²");
-        tooltipMercury.setTextAlignment(CENTER);
-        Tooltip.install(mercuryImage, tooltipMercury);
-        //Tooltip.uninstall(mercuryImage, tooltipMercury);
-        // Label lbMercury = new Label("Mercury");
-        Label lbMercury = new Label("???");
-        vbMercury.getChildren().addAll(mercuryImage, lbMercury);
-        gridPane.add(vbMercury, 0, 0);
+        //Setting planet image
+        for(int i = 0; i < 8; i++) {
+            VBox vbPlanet = new VBox();
+            vbPlanet.setAlignment(Pos.CENTER);
+            vbPlanet.setSpacing(5);
+            ImageView planetImage = new ImageView("file:" + planetArray.get(i).toString() + ".png");
+            planetImage.setFitWidth(planetArray.get(i).getSize());
+            planetImage.setFitHeight(planetArray.get(i).getSize());
+            ColorAdjust blackout = new ColorAdjust();
+            blackout.setBrightness(-1);
+            planetImage.setTranslateX(planetArray.get(i).getSetTranslateX());
 
-        // Venus Image
-        VBox vbVenus = new VBox();
-        vbVenus.setAlignment(Pos.CENTER);
-        vbVenus.setSpacing(5);
-        ImageView venusImage = new ImageView("file:Venus.png");
-        venusImage.setFitWidth(30);
-        venusImage.setFitHeight(30);
-        venusImage.setTranslateX(-6);
-        Tooltip tooltipVenus = new Tooltip("Gravitational acceleration\nof Venus: 8.87 m/s²");
-        tooltipVenus.setTextAlignment(CENTER);
-        Tooltip.install(venusImage, tooltipVenus);
-        Label lbVenus = new Label("Venus");
-        lbVenus.setTranslateX(-6);
-        vbVenus.getChildren().addAll(venusImage, lbVenus);
-        gridPane.add(vbVenus, 1, 0);
+            if(isBlackedOut(i)){
+                planetImage.setEffect(blackout);
+                Label lbPlanet = new Label("???");
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                vbPlanet.getChildren().addAll(planetImage, lbPlanet);
+            }
+            else {
+                Tooltip tooltipPlanet = new Tooltip("Gravitational acceleration\nof " + planetArray.get(i).toString() + " : " + Math.round(planetArray.get(i).gravity/-1.5551)/100.0 + " m/s²");
+                tooltipPlanet.setTextAlignment(CENTER);
+                Tooltip.install(planetImage, tooltipPlanet);
+                Label lbPlanet = new Label(planetArray.get(i).toString());
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                vbPlanet.getChildren().addAll(planetImage, lbPlanet);
+            }
+            //add to gridpane
+            gridPane.add(vbPlanet, i%4, i/4);
+        }
 
-        // Earth Image
-        VBox vbEarth = new VBox();
-        vbEarth.setAlignment(Pos.CENTER);
-        vbEarth.setSpacing(5);
-        ImageView earthImage = new ImageView("file:Earth.png");
-        earthImage.setFitWidth(30);
-        earthImage.setFitHeight(30);
-        earthImage.setTranslateX(-8);
-        Tooltip tooltipEarth = new Tooltip("Gravitational acceleration\nof Earth: 9.807 m/s²");
-        tooltipEarth.setTextAlignment(CENTER);
-        Tooltip.install(earthImage, tooltipEarth);
-        Label lbEarth = new Label("Earth");
-        lbEarth.setTranslateX(-8);
-        vbEarth.getChildren().addAll(earthImage, lbEarth);
-        gridPane.add(vbEarth, 2, 0);
-
-        // Mars Image
-        VBox vbMars = new VBox();
-        vbMars.setAlignment(Pos.CENTER);
-        vbMars.setSpacing(5);
-        ImageView marsImage = new ImageView("file:Mars.png");
-        marsImage.setFitWidth(30);
-        marsImage.setFitHeight(30);
-        Tooltip tooltipMars = new Tooltip("Gravitational acceleration\nof Mars: 3.73 m/s²");
-        tooltipMars.setTextAlignment(CENTER);
-        Tooltip.install(marsImage, tooltipMars);
-        Label lbMars = new Label("Mars");
-        vbMars.getChildren().addAll(marsImage, lbMars);
-        gridPane.add(vbMars, 3, 0);
-
-        // Jupiter Image
-        VBox vbJupiter = new VBox();
-        vbJupiter.setAlignment(Pos.CENTER);
-        vbJupiter.setSpacing(5);
-        ImageView jupiterImage = new ImageView("file:Jupiter.png");
-        jupiterImage.setFitWidth(30);
-        jupiterImage.setFitHeight(30);
-        Tooltip tooltipJupiter = new Tooltip("Gravitational acceleration\nof Jupiter: 24.79 m/s²");
-        tooltipJupiter.setTextAlignment(CENTER);
-        Tooltip.install(jupiterImage, tooltipJupiter);
-        Label lbJupiter = new Label("Jupiter");
-        vbJupiter.getChildren().addAll(jupiterImage, lbJupiter);
-        gridPane.add(vbJupiter, 0, 1);
-
-        // Saturn Image
-        VBox vbSaturn = new VBox();
-        vbSaturn.setAlignment(Pos.CENTER);
-        vbSaturn.setSpacing(5);
-        ImageView saturnImage = new ImageView("file:Saturn.png");
-        saturnImage.setFitWidth(64);
-        saturnImage.setFitHeight(64);
-        saturnImage.setTranslateX(-5);
-        Tooltip tooltipSaturn = new Tooltip("Gravitational acceleration\nof Saturn: 10.44 m/s²");
-        tooltipSaturn.setTextAlignment(CENTER);
-        Tooltip.install(saturnImage, tooltipSaturn);
-        Label lbSaturn = new Label("Saturn");
-        lbSaturn.setTranslateX(-5);
-        lbSaturn.setTranslateY(-16.5);
-        vbSaturn.getChildren().addAll(saturnImage, lbSaturn);
-        gridPane.add(vbSaturn, 1, 1);
-
-        // Uranus Image
-        VBox vbUranus = new VBox();
-        vbUranus.setAlignment(Pos.CENTER);
-        vbUranus.setSpacing(5);
-        ImageView uranusImage = new ImageView("file:Uranus.png");
-        uranusImage.setFitWidth(36);
-        uranusImage.setFitHeight(36);
-        uranusImage.setTranslateX(-7.5);
-        Tooltip tooltipUranus = new Tooltip("Gravitational acceleration\nof Uranus: 8.87 m/s²");
-        tooltipUranus.setTextAlignment(CENTER);
-        Tooltip.install(uranusImage, tooltipUranus);
-        Label lbUranus = new Label("Uranus");
-        lbUranus.setTranslateX(-7.5);
-        lbUranus.setTranslateY(-2.5);
-        vbUranus.getChildren().addAll(uranusImage, lbUranus);
-        gridPane.add(vbUranus, 2, 1);
-
-        // Neptune Image
-        VBox vbNeptune = new VBox();
-        vbNeptune.setAlignment(Pos.CENTER);
-        vbNeptune.setSpacing(5);
-        ImageView neptuneImage = new ImageView("file:Neptune.png");
-        neptuneImage.setFitWidth(30);
-        neptuneImage.setFitHeight(30);
-        Tooltip tooltipNeptune = new Tooltip("Gravitational acceleration\nof Neptune: 11.15 m/s²");
-        tooltipNeptune.setTextAlignment(CENTER);
-        Tooltip.install(neptuneImage, tooltipNeptune);
-        Label lbNeptune = new Label("Neptune");
-        vbNeptune.getChildren().addAll(neptuneImage, lbNeptune);
-        gridPane.add(vbNeptune, 3, 1);
-
-        vBox3.getChildren().addAll(lbPlanets, gridPane);
-        borderPane.setRight(vBox3);
-
+        vBox3.getChildren().addAll(txFiller, lbPlanets, gridPane);
+        generalPane.add(vBox3,2,1);
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
@@ -324,9 +252,6 @@ public class AstroJump extends Application {
             showSettings(primaryStage);
             settingsListener = new SimpleBooleanProperty(false);
         });
-
-        //link to FXML file
-        FXMLLoader loader = new FXMLLoader(AstroJump.class.getResource("astroJumpMenu.fxml"));
 
         //music from Menu
         Media media;
@@ -351,9 +276,14 @@ public class AstroJump extends Application {
         }
 
         //scene
-        StackPane generalPane = new StackPane(pane, borderPane);
-
-        Scene scene = new Scene(generalPane,screenWidth,screenHeight);
+        generalPane.setHgap(125);
+        generalPane.setVgap(100);
+        generalPane.setAlignment(Pos.CENTER);
+        Image menuImage = new Image("file:menuScreen.bmp");
+        generalPane.setBackground(new javafx.scene.layout.Background(new BackgroundImage(menuImage,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(screenWidth,screenHeight,true,true,true,true))));
+        StackPane mediaAndVisuals = new StackPane(pane,generalPane);
+        Scene scene = new Scene(mediaAndVisuals,screenWidth,screenHeight);
+        mediaAndVisuals.requestFocus();
 
         //create player
         createPlayer();
@@ -421,7 +351,6 @@ public class AstroJump extends Application {
     }
 
     protected void startGameLoop(Stage primaryStage) {
-        objectSpeed = -500;
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -431,18 +360,44 @@ public class AstroJump extends Application {
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
-        //start planetChange method
-        portalSpawner();
-        //resetting all game variables
+
+        //start all timers
         stopAnimationTimer = false;
 
         //game scene setup
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage());
-        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
+        objectSpeed = -500;
+        if(gameObjects!=null)
+            gameObjects.getChildren().clear();
+        score = 0;
 
-        // Create a path for the parabola
-        //parabolaPath = createParabolaPath(-1,0,0,0);
-        //gameObjects.getChildren().add(parabolaPath);
+        //initialise txGameInfo
+        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25));
+        txGameInfo.setFill(Color.CORNFLOWERBLUE);
+        txGameInfo.setStrokeWidth(.8);
+        txGameInfo.setStroke(Color.BLACK);
+        txGameInfo.setTextAlignment(LEFT);
+        txGameInfo.setX(6);
+        txGameInfo.setY(22);
+
+        //initialise txGameOver
+        txGameOver = new Text("");
+        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 30));
+        txGameOver.setFill(Color.CORNFLOWERBLUE);
+        txGameOver.setStrokeWidth(1.25);
+        txGameOver.setStroke(Color.BLACK);
+        txGameOver.setX(27);
+        txGameOver.setY(170);
+        txGameOver.setTextAlignment(CENTER);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver);
+
+
+        //clear nets, obstacles
+        nets.clear();
+        obstacles.clear();
+
+        Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
         //initialize the next star spawning
         randomizeStarSpawnTime();
@@ -458,19 +413,27 @@ public class AstroJump extends Application {
                 }
             }
         });
+        game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.R) {
+                try {
+                    startGameLoop(primaryStage);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
         //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
                 player.setIsJumping(true);
-                player.setY(GROUND_Y-1);
+                player.setY(GROUND_Y-1-player.getHeight());
             }
         });
 
         // when mouse is released create a net
         game.setOnMouseReleased(event -> {
-            System.out.println("Mouse X "+event.getX()+" "+lastKnownMouseX);
-            System.out.println("Mouse Y "+event.getY()+" "+lastKnownMouseY);
+            parabolaPath.getElements().clear();
             updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
@@ -495,7 +458,6 @@ public class AstroJump extends Application {
             public void handle(long now) {
                 // Calculate the time elapsed since the last frame
                 if(stopAnimationTimer) {
-                    System.out.println("STOPPING ANIMATION");
                     this.stop();
                 }
                 if (lastUpdateMethodTime > 0) {
@@ -521,6 +483,9 @@ public class AstroJump extends Application {
         objectSpeed += (float) (objectSpeed*0.01*deltaTime);
         updateGameObjectsSpeed();
 
+        //update txGameInfo
+        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+
         //update PLAYER jump
         if(player.getIsJumping()){
             playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
@@ -540,7 +505,7 @@ public class AstroJump extends Application {
                 if(net.isCollidingWith(star.getImage())){
                     player.addOneStar();
                     //modify score
-
+                    score+= (long) star.getScoreValue();
                     //reset star
                     spawnStar(screenWidth,0,0,0,0);
                 }
@@ -550,6 +515,8 @@ public class AstroJump extends Application {
                 //delete game object
                 gameObjects.getChildren().remove(net.getImage());
                 nets.remove(net);
+                net=null;
+                i--;
             }
         }
 
@@ -563,10 +530,11 @@ public class AstroJump extends Application {
             //check for collisions with player
             if(obstacle.isCollidingWith(player.getImage())){
                 //game over methods
-                IOMethods saveData = new IOMethods(score, IOMethods.getTotalStarsCollected() + player.getStarsCaught(), planetsDiscovered);
-                System.out.print("GAME OVER!");
+                IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
                 stopAnimationTimer = true;
-                showGameOverScreen(stage);
+                player.setAnimationState(Player.DEAD);
+                txGameOver.setText("GAME OVER\nPRESS ESCAPE TO EXIT TO MAIN MENU OR R TO RESTART");
+                //showGameOverScreen(stage);
             }
 
             //if the obstacle is out of bounds delete it
@@ -574,6 +542,7 @@ public class AstroJump extends Application {
                 gameObjects.getChildren().remove(obstacle.getImage());
                 obstacle=null;
                 obstacles.remove(i);
+                i--;
             }
         }
 
@@ -582,6 +551,7 @@ public class AstroJump extends Application {
 
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
+            score+=(long)star.getScoreValue();
             //reset star
             spawnStar(screenWidth,0,0,0,0);
         }
@@ -763,17 +733,17 @@ public class AstroJump extends Application {
         int METEO_HEIGHT = 10 * 3;
         obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
-        //change image view
-        ImageView imgV = obstacles.getLast().getImage();
-        imgV.setViewport(new Rectangle2D(0,((int)(Math.random()*10))*10,35,10));
-
-        //add imageView to game objects
-        gameObjects.getChildren().add(imgV);
-
         //set obstacle to the right position
         SimpleMovingImage obstacle = obstacles.getLast();
+
+        //change image view
+        ImageView imgV = obstacle.getImage();
+        imgV.setViewport(new Rectangle2D(0,(Math.round(Math.random()))*10,35,10));
+
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
         obstacle.setX(screenWidth);//CHECK
+        //add imageView to game objects
+        gameObjects.getChildren().add(obstacles.getLast().getImage());
     }
     public void initializeStar(){
         //create star
@@ -799,8 +769,6 @@ public class AstroJump extends Application {
         int index = (int)(Math.round(Math.random()));
         //randomize the star image
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
-
-        System.out.println("Star spawned");
     }
 
     //path maker
@@ -833,18 +801,12 @@ public class AstroJump extends Application {
         return path;
     }
     //PORTAL METHOD
-    private void portalSpawner() {
-        levelChanger = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+    private void spawnPortal() {
             //spawn portal
             portal = new SimpleMovingImage(new ImageView("Black_hole.png"),96,96,objectSpeed,0);
             portal.setX(screenWidth);
             portal.setY(GROUND_Y-portal.getHeight());
             gameObjects.getChildren().add(portal.getImage());
-        }));
-
-        // Set the Timeline to run indefinitely
-        levelChanger.setCycleCount(Timeline.INDEFINITE);
-        levelChanger.play();
     }
 
     //PLANET CHANGE METHOD
@@ -872,6 +834,14 @@ public class AstroJump extends Application {
 
     //GAMEPLAY METHODS
     private void gameObjectSpawner(long now){
+
+        //initialize spawning time for star and portal
+        if(startSpawnPortalStarTime ==0) {
+            startSpawnPortalStarTime = now + 1_000_000_000;
+            lastPortalSpawnTime = now;
+            lastStarSpawnTime = now;
+        }
+
         // Spawn a new obstacle if the spawn interval has passed
         if (now - lastObstacleSpawnTime >= obstacleSpawnIntervalNano) {
             spawnObstacle();
@@ -879,16 +849,24 @@ public class AstroJump extends Application {
             increaseSpawnSpeed(); // Gradually increase spawn speed
         }
         // Spawn a new star if the spawn interval has passed
-        if (now - lastStarSpawnTime >= starSpawnIntervalNano) {
+        if (now - lastStarSpawnTime >= starSpawnIntervalNano&&now> startSpawnPortalStarTime) {
             //give a score value based on time passed
             long scoreValue = (long) 500*1_000_000_000/obstacleSpawnIntervalNano;
-            //System.out.println(scoreValue + "scoreValue");
+
             spawnStar(Math.random()*(screenWidth-star.getWidth()),Math.random()*(GROUND_Y-star.getHeight()),0,0,scoreValue);
 
             lastStarSpawnTime = now;
             randomizeStarSpawnTime(); // Gradually increase spawn speed
+        }
 
-            System.out.println("Score value: "+ scoreValue);
+        //System.out.println(now);
+
+        // Spawn a new portal if the spawn interval has passed
+        if (now - lastPortalSpawnTime >= portalSpawnIntervalNano && now> startSpawnPortalStarTime) {
+            spawnPortal();
+
+            lastPortalSpawnTime = now;
+            randomizePortalSpawnTime(); // Gradually increase spawn speed
         }
 
 
@@ -909,6 +887,9 @@ public class AstroJump extends Application {
     public void randomizeStarSpawnTime(){
         starSpawnIntervalNano = (long)(((Math.random()*5)+10)*1_000_000_000);
     }
+    public void randomizePortalSpawnTime(){
+        portalSpawnIntervalNano = (long)(((Math.random()*10)+20)*1_000_000_000);
+    }
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
         long SPAWN_TIME_DECREMENT = 5_000;
@@ -927,14 +908,12 @@ public class AstroJump extends Application {
 
     }
 
-    public ImageView isBlackedOut(int planetInt) {
+    public boolean isBlackedOut(int planetInt) {
         if(IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0') {
-            return new ImageView(planetArray.get(planetInt).name + "BlackedOut.png");
+            return true;
         }
         else {
-            return new ImageView(planetArray.get(planetInt).name + ".png");
+            return false;
         }
     }
-
-
 }

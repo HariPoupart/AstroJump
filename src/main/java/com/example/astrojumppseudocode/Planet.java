@@ -9,14 +9,19 @@ public class Planet {
     float jumpForce;
     float netForce;
     String name;
-
+    double setTranslateX;
+    double setTranslateY;
+    int size;
 
     //constructor
-    Planet(String name, float gravity, float jumpForce, float netForce) {
+    Planet(String name, float gravity, float jumpForce, float netForce, double setTranslateX, double setTranslateY, int size) {
         this.gravity = gravity;
         this.jumpForce = jumpForce;
         this.netForce = netForce;
         this.name = name;
+        this.setTranslateX = setTranslateX;
+        this.setTranslateY = setTranslateY;
+        this.size = size;
     }
 
     //planet mutators and accessors
@@ -41,6 +46,15 @@ public class Planet {
     }
     public String toString() {
         return name;
+    }
+    public double getSetTranslateX() {
+        return setTranslateX;
+    }
+    public double getSetTranslateY() {
+        return setTranslateY;
+    }
+    public int getSize() {
+        return size;
     }
 
 
