@@ -63,7 +63,7 @@ public class AstroJump extends Application {
     public static double screenHeight = 500;
     public static double screenWidth = 1000;
 
-    public int currentPlanetInt = 0;
+    public int currentPlanetInt = currentPlanetInt = (int) Math.round((Math.random() * 7));
 
     public static boolean stopAnimationTimer;
 
@@ -136,7 +136,7 @@ public class AstroJump extends Application {
             definingSize = (screenWidth/1000.0);
 
         }
-        //ajusting game objects based on screen resolution
+        //adjusting game objects based on screen resolution
 
         PLAYER_WIDTH = (int) (100 * definingSize);
         SPIKE_WIDTH = (int) (42 * definingSize);
@@ -467,6 +467,8 @@ public class AstroJump extends Application {
 
     //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
+        score = 0;
+        player.setStarsCaught(0);
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -487,7 +489,7 @@ public class AstroJump extends Application {
         score = 0;
 
         //initialise txGameInfo
-        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0/definingSize + " m/s*s\nScore: " + score + "\nStars: " + player.getStarsCaught());
         txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,15 * definingSize));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
@@ -550,6 +552,9 @@ public class AstroJump extends Application {
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.R) {
                 try {
+                    IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
+                    score = 0;
+                    player.setStarsCaught(0);
                     startGameLoop(primaryStage);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -619,7 +624,7 @@ public class AstroJump extends Application {
         updateGameObjectsSpeed();
 
         //update txGameInfo
-        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551/definingSize)/100.0 + " m/s²\nScore: " + score + "\nStars: " + player.getStarsCaught());
 
         //update PLAYER jump
         if(player.getIsJumping()){
@@ -969,7 +974,11 @@ public class AstroJump extends Application {
     //PLANET CHANGE METHOD
     private void changePlanet(){
         System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
-        currentPlanetInt = (int) (Math.random() * 7);
+        int newPlanetInt = (int) Math.round((Math.random() * 7));
+        while(currentPlanetInt == newPlanetInt) {
+            newPlanetInt = (int) Math.round((Math.random() * 7));
+        }
+        currentPlanetInt = newPlanetInt;
         //update background
         background.changePlanet(currentPlanetInt);
         //add planet to planetsDiscovered
