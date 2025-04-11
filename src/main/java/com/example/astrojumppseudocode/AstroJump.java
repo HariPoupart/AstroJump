@@ -27,10 +27,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.*;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -75,6 +73,7 @@ public class AstroJump extends Application {
     private Group gameObjects;
     private Text txGameInfo;
     private Text txGameOver;
+    private Text txNetInfo;
 
     //player
     private Player player;
@@ -155,14 +154,14 @@ public class AstroJump extends Application {
         PLAYER_HEIGHT = (int) (100 * definingSize);
 
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
-        Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
-        Planet earth = new Planet("Earth",-1524f,-1000f,600f,-8,0,30);
-        Planet mars = new Planet("Mars",-574f,-600f,600f,0,0,30);
-        Planet jupiter = new Planet("Jupiter",-3596f,-1500f,600f,0,0,30);
-        Planet saturn = new Planet("Saturn",-1396f,-900f,600f,-5,-16.5,64);
-        Planet uranus = new Planet("Uranus",-1355f,-1000f,600f,-7.5,-2.5,36);
-        Planet neptune = new Planet("Neptune",-1707f,-1000f,600f,0,0,30);
+        Planet mercury = new Planet("Mercury", (float) (-567f*definingSize), (float) (-600f*  definingSize), (float) (600f*  definingSize),0,0,30);
+        Planet venus = new Planet("Venus", (float) (-1382f*  definingSize), (float) (-900f*  definingSize), (float) (600f*  definingSize),-6,0,30);
+        Planet earth = new Planet("Earth", (float) (-1524f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),-8,0,30);
+        Planet mars = new Planet("Mars", (float) (-574f*  definingSize), (float) (-600f*  definingSize), (float) (600f*  definingSize),0,0,30);
+        Planet jupiter = new Planet("Jupiter", (float) (-3596f*  definingSize), (float) (-1500f*  definingSize), (float) (600f*  definingSize),0,0,30);
+        Planet saturn = new Planet("Saturn", (float) (-1396f*  definingSize), (float) (-900f*  definingSize), (float) (600f*  definingSize),-5,-16.5,64);
+        Planet uranus = new Planet("Uranus", (float) (-1355f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),-7.5,-2.5,36);
+        Planet neptune = new Planet("Neptune", (float) (-1707f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),0,0,30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -506,12 +505,21 @@ public class AstroJump extends Application {
         txGameOver.setTextAlignment(CENTER);
         BorderPane pane = new BorderPane();
         pane.setPrefSize(screenWidth,screenHeight);
-        //        txGameOver.setX(screenWidth * 0.5);
-//        txGameOver.setY(screenHeight * 0.3);
         pane.setCenter(txGameOver);
 
+        //initialise net info text
+        txNetInfo = new Text("");
+        txNetInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 15*definingSize));
+        txNetInfo.setFill(Color.WHITE);
+        txNetInfo.setStrokeWidth(.8*definingSize);
+        txNetInfo.setStroke(Color.BLACK);
+        txNetInfo.setTextAlignment(LEFT);
+        txNetInfo.setX(screenWidth-265*definingSize);
+        txNetInfo.setY(20*definingSize);
+        txNetInfo.setTextAlignment(TextAlignment.RIGHT);
 
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, pane);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo,txNetInfo, pane);
 
 
         //clear nets, obstacles
@@ -560,6 +568,7 @@ public class AstroJump extends Application {
         // when mouse is released create a net
         game.setOnMouseReleased(event -> {
             parabolaPath.getElements().clear();
+            txNetInfo.setText("");
             updatePath = false;
             createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
@@ -719,13 +728,18 @@ public class AstroJump extends Application {
             double initialPosY = player.getY()+(0.5*player.getHeight())-(Net.WIDTH*0.5);
 
             //calculate the angle of the throw
-            double angle = Math.atan((lastKnownMouseY-initialPosY)/(lastKnownMouseX-initialPosX));
+            double dx = lastKnownMouseX - initialPosX;
+            double dy = -lastKnownMouseY + initialPosY;
+
+            // Angle from player to point (world angle)
+            double angle = Math.atan2(dy, dx);
 
             //calculate the speed in each axis
             double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
-            double initialSpeedY = planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
+            double initialSpeedY = -planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
             //get acceleration
             double accelerationY = planetArray.get(currentPlanetInt).getGravity();
+            double accelerationX = 0;
 
             //draw line
             // Create a path for the parabola
@@ -742,6 +756,14 @@ public class AstroJump extends Application {
             if(!gameObjects.getChildren().contains(parabolaPath))
                 gameObjects.getChildren().add(parabolaPath);
 
+            //UPDATE NET INFO
+            txNetInfo.setText("NET THROW INFO:\n" +
+                    "Initial Speed: " + planetArray.get(currentPlanetInt).getNetForce()+ "(px/s)" +
+                    "\nAngle thrown: " + roundTo2Dec(Math.toDegrees(angle)) + "(degrees)" +
+                    "\nInitial Speed X: " + (int)initialSpeedX + "(px/s)" +
+                    "\nInitial Speed Y: " + (int)-initialSpeedY + "(px/s)" +
+                    "\nAcceleration X: " + accelerationX + "(px/s²)" +
+                    "\nAcceleration Y: "+ roundTo2Dec(accelerationY)+ "(px/s²)");
         }
 
 
@@ -788,8 +810,6 @@ public class AstroJump extends Application {
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
         player.setAnimationState(Player.JUMP); // TO DO: move to action event
-        //Changing force
-        initialJumpSpeed *= definingSize;
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
@@ -808,18 +828,25 @@ public class AstroJump extends Application {
     //NET METHOD
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
         //calculate the inital position of the net
-        //Changing force
-        netForce *= definingSize;
         double initialPosX = player.getX()+player.getWidth();
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
 
         //calculate the angle of the throw
-        double angle = Math.atan((mouseY-initialPosY)/(mouseX-initialPosX));
+        double dx = lastKnownMouseX - initialPosX;
+        double dy = -lastKnownMouseY + initialPosY;
+
+        // Angle from player to point (world angle)
+        double angle = Math.atan2(dy, dx);
 
         //calculate the speed in each axis
-        double initialSpeedX = netForce * Math.cos(angle);
-        double initialSpeedY = netForce * Math.sin(angle);
+        double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
+        double initialSpeedY = -planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
 
+        //if the player is aiming backwards shot the net like a slingshot
+        if(initialSpeedX<0){
+            initialSpeedX*=-1;
+            initialSpeedY*=-1;
+        }
         //create net
         //TO DO: ADD WIND RESISTANCE DURING STORM
         //adds a new net to the nets array
@@ -829,7 +856,6 @@ public class AstroJump extends Application {
         //set its initial Positions to the nets initial positions
         nets.getLast().setX(initialPosX);
         nets.getLast().setY(initialPosY);
-
     }
 
     //OBSTACLE METHODS
@@ -1066,5 +1092,10 @@ public class AstroJump extends Application {
         });
         hbox.getChildren().addAll(slider, lbSlider);
         return hbox;
+    }
+
+    //MATH METHOD
+    private double roundTo2Dec(double value){
+        return ((int)(value*100))/100.0;
     }
 }
