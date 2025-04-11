@@ -193,7 +193,7 @@ public class AstroJump extends Application {
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
         lbStars.setStyle("-fx-font-size: 30px;");
-        lbStars.setMinWidth(200);
+        lbStars.setMinWidth(200*definingSize);
         TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
         tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
         tfStars.setAlignment(Pos.CENTER);
@@ -290,37 +290,48 @@ public class AstroJump extends Application {
         vbox1.setSpacing(40);
         vbox1.setPadding(new Insets(0, 150, 30, 150));
         Label lbAction = new Label("ACTION:");
+        lbAction.setFont(new Font(40));
         Label lbJump = new Label("Jump:");
+        lbJump.setFont(new Font(30));
         Label lbThrow = new Label("Throw:");
+        lbThrow.setFont(new Font(30));
         Label lbExit = new Label("Exit:");
+        lbExit.setFont(new Font(30));
         Label lbAim = new Label("Aim:");
+        lbAim.setFont(new Font(30));
         vbox1.getChildren().addAll(lbAction, lbJump, lbThrow, lbExit, lbAim);
         borderPane1.setLeft(vbox1);
 
         // Control
         VBox vbox2 = new VBox();
         vbox2.setAlignment(Pos.CENTER);
-        vbox2.setSpacing(35);
+        vbox2.setSpacing(43);
         vbox2.setPadding(new Insets(0, 0, 20, 0));
         Label lbControls = new Label("CONTROL:");
+        lbControls.setFont(new Font(40));
+        lbControls.setTranslateY(-2.5);
 
         TextField tfJump = new TextField("SPACEBAR");
+        tfJump.setFont(new Font(20));
         tfJump.setAlignment(Pos.CENTER);
-        tfJump.setTranslateY(5);
         tfJump.setEditable(false);
 
         TextField tfThrow = new TextField("RIGHT CLICK");
+        tfThrow.setFont(new Font(20));
         tfThrow.setAlignment(Pos.CENTER);
+        tfThrow.setTranslateY(-3);
         tfThrow.setEditable(false);
 
         TextField tfExit = new TextField("ESCAPE");
+        tfExit.setFont(new Font(20));
         tfExit.setAlignment(Pos.CENTER);
-        tfExit.setTranslateY(-3);
+        tfExit.setTranslateY(-5);
         tfExit.setEditable(false);
 
         TextField tfAim = new TextField("MOUSE");
+        tfAim.setFont(new Font(20));
         tfAim.setAlignment(Pos.CENTER);
-        tfAim.setTranslateY(-6);
+        tfAim.setTranslateY(-7);
         tfAim.setEditable(false);
 
         vbox2.getChildren().addAll(lbControls, tfJump, tfThrow, tfExit, tfAim);
@@ -332,13 +343,17 @@ public class AstroJump extends Application {
         vbox3.setSpacing(30);
         vbox3.setPadding(new Insets(0, 150, 8, 150));
         Label lbSound = new Label("SOUND SETTING:");
-        lbSound.setTranslateY(-19);
+        lbSound.setFont(new Font(40));
+        lbSound.setTranslateY(15);
 
         // Music
         Label lbMusic = new Label("Music:");
+        lbMusic.setFont(new Font(30));
+        lbMusic.setPadding(new Insets(25,0,0,0));
 
         // Sound Effects
         Label lbEffects = new Label("Sound Effects:");
+        lbEffects.setFont(new Font(30));
         vbox3.getChildren().addAll(lbSound, lbMusic, createSlider(), lbEffects, createSlider());
         borderPane1.setRight(vbox3);
 
@@ -386,6 +401,7 @@ public class AstroJump extends Application {
         BorderPane borderPane2 = new BorderPane();
         borderPane2.setPadding(new Insets(-50, 50, 50, 50));
         Button btBack = new Button("Back");
+        btBack.setFont(new Font(20));
         btBack.setOnAction(e -> primaryStage.setScene(scene));
         borderPane2.setLeft(btBack);
         borderPane1.setBottom(borderPane2);
@@ -1035,14 +1051,16 @@ public class AstroJump extends Application {
 
     public Node createSlider() {
         HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER);
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(100);
         Label lbSlider = new Label((int) slider.getValue() + "%");
-        lbSlider.setMinWidth(30);
-        lbSlider.setMinHeight(30);
+        lbSlider.setFont(new Font(30));
+        lbSlider.setMinWidth(80);
+        lbSlider.setMinHeight(80);
         lbSlider.setTranslateX(10);
-        lbSlider.setTranslateY(-10);
+        lbSlider.setTranslateY(0);
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider.setText(newValue.intValue() + "%");
         });
