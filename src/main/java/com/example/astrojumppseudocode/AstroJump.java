@@ -33,6 +33,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,21 +54,18 @@ public class AstroJump extends Application {
     private static long startSpawnPortalStarTime =0;
     private StringBuilder planetsDiscovered = new StringBuilder("00000000");
 
-    private long obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
-    private long starSpawnIntervalNano= (long)2*1_000_000_000;
-    private long portalSpawnIntervalNano = (long)5*1_000_000_000;
+    private long obstacleSpawnIntervalNano;
+    private long starSpawnIntervalNano;
+    private long portalSpawnIntervalNano;
     private long lastObstacleSpawnTime =0;
     private long lastStarSpawnTime = 0;
     private long lastPortalSpawnTime =0;
 
-    public int screenHeight = 500;
-    public int screenWidth = 1000;
+    public static double screenHeight = 500;
+    public static double screenWidth = 1000;
 
     public int currentPlanetInt = 0;
 
-    public static BooleanProperty startLoopListener = new SimpleBooleanProperty(false);
-    public static BooleanProperty tutorialListener = new SimpleBooleanProperty(false);
-    public static BooleanProperty settingsListener = new SimpleBooleanProperty(false);
     public static boolean stopAnimationTimer;
 
     public MediaPlayer mediaPlayer;
@@ -79,36 +77,80 @@ public class AstroJump extends Application {
 
     //player
     private Player player;
+    private static  int PLAYER_WIDTH = 100;
+    private static int PLAYER_HEIGHT = 100;
 
     //obstacles
     private ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
+    private static int SPIKE_WIDTH = 42;
+    private static int SPIKE_HEIGHT = 64;
+    private static int METEO_WIDTH = 105;
+    private static int METEO_HEIGHT = 30;
 
     //star
     private Star star;
+    private static int STAR_WIDTH = 58;
+    private static int STAR_HEIGHT = 60;
 
     //net
     private ArrayList<Net> nets = new ArrayList<>();
+    private static int NET_WIDTH = 32;
     private Path parabolaPath;
     private boolean updatePath = false;
     private double lastKnownMouseX;
     private double lastKnownMouseY;
+
+
     //Background
     Background background;
+    private static int BACKGROUND_WIDTH = 2000;
+    private static int BACKGROUND_HEIGHT = 500;
 
     //Portal
     SimpleMovingImage portal;
+    private static int PORTAL_WIDTH = 96;
+    private static int PORTAL_HEIGHT = 96;
 
     //planets
     protected static ArrayList<Planet> planetArray;
 
     //game pane properties
-    private static final int GROUND_Y = 390;
+    private static int GROUND_Y = 390;
+    private static int definingSize;
 
     //game controls
     private static String jumpControl = "SPACE";
     private String netThrow = "";
 
     public static void main(String[] args) {
+        //get screen resolution
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        screenWidth = screenSize.getWidth();
+        screenHeight = screenSize.getHeight();
+        //defining "used" width/height
+        if(screenWidth/screenHeight >= 2) {
+            definingSize = (int)screenHeight/500;
+        }
+        else {
+            definingSize = (int) (screenWidth/2)/500;
+        }
+        //ajusting game objects based on screen resolution
+        definingSize *= 2;
+        PLAYER_WIDTH = 100 * definingSize;
+        SPIKE_WIDTH = 42 * definingSize;
+        SPIKE_HEIGHT = 64 * definingSize;
+        METEO_WIDTH = 105 *  definingSize;
+        METEO_HEIGHT = 30 *  definingSize;
+        STAR_WIDTH = 58 *  definingSize;
+        STAR_HEIGHT = 60 *  definingSize;
+        NET_WIDTH = 32 *  definingSize;
+        BACKGROUND_WIDTH = 2000 * definingSize;
+        BACKGROUND_HEIGHT = 500 *  definingSize;
+        PORTAL_WIDTH = 96 *  definingSize;
+        PORTAL_HEIGHT = 96 * definingSize;
+        GROUND_Y = 390 * definingSize;
+        PLAYER_HEIGHT = 100 * definingSize;
+
         //initiate planetArray with gravities from NSSDC
         Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
         Planet venus = new Planet("Venus",-1382f,-900f,600f,-6,0,30);
@@ -142,6 +184,7 @@ public class AstroJump extends Application {
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
         TextField tfScore = new TextField(IOMethods.getHighScore() + "");
+        double fontSize = 1.8 * definingSize;
         tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
         tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
@@ -234,24 +277,11 @@ public class AstroJump extends Application {
         primaryStage.setTitle("AstroJump");
 
         //buttons action handler
-        btStart.setOnAction(e -> MenuController.startButton());
-        btTutorial.setOnAction(e -> MenuController.tutorialButton());
-        btSettings.setOnAction(e -> MenuController.settingButton());
-        btExit.setOnAction(e -> MenuController.exitButton());
-        //listeners for action events in MenuController
+        btStart.setOnAction(e -> startGameLoop(primaryStage));
+        btTutorial.setOnAction(e -> showTutorial(primaryStage));
+        btSettings.setOnAction(e -> showSettings(primaryStage));
+        btExit.setOnAction(e -> System.exit(0));
 
-        startLoopListener.addListener(e -> {
-            startGameLoop(primaryStage);
-            startLoopListener = new SimpleBooleanProperty(false);
-        });
-        tutorialListener.addListener(e -> {
-            showTutorial(primaryStage);
-            tutorialListener = new SimpleBooleanProperty(false);
-        });
-        settingsListener.addListener(e -> {
-            showSettings(primaryStage);
-            settingsListener = new SimpleBooleanProperty(false);
-        });
 
         //music from Menu
         Media media;
@@ -300,6 +330,8 @@ public class AstroJump extends Application {
 
 
     }
+
+    //show different stages
     protected void showTutorial(Stage primaryStage) {
         Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
@@ -331,25 +363,8 @@ public class AstroJump extends Application {
             }
         });
     }
-    protected void showGameOverScreen(Stage primaryStage) {
-        ImageView gameOverScreen = new ImageView("GameOver.bmp");
-        gameOverScreen.setFitHeight(screenHeight);
-        gameOverScreen.setFitWidth(screenWidth);
-        Scene scene = new Scene(new Pane(gameOverScreen),screenWidth,screenHeight);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        //add listener
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.ESCAPE) {
-                try {
-                    start(primaryStage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-    }
 
+    //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
@@ -372,30 +387,39 @@ public class AstroJump extends Application {
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25));
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25 * definingSize));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
-        txGameInfo.setStrokeWidth(.8);
+        txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
         txGameInfo.setTextAlignment(LEFT);
-        txGameInfo.setX(6);
-        txGameInfo.setY(22);
+        txGameInfo.setX(6 * definingSize);
+        txGameInfo.setY(22 * definingSize);
 
         //initialise txGameOver
         txGameOver = new Text("");
-        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 30));
+        txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 20 * definingSize));
         txGameOver.setFill(Color.CORNFLOWERBLUE);
-        txGameOver.setStrokeWidth(1.25);
+        txGameOver.setStrokeWidth(1.25 * definingSize);
         txGameOver.setStroke(Color.BLACK);
-        txGameOver.setX(27);
-        txGameOver.setY(170);
         txGameOver.setTextAlignment(CENTER);
+        BorderPane pane = new BorderPane();
+        pane.setPrefSize(screenWidth,screenHeight);
+        //        txGameOver.setX(screenWidth * 0.5);
+//        txGameOver.setY(screenHeight * 0.3);
+        pane.setCenter(txGameOver);
 
-        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, txGameOver);
+
+        gameObjects = new Group(background.getImage(),player.getImage(),star.getImage(), txGameInfo, pane);
 
 
         //clear nets, obstacles
         nets.clear();
         obstacles.clear();
+
+        //reset timers
+        obstacleSpawnIntervalNano = (long)3.5*1_000_000_000;
+        starSpawnIntervalNano= (long)4*1_000_000_000;
+        portalSpawnIntervalNano = (long)30*1_000_000_000;
 
         Scene game = new Scene(gameObjects,screenWidth,screenHeight);
 
@@ -632,13 +656,11 @@ public class AstroJump extends Application {
         //size of one image
         final int SPRITE_WIDTH = 32;
         final int SPRITE_HEIGHT = 32;
-        final int IMAGE_WIDTH=100;
-        final int IMAGE_HEIGHT=100;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
         playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT));
-        playerIV.setFitWidth(IMAGE_WIDTH);
-        playerIV.setFitHeight(IMAGE_HEIGHT);
+        playerIV.setFitWidth(PLAYER_WIDTH);
+        playerIV.setFitHeight(PLAYER_HEIGHT);
 
         //animation player imageview
         final Duration PLAYER_ANIM_DURATION= Duration.millis(1000);
@@ -681,7 +703,6 @@ public class AstroJump extends Application {
 
     //NET METHOD
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
-        int NET_WIDTH = 32;
         //calculate the inital position of the net
         double initialPosX = player.getX()+player.getWidth();
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
@@ -708,8 +729,6 @@ public class AstroJump extends Application {
     //OBSTACLE METHODS
     public void createSpike(){
         //add new obstacle
-        int SPIKE_WIDTH = 42;
-        int SPIKE_HEIGHT = 64;
         obstacles.add(new SimpleMovingImage(new ImageView("Obstacle3.png"), SPIKE_WIDTH, SPIKE_HEIGHT,objectSpeed,0));
 
         //change image view
@@ -729,8 +748,6 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        int METEO_WIDTH = 35 * 3;
-        int METEO_HEIGHT = 10 * 3;
         obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
         //set obstacle to the right position
@@ -745,18 +762,20 @@ public class AstroJump extends Application {
         //add imageView to game objects
         gameObjects.getChildren().add(obstacles.getLast().getImage());
     }
+
+    //STAR METHODS
     public void initializeStar(){
         //create star
-        star = new Star(new ImageView("StarAnimationSheet.png"),58,60, 0, 0, 0);
+        star = new Star(new ImageView("StarAnimationSheet.png"),STAR_WIDTH, STAR_HEIGHT, 0, 0, 0);
+
         //get random index 0-1
         int index = (int)(Math.round(Math.random()));
+
         //randomize the star
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
 
+        //set position and size
         star.setX(screenWidth);
-    }
-    public void createBackground(){
-        background = new Background(new ImageView("Background.png"),2000,500,512,128,objectSpeed ,512,currentPlanetInt);
     }
     public void spawnStar(double x,double y,float speedX, float speedY, double scoreValue){
         star.setX(x);
@@ -771,7 +790,12 @@ public class AstroJump extends Application {
         star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
     }
 
-    //path maker
+    //BACKGROUND METHOD
+    public void createBackground(){
+        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,512,128,objectSpeed ,512,currentPlanetInt);
+    }
+
+    //PATH METHOD
     private Path createParabola(Path path,double a, double h, double k,double startX) {
         //reset the path is if it doesn't exist already
         if(path==null)
@@ -800,10 +824,11 @@ public class AstroJump extends Application {
 
         return path;
     }
+
     //PORTAL METHOD
     private void spawnPortal() {
             //spawn portal
-            portal = new SimpleMovingImage(new ImageView("Black_hole.png"),96,96,objectSpeed,0);
+            portal = new SimpleMovingImage(new ImageView("Black_hole.png"),PORTAL_WIDTH,PORTAL_HEIGHT,objectSpeed,0);
             portal.setX(screenWidth);
             portal.setY(GROUND_Y-portal.getHeight());
             gameObjects.getChildren().add(portal.getImage());
@@ -832,7 +857,7 @@ public class AstroJump extends Application {
         }
     }
 
-    //GAMEPLAY METHODS
+    //GAMEPLAY SPAWNING METHODS
     private void gameObjectSpawner(long now){
 
         //initialize spawning time for star and portal
@@ -908,6 +933,7 @@ public class AstroJump extends Application {
 
     }
 
+    //MENU METHOD
     public boolean isBlackedOut(int planetInt) {
         if(IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0') {
             return true;
