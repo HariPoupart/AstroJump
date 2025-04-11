@@ -184,14 +184,15 @@ public class AstroJump extends Application {
         vBox1.setSpacing(20);
         vBox1.setPadding(new Insets(0, 0, 0, 150));
         Label lbScore = new Label("High Score:");
+        lbScore.setStyle("-fx-font-size: 30px;");
         TextField tfScore = new TextField(IOMethods.getHighScore() + "");
-        double fontSize = 1.8 * definingSize;
-        tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        tfScore.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
         tfScore.setAlignment(Pos.CENTER);
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
+        lbStars.setStyle("-fx-font-size: 30px;");
         TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
-        tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
         tfStars.setAlignment(Pos.CENTER);
         tfStars.setEditable(false);
         vBox1.getChildren().addAll(lbScore, tfScore, lbStars, tfStars);
@@ -204,28 +205,28 @@ public class AstroJump extends Application {
 
         // Start button
         Button btStart = new Button("Start");
-        btStart.setPrefWidth(150);
+        btStart.setPrefWidth(250);
         btStart.setPrefHeight(30);
-        btStart.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        btStart.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
 
         // Tutorial button
         Button btTutorial = new Button("Tutorial");
-        btTutorial.setPrefWidth(150);
+        btTutorial.setPrefWidth(250);
         btTutorial.setPrefHeight(30);
-        btTutorial.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        btTutorial.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         // Settings button
         Button btSettings = new Button("Settings");
-        btSettings.setPrefWidth(150);
+        btSettings.setPrefWidth(250);
         btSettings.setPrefHeight(30);
-        btSettings.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        btSettings.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         // Exit button
         Button btExit = new Button("Exit");
-        btExit.setPrefWidth(150);
+        btExit.setPrefWidth(250);
         btExit.setPrefHeight(30);
-        btExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;");
+        btExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         vBox2.getChildren().addAll(txFiller, btStart, btTutorial, btSettings, btExit);
         generalPane.add(vBox2, 1,1);
@@ -236,6 +237,7 @@ public class AstroJump extends Application {
         vBox3.setSpacing(20);
         vBox3.setPadding(new Insets(0, 150, 0, 0));
         Label lbPlanets = new Label("Planets Discovered:");
+        lbPlanets.setStyle("-fx-font-size: 30px;");
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setHgap(10);
@@ -243,21 +245,22 @@ public class AstroJump extends Application {
 
         //Setting planet image
         for(int i = 0; i < 8; i++) {
+            double ratio = definingSize;
             VBox vbPlanet = new VBox();
             vbPlanet.setAlignment(Pos.CENTER);
-            vbPlanet.setSpacing(5);
+            vbPlanet.setSpacing(5*ratio);
             ImageView planetImage = new ImageView("file:" + planetArray.get(i).toString() + ".png");
-            planetImage.setFitWidth(planetArray.get(i).getSize());
-            planetImage.setFitHeight(planetArray.get(i).getSize());
+            planetImage.setFitWidth(planetArray.get(i).getSize()*ratio);
+            planetImage.setFitHeight(planetArray.get(i).getSize()*ratio);
             ColorAdjust blackout = new ColorAdjust();
             blackout.setBrightness(-1);
-            planetImage.setTranslateX(planetArray.get(i).getSetTranslateX());
+            planetImage.setTranslateX(planetArray.get(i).getSetTranslateX()*ratio);
 
             if(isBlackedOut(i)){
                 planetImage.setEffect(blackout);
                 Label lbPlanet = new Label("???");
-                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
-                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX()*ratio);
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY()*ratio);
                 vbPlanet.getChildren().addAll(planetImage, lbPlanet);
             }
             else {
@@ -265,14 +268,13 @@ public class AstroJump extends Application {
                 tooltipPlanet.setTextAlignment(CENTER);
                 Tooltip.install(planetImage, tooltipPlanet);
                 Label lbPlanet = new Label(planetArray.get(i).toString());
-                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX());
-                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY());
+                lbPlanet.setTranslateX(planetArray.get(i).getSetTranslateX()*ratio);
+                lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY()*ratio);
                 vbPlanet.getChildren().addAll(planetImage, lbPlanet);
             }
             //add to gridpane
             gridPane.add(vbPlanet, i%4, i/4);
         }
-
         vBox3.getChildren().addAll(txFiller, lbPlanets, gridPane);
         generalPane.add(vBox3,2,1);
 
@@ -461,7 +463,7 @@ public class AstroJump extends Application {
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,25 * definingSize));
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,16 * definingSize));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
@@ -473,7 +475,7 @@ public class AstroJump extends Application {
         txGameOver = new Text("");
         txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 20 * definingSize));
         txGameOver.setFill(Color.CORNFLOWERBLUE);
-        txGameOver.setStrokeWidth(1.25 * definingSize);
+        txGameOver.setStrokeWidth(0.8 * definingSize);
         txGameOver.setStroke(Color.BLACK);
         txGameOver.setTextAlignment(CENTER);
         BorderPane pane = new BorderPane();
@@ -588,6 +590,7 @@ public class AstroJump extends Application {
         if(player.getIsJumping()){
             playerJump(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getjumpForce());
         }
+
         //update is on ground boolean
         player.updateIsOnGround(GROUND_Y);
 
@@ -759,7 +762,8 @@ public class AstroJump extends Application {
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
         player.setAnimationState(Player.JUMP); // TO DO: move to action event
-
+        //Changing force
+        initialJumpSpeed *= definingSize/(float)1.5;
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
@@ -778,6 +782,8 @@ public class AstroJump extends Application {
     //NET METHOD
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
         //calculate the inital position of the net
+        //Changing force
+        netForce *= definingSize/2;
         double initialPosX = player.getX()+player.getWidth();
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
 
@@ -785,8 +791,8 @@ public class AstroJump extends Application {
         double angle = Math.atan((mouseY-initialPosY)/(mouseX-initialPosX));
 
         //calculate the speed in each axis
-        double initialSpeedX = netForce* Math.cos(angle);
-        double initialSpeedY = netForce* Math.sin(angle);
+        double initialSpeedX = netForce * Math.cos(angle);
+        double initialSpeedY = netForce * Math.sin(angle);
 
         //create net
         //TO DO: ADD WIND RESISTANCE DURING STORM
