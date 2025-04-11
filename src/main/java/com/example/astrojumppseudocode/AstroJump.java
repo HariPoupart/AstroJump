@@ -10,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -274,7 +275,68 @@ public class AstroJump extends Application {
 
         vBox3.getChildren().addAll(txFiller, lbPlanets, gridPane);
         generalPane.add(vBox3,2,1);
-        primaryStage.setTitle("AstroJump");
+
+        // Setting page
+        BorderPane borderPane1 = new BorderPane();
+
+        // Action
+        VBox vbox1 = new VBox();
+        vbox1.setAlignment(Pos.CENTER);
+        vbox1.setSpacing(40);
+        vbox1.setPadding(new Insets(0, 150, 30, 150));
+        Label lbAction = new Label("ACTION:");
+        Label lbJump = new Label("Jump:");
+        Label lbThrow = new Label("Throw:");
+        Label lbExit = new Label("Exit:");
+        Label lbAim = new Label("Aim:");
+        vbox1.getChildren().addAll(lbAction, lbJump, lbThrow, lbExit, lbAim);
+        borderPane1.setLeft(vbox1);
+
+        // Control
+        VBox vbox2 = new VBox();
+        vbox2.setAlignment(Pos.CENTER);
+        vbox2.setSpacing(35);
+        vbox2.setPadding(new Insets(0, 0, 20, 0));
+        Label lbControls = new Label("CONTROL:");
+
+        TextField tfJump = new TextField("SPACEBAR");
+        tfJump.setAlignment(Pos.CENTER);
+        tfJump.setTranslateY(5);
+        tfJump.setEditable(false);
+
+        TextField tfThrow = new TextField("RIGHT CLICK");
+        tfThrow.setAlignment(Pos.CENTER);
+        tfThrow.setEditable(false);
+
+        TextField tfExit = new TextField("ESCAPE");
+        tfExit.setAlignment(Pos.CENTER);
+        tfExit.setTranslateY(-3);
+        tfExit.setEditable(false);
+
+        TextField tfAim = new TextField("MOUSE");
+        tfAim.setAlignment(Pos.CENTER);
+        tfAim.setTranslateY(-6);
+        tfAim.setEditable(false);
+
+        vbox2.getChildren().addAll(lbControls, tfJump, tfThrow, tfExit, tfAim);
+        borderPane1.setCenter(vbox2);
+
+        // Sound setting
+        VBox vbox3 = new VBox();
+        vbox3.setAlignment(Pos.CENTER);
+        vbox3.setSpacing(30);
+        vbox3.setPadding(new Insets(0, 150, 8, 150));
+        Label lbSound = new Label("SOUND SETTING:");
+        lbSound.setTranslateY(-19);
+
+        // Music
+        Label lbMusic = new Label("Music:");
+
+        // Sound Effects
+        Label lbEffects = new Label("Sound Effects:");
+        vbox3.getChildren().addAll(lbSound, lbMusic, createSlider(), lbEffects, createSlider());
+        borderPane1.setRight(vbox3);
+
 
         //buttons action handler
         btStart.setOnAction(e -> startGameLoop(primaryStage));
@@ -314,6 +376,18 @@ public class AstroJump extends Application {
         StackPane mediaAndVisuals = new StackPane(pane,generalPane);
         Scene scene = new Scene(mediaAndVisuals,screenWidth,screenHeight);
         mediaAndVisuals.requestFocus();
+
+        // Go back button
+        BorderPane borderPane2 = new BorderPane();
+        borderPane2.setPadding(new Insets(-50, 50, 50, 50));
+        Button btBack = new Button("Back");
+        btBack.setOnAction(e -> primaryStage.setScene(scene));
+        borderPane2.setLeft(btBack);
+        borderPane1.setBottom(borderPane2);
+
+        Scene scene2 = new Scene(borderPane1, screenWidth, screenHeight);
+        btSettings.setOnAction(e -> primaryStage.setScene(scene2));
+        primaryStage.setTitle("AstroJump");
 
         //create player
         createPlayer();
@@ -941,5 +1015,22 @@ public class AstroJump extends Application {
         else {
             return false;
         }
+    }
+
+    public Node createSlider() {
+        HBox hbox = new HBox();
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(100);
+        Label lbSlider = new Label((int) slider.getValue() + "%");
+        lbSlider.setMinWidth(30);
+        lbSlider.setMinHeight(30);
+        lbSlider.setTranslateX(10);
+        lbSlider.setTranslateY(-10);
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            lbSlider.setText(newValue.intValue() + "%");
+        });
+        hbox.getChildren().addAll(slider, lbSlider);
+        return hbox;
     }
 }
