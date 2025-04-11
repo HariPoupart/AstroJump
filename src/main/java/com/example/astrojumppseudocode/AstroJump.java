@@ -389,6 +389,13 @@ public class AstroJump extends Application {
         borderPane2.setLeft(btBack);
         borderPane1.setBottom(borderPane2);
 
+        //listener for back button
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                primaryStage.setScene(scene);
+            }
+        });
+
         Scene scene2 = new Scene(borderPane1, screenWidth, screenHeight);
         btSettings.setOnAction(e -> primaryStage.setScene(scene2));
         primaryStage.setTitle("AstroJump");
@@ -465,7 +472,7 @@ public class AstroJump extends Application {
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,screenWidth/100));
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,15 * definingSize));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
