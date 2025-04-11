@@ -117,7 +117,7 @@ public class AstroJump extends Application {
 
     //game pane properties
     private static int GROUND_Y = 390;
-    private static int definingSize;
+    private static double definingSize;
 
     //game controls
     private static String jumpControl = "SPACE";
@@ -129,28 +129,30 @@ public class AstroJump extends Application {
         screenWidth = screenSize.getWidth();
         screenHeight = screenSize.getHeight();
         //defining "used" width/height
-        if(screenWidth/screenHeight >= 2) {
-            definingSize = (int)screenHeight/500;
+        if(!(screenWidth/screenHeight >= 2)) {
+            definingSize = screenHeight/500.0;
+
         }
         else {
-            definingSize = (int) (screenWidth/2)/500;
+            definingSize = (screenWidth/1000.0);
+
         }
         //ajusting game objects based on screen resolution
-        definingSize *= 2;
-        PLAYER_WIDTH = 100 * definingSize;
-        SPIKE_WIDTH = 42 * definingSize;
-        SPIKE_HEIGHT = 64 * definingSize;
-        METEO_WIDTH = 105 *  definingSize;
-        METEO_HEIGHT = 30 *  definingSize;
-        STAR_WIDTH = 58 *  definingSize;
-        STAR_HEIGHT = 60 *  definingSize;
-        NET_WIDTH = 32 *  definingSize;
-        BACKGROUND_WIDTH = 2000 * definingSize;
-        BACKGROUND_HEIGHT = 500 *  definingSize;
-        PORTAL_WIDTH = 96 *  definingSize;
-        PORTAL_HEIGHT = 96 * definingSize;
-        GROUND_Y = 390 * definingSize;
-        PLAYER_HEIGHT = 100 * definingSize;
+
+        PLAYER_WIDTH = (int) (100 * definingSize);
+        SPIKE_WIDTH = (int) (42 * definingSize);
+        SPIKE_HEIGHT = (int) (64 * definingSize);
+        METEO_WIDTH = (int) (105 *  definingSize);
+        METEO_HEIGHT = (int) (30 *  definingSize);
+        STAR_WIDTH = (int) (58 *  definingSize);
+        STAR_HEIGHT = (int) (60 *  definingSize);
+        NET_WIDTH = (int) (32 *  definingSize);
+        BACKGROUND_WIDTH = (int) (2000 * definingSize);
+        BACKGROUND_HEIGHT = (int) (500 *  definingSize);
+        PORTAL_WIDTH = (int) (96 *  definingSize);
+        PORTAL_HEIGHT = (int) (96 * definingSize);
+        GROUND_Y = (int) (390 * definingSize);
+        PLAYER_HEIGHT = (int) (100 * definingSize);
 
         //initiate planetArray with gravities from NSSDC
         Planet mercury = new Planet("Mercury", -567f,-600f,600f,0,0,30);
@@ -463,7 +465,7 @@ public class AstroJump extends Application {
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0 + "\nScore: " + score + "\nStars: " + player.getStarsCaught());
-        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,16 * definingSize));
+        txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,screenWidth/100));
         txGameInfo.setFill(Color.CORNFLOWERBLUE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
@@ -763,7 +765,7 @@ public class AstroJump extends Application {
         //set player animation to jump
         player.setAnimationState(Player.JUMP); // TO DO: move to action event
         //Changing force
-        initialJumpSpeed *= definingSize/(float)1.5;
+        initialJumpSpeed *= definingSize;
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
@@ -783,7 +785,7 @@ public class AstroJump extends Application {
     public void createNet(double mouseX,double mouseY,float gravity, float netForce){
         //calculate the inital position of the net
         //Changing force
-        netForce *= definingSize/2;
+        netForce *= definingSize;
         double initialPosX = player.getX()+player.getWidth();
         double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
 
