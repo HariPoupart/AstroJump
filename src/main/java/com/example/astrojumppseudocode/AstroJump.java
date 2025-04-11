@@ -193,6 +193,7 @@ public class AstroJump extends Application {
         tfScore.setEditable(false);
         Label lbStars = new Label("Total Stars Collected:");
         lbStars.setStyle("-fx-font-size: 30px;");
+        lbStars.setMinWidth(200);
         TextField tfStars = new TextField(IOMethods.getTotalStarsCollected() + "");
         tfStars.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
         tfStars.setAlignment(Pos.CENTER);
@@ -389,16 +390,16 @@ public class AstroJump extends Application {
         borderPane2.setLeft(btBack);
         borderPane1.setBottom(borderPane2);
 
+        Scene scene2 = new Scene(borderPane1, screenWidth, screenHeight);
+        btSettings.setOnAction(e -> primaryStage.setScene(scene2));
+        primaryStage.setTitle("AstroJump");
+
         //listener for back button
-        scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+        scene2.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 primaryStage.setScene(scene);
             }
         });
-
-        Scene scene2 = new Scene(borderPane1, screenWidth, screenHeight);
-        btSettings.setOnAction(e -> primaryStage.setScene(scene2));
-        primaryStage.setTitle("AstroJump");
 
         //create player
         createPlayer();
