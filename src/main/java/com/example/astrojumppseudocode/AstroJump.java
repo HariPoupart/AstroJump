@@ -4,8 +4,6 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -77,24 +75,24 @@ public class AstroJump extends Application {
 
     //player
     private Player player;
-    private static  int PLAYER_WIDTH = 100;
-    private static int PLAYER_HEIGHT = 100;
+    private static  int PLAYER_WIDTH;
+    private static int PLAYER_HEIGHT;
 
     //obstacles
-    private ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
-    private static int SPIKE_WIDTH = 42;
-    private static int SPIKE_HEIGHT = 64;
-    private static int METEO_WIDTH = 105;
-    private static int METEO_HEIGHT = 30;
+    private final ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
+    private static int SPIKE_WIDTH;
+    private static int SPIKE_HEIGHT;
+    private static int METEO_WIDTH;
+    private static int METEO_HEIGHT;
 
     //star
     private Star star;
-    private static int STAR_WIDTH = 58;
-    private static int STAR_HEIGHT = 60;
+    private static int STAR_WIDTH;
+    private static int STAR_HEIGHT;
 
     //net
-    private ArrayList<Net> nets = new ArrayList<>();
-    private static int NET_WIDTH = 32;
+    private final ArrayList<Net> nets = new ArrayList<>();
+    private static int NET_SIZE;
     private Path parabolaPath;
     private boolean updatePath = false;
     private double lastKnownMouseX;
@@ -103,19 +101,19 @@ public class AstroJump extends Application {
 
     //Background
     Background background;
-    private static int BACKGROUND_WIDTH = 2000;
-    private static int BACKGROUND_HEIGHT = 500;
+    private static int BACKGROUND_WIDTH;
+    private static int BACKGROUND_HEIGHT;
 
     //Portal
     SimpleMovingImage portal;
-    private static int PORTAL_WIDTH = 96;
-    private static int PORTAL_HEIGHT = 96;
+    private static int PORTAL_WIDTH;
+    private static int PORTAL_HEIGHT;
 
     //planets
     protected static ArrayList<Planet> planetArray;
 
     //game pane properties
-    private static int GROUND_Y = 390;
+    private static int GROUND_Y;
     private static double definingSize;
 
     //game controls
@@ -145,7 +143,7 @@ public class AstroJump extends Application {
         METEO_HEIGHT = (int) (30 *  definingSize);
         STAR_WIDTH = (int) (58 *  definingSize);
         STAR_HEIGHT = (int) (60 *  definingSize);
-        NET_WIDTH = (int) (32 *  definingSize);
+        NET_SIZE = (int) (45 *  definingSize);
         BACKGROUND_WIDTH = (int) (2000 * definingSize);
         BACKGROUND_HEIGHT = (int) (500 *  definingSize);
         PORTAL_WIDTH = (int) (96 *  definingSize);
@@ -575,7 +573,7 @@ public class AstroJump extends Application {
             parabolaPath.getElements().clear();
             txNetInfo.setText("");
             updatePath = false;
-            createNet(event.getX(),event.getY(),planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
+            createNet(planetArray.get(currentPlanetInt).getGravity(),planetArray.get(currentPlanetInt).getNetForce());
         });
         game.setOnMousePressed(event -> {
             updatePath = true;
@@ -685,6 +683,17 @@ public class AstroJump extends Application {
                 obstacles.remove(i);
                 i--;
             }
+
+            //check for collision with portal
+            if(portal !=null & obstacle!=null) {
+                if (obstacle.isCollidingWith(portal.getImage())){
+                    //delete obstacle
+                    gameObjects.getChildren().remove(obstacle.getImage());
+                    obstacle=null;
+                    obstacles.remove(i);
+                    i--;
+                }
+            }
         }
 
         //STAR movement and collisions
@@ -717,9 +726,11 @@ public class AstroJump extends Application {
         }
         //collision detection for portal
         if(portal!=null) {
-            if (portal.isCollidingWith(player.getImage())) {
+            if (portal.isCollidingWith(player.getImage())&&!player.getIsJumping()) {
                 //change planet
                 changePlanet();
+                //update spikes graphics
+                updateSpikePlanet();
                 //delete portal
                 gameObjects.getChildren().remove(portal.getImage());
                 portal = null;
@@ -831,10 +842,10 @@ public class AstroJump extends Application {
     }
 
     //NET METHOD
-    public void createNet(double mouseX,double mouseY,float gravity, float netForce){
+    public void createNet(float gravity, float netForce){
         //calculate the inital position of the net
         double initialPosX = player.getX()+player.getWidth();
-        double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_WIDTH);
+        double initialPosY = player.getY()+(0.5*player.getHeight())-(0.5* NET_SIZE);
 
         //calculate the angle of the throw
         double dx = lastKnownMouseX - initialPosX;
@@ -844,8 +855,8 @@ public class AstroJump extends Application {
         double angle = Math.atan2(dy, dx);
 
         //calculate the speed in each axis
-        double initialSpeedX = planetArray.get(currentPlanetInt).getNetForce()* Math.cos(angle);
-        double initialSpeedY = -planetArray.get(currentPlanetInt).getNetForce()* Math.sin(angle);
+        double initialSpeedX = netForce* Math.cos(angle);
+        double initialSpeedY = -netForce* Math.sin(angle);
 
         //if the player is aiming backwards shot the net like a slingshot
         if(initialSpeedX<0){
@@ -853,7 +864,7 @@ public class AstroJump extends Application {
             initialSpeedY*=-1;
         }
         //create net
-        //TO DO: ADD WIND RESISTANCE DURING STORM
+
         //adds a new net to the nets array
         nets.add(new Net(new ImageView("Net.png"),initialPosX,initialPosY,initialSpeedX,initialSpeedY,gravity,0));
         //adds the last net added to nets to the game object group
@@ -861,6 +872,10 @@ public class AstroJump extends Application {
         //set its initial Positions to the nets initial positions
         nets.getLast().setX(initialPosX);
         nets.getLast().setY(initialPosY);
+        nets.getLast().setHeight(NET_SIZE);
+        nets.getLast().setWidth(NET_SIZE);
+
+
     }
 
     //OBSTACLE METHODS
@@ -894,10 +909,22 @@ public class AstroJump extends Application {
         ImageView imgV = obstacle.getImage();
         imgV.setViewport(new Rectangle2D(0,(Math.round(Math.random()))*10,35,10));
 
-        obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()));
+        obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()));
         obstacle.setX(screenWidth);//CHECK
         //add imageView to game objects
         gameObjects.getChildren().add(obstacles.getLast().getImage());
+    }
+    public void updateSpikePlanet(){
+        for(int i =0; i<obstacles.size();i++){
+            SimpleMovingImage obstacle = obstacles.get(i);
+            //make sure the object is a spike
+            if(obstacle.getHeight()==SPIKE_HEIGHT&&obstacle.getWidth()==SPIKE_WIDTH){
+                //change the viewport to the right planet
+                //set to the right spike image (same spike on the current planet)
+                 Rectangle2D oldViewport = obstacle.getImage().getViewport();
+                obstacle.getImage().setViewport(new Rectangle2D(oldViewport.getMinX(), currentPlanetInt*32,21,32));
+            }
+        }
     }
 
     //STAR METHODS
@@ -1058,8 +1085,9 @@ public class AstroJump extends Application {
     }
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
-        long SPAWN_TIME_DECREMENT = 5_000;
-        obstacleSpawnIntervalNano = Math.max(200_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT); // Don't go below 0.2 seconds
+        long SPAWN_TIME_DECREMENT = 20_000_000;
+        obstacleSpawnIntervalNano = Math.max(300_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT);// Don't go below 0.2 seconds
+        System.out.println(obstacleSpawnIntervalNano);
     }
     private void updateGameObjectsSpeed(){
         //update background
