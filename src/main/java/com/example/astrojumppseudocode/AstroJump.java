@@ -2,6 +2,7 @@ package com.example.astrojumppseudocode;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -59,8 +60,8 @@ public class AstroJump extends Application {
     public static double screenHeight = 500;
     public static double screenWidth = 1000;
 
-    //public int currentPlanetInt = currentPlanetInt = (int) Math.round((Math.random() * 7));
-    public int currentPlanetInt = currentPlanetInt = 3;
+    public int currentPlanetInt = currentPlanetInt = (int) Math.round((Math.random() * 7));
+    public int currentTutorialInt = 0;
 
     public static boolean stopAnimationTimer;
 
@@ -127,11 +128,14 @@ public class AstroJump extends Application {
         //defining "used" width/height
         if(!(screenWidth/screenHeight >= 2)) {
             definingSize = screenHeight/500.0;
+
         }
         else {
             definingSize = (screenWidth/1000.0);
 
         }
+        //adjusting game objects based on screen resolution
+
         //adjusting game objects based on screen resolution
 
         PLAYER_WIDTH = (int) (50 * definingSize);
@@ -148,7 +152,6 @@ public class AstroJump extends Application {
         PORTAL_WIDTH = (int) (96 *  definingSize);
         PORTAL_HEIGHT = (int) (96 * definingSize);
         GROUND_Y = (int) (390 * definingSize);
-
 
         //initiate planetArray with gravities from NSSDC
         final float PLAYER_JUMP_FORCE = (float)(-800f*definingSize);
@@ -436,7 +439,7 @@ public class AstroJump extends Application {
 
     //show different stages
     protected void showTutorial(Stage primaryStage) {
-        Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
+        Scene scene = new Scene(new Pane(new ImageView("tutorial" + currentTutorialInt + ".bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -448,6 +451,14 @@ public class AstroJump extends Application {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+            }
+            if (event.getCode() == KeyCode.LEFT && currentTutorialInt < 5) {
+                    currentTutorialInt++;
+                    showTutorial(primaryStage);
+            }
+            if (event.getCode() == KeyCode.RIGHT && currentTutorialInt > 0) {
+                currentTutorialInt--;
+                showTutorial(primaryStage);
             }
         });
     }
@@ -494,7 +505,7 @@ public class AstroJump extends Application {
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0/definingSize + " m/s*s\nScore: " + score + "\nStars: " + player.getStarsCaught());
         txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,15 * definingSize));
-        txGameInfo.setFill(Color.CORNFLOWERBLUE);
+        txGameInfo.setFill(Color.WHITE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
         txGameInfo.setStroke(Color.BLACK);
         txGameInfo.setTextAlignment(LEFT);
@@ -504,7 +515,7 @@ public class AstroJump extends Application {
         //initialise txGameOver
         txGameOver = new Text("");
         txGameOver.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR, 20 * definingSize));
-        txGameOver.setFill(Color.CORNFLOWERBLUE);
+        txGameOver.setFill(Color.WHITE);
         txGameOver.setStrokeWidth(0.8 * definingSize);
         txGameOver.setStroke(Color.BLACK);
         txGameOver.setTextAlignment(CENTER);
@@ -567,10 +578,17 @@ public class AstroJump extends Application {
 
         //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
-            if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
-                player.setIsJumping(true);
-                player.setY(GROUND_Y-1-player.getHeight());
-                player.setAnimationState(Player.JUMPING);
+            if (event.getCode() == KeyCode.SPACE) {
+                if(player.getY() + player.getHeight() >= GROUND_Y - screenHeight/12 && player.getJumpTimeElapsed() > 0.4 ){
+                    player.setIsJumping(true);
+                    player.setAnimationState(Player.JUMPING);
+                }
+                else if(!player.getIsJumping()) {
+                    //player.getAnimation().setRate();
+                    player.setIsJumping(true);
+                    player.setY(GROUND_Y-1-player.getHeight());
+                    player.setAnimationState(Player.JUMPING);
+                }
             }
         });
 
@@ -919,7 +937,7 @@ public class AstroJump extends Application {
 
         //change image view
         ImageView imgV = obstacle.getImage();
-        imgV.setViewport(new Rectangle2D(Math.round(Math.random())*320,0,320,100));
+        imgV.setViewport(new Rectangle2D((Math.round(Math.random()))*320,0,320,100));
 
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()));
         obstacle.setX(screenWidth);//CHECK
