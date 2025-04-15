@@ -152,14 +152,14 @@ public class AstroJump extends Application {
         PLAYER_HEIGHT = (int) (100 * definingSize);
 
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("Mercury", (float) (-567f*definingSize), (float) (-600f*  definingSize), (float) (600f*  definingSize),0,0,30);
-        Planet venus = new Planet("Venus", (float) (-1382f*  definingSize), (float) (-900f*  definingSize), (float) (600f*  definingSize),-6,0,30);
-        Planet earth = new Planet("Earth", (float) (-1524f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),-8,0,30);
-        Planet mars = new Planet("Mars", (float) (-574f*  definingSize), (float) (-600f*  definingSize), (float) (600f*  definingSize),0,0,30);
-        Planet jupiter = new Planet("Jupiter", (float) (-3596f*  definingSize), (float) (-1500f*  definingSize), (float) (600f*  definingSize),0,0,30);
-        Planet saturn = new Planet("Saturn", (float) (-1396f*  definingSize), (float) (-900f*  definingSize), (float) (600f*  definingSize),-5,-16.5,64);
-        Planet uranus = new Planet("Uranus", (float) (-1355f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),-7.5,-2.5,36);
-        Planet neptune = new Planet("Neptune", (float) (-1707f*  definingSize), (float) (-1000f*  definingSize), (float) (600f*  definingSize),0,0,30);
+        Planet mercury = new Planet("Mercury", (float) (-576f*definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
+        Planet venus = new Planet("Venus", (float) (-1382f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-6,0,30);
+        Planet earth = new Planet("Earth", (float) (-1524f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-8,0,30);
+        Planet mars = new Planet("Mars", (float) (-574f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
+        Planet jupiter = new Planet("Jupiter", (float) (-3596f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
+        Planet saturn = new Planet("Saturn", (float) (-1396f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-5,-16.5,64);
+        Planet uranus = new Planet("Uranus", (float) (-1355f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-7.5,-2.5,36);
+        Planet neptune = new Planet("Neptune", (float) (-1707f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -389,7 +389,10 @@ public class AstroJump extends Application {
         generalPane.setVgap(100);
         generalPane.setAlignment(Pos.CENTER);
         Image menuImage = new Image("file:menuScreen.bmp");
-        generalPane.setBackground(new javafx.scene.layout.Background(new BackgroundImage(menuImage,BackgroundRepeat.NO_REPEAT,BackgroundRepeat.NO_REPEAT,BackgroundPosition.CENTER,new BackgroundSize(screenWidth,screenHeight,true,true,true,true))));
+        ImageView ivBackground = new ImageView(menuImage);
+        ivBackground.setFitHeight(screenHeight);
+        ivBackground.setFitWidth(screenWidth);
+        pane.getChildren().add(ivBackground);
         StackPane mediaAndVisuals = new StackPane(pane,generalPane);
         Scene scene = new Scene(mediaAndVisuals,screenWidth,screenHeight);
         mediaAndVisuals.requestFocus();
