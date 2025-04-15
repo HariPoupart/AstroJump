@@ -2,7 +2,6 @@ package com.example.astrojumppseudocode;
 
 import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -44,7 +43,6 @@ public class AstroJump extends Application {
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
-    private Timeline levelChanger;
 
     private float objectSpeed;
     private long score = 0;
@@ -61,7 +59,8 @@ public class AstroJump extends Application {
     public static double screenHeight = 500;
     public static double screenWidth = 1000;
 
-    public int currentPlanetInt = currentPlanetInt = (int) Math.round((Math.random() * 7));
+    //public int currentPlanetInt = currentPlanetInt = (int) Math.round((Math.random() * 7));
+    public int currentPlanetInt = currentPlanetInt = 3;
 
     public static boolean stopAnimationTimer;
 
@@ -128,7 +127,6 @@ public class AstroJump extends Application {
         //defining "used" width/height
         if(!(screenWidth/screenHeight >= 2)) {
             definingSize = screenHeight/500.0;
-
         }
         else {
             definingSize = (screenWidth/1000.0);
@@ -136,30 +134,33 @@ public class AstroJump extends Application {
         }
         //adjusting game objects based on screen resolution
 
-        PLAYER_WIDTH = (int) (100 * definingSize);
-        SPIKE_WIDTH = (int) (42 * definingSize);
-        SPIKE_HEIGHT = (int) (64 * definingSize);
+        PLAYER_WIDTH = (int) (50 * definingSize);
+        PLAYER_HEIGHT = (int) (50 * definingSize);
+        SPIKE_WIDTH = (int) (21 * definingSize);
+        SPIKE_HEIGHT = (int) (37 * definingSize);
         METEO_WIDTH = (int) (105 *  definingSize);
         METEO_HEIGHT = (int) (30 *  definingSize);
-        STAR_WIDTH = (int) (58 *  definingSize);
-        STAR_HEIGHT = (int) (60 *  definingSize);
-        NET_SIZE = (int) (45 *  definingSize);
+        STAR_WIDTH = (int) (50 *  definingSize);
+        STAR_HEIGHT = (int) (50 *  definingSize);
+        NET_SIZE = (int) (30 *  definingSize);
         BACKGROUND_WIDTH = (int) (2000 * definingSize);
         BACKGROUND_HEIGHT = (int) (500 *  definingSize);
         PORTAL_WIDTH = (int) (96 *  definingSize);
         PORTAL_HEIGHT = (int) (96 * definingSize);
         GROUND_Y = (int) (390 * definingSize);
-        PLAYER_HEIGHT = (int) (100 * definingSize);
+
 
         //initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("Mercury", (float) (-576f*definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
-        Planet venus = new Planet("Venus", (float) (-1382f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-6,0,30);
-        Planet earth = new Planet("Earth", (float) (-1524f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-8,0,30);
-        Planet mars = new Planet("Mars", (float) (-574f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
-        Planet jupiter = new Planet("Jupiter", (float) (-3596f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
-        Planet saturn = new Planet("Saturn", (float) (-1396f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-5,-16.5,64);
-        Planet uranus = new Planet("Uranus", (float) (-1355f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),-7.5,-2.5,36);
-        Planet neptune = new Planet("Neptune", (float) (-1707f*  definingSize), (float) (-950f*  definingSize), (float) (800f*  definingSize),0,0,30);
+        final float PLAYER_JUMP_FORCE = (float)(-800f*definingSize);
+        final float NET_FORCE = (float) (800f * definingSize);
+        Planet mercury = new Planet("Mercury", (float) (-576f*definingSize),PLAYER_JUMP_FORCE, NET_FORCE,0,0,30);
+        Planet venus = new Planet("Venus", (float) (-1382f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,-6,0,30);
+        Planet earth = new Planet("Earth", (float) (-1524f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,-8,0,30);
+        Planet mars = new Planet("Mars", (float) (-574f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,0,0,30);
+        Planet jupiter = new Planet("Jupiter", (float) (-3596f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,0,0,30);
+        Planet saturn = new Planet("Saturn", (float) (-1396f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,-5,-16.5,64);
+        Planet uranus = new Planet("Uranus", (float) (-1355f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,-7.5,-2.5,36);
+        Planet neptune = new Planet("Neptune", (float) (-1707f*  definingSize),PLAYER_JUMP_FORCE, NET_FORCE,0,0,30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -470,6 +471,7 @@ public class AstroJump extends Application {
     protected void startGameLoop(Stage primaryStage) {
         score = 0;
         player.setStarsCaught(0);
+        player.getAnimation().setRate(1.0);
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -566,7 +568,6 @@ public class AstroJump extends Application {
         //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
-                //player.getAnimation().setRate();
                 player.setIsJumping(true);
                 player.setY(GROUND_Y-1-player.getHeight());
                 player.setAnimationState(Player.JUMPING);
@@ -699,6 +700,9 @@ public class AstroJump extends Application {
                     i--;
                 }
             }
+
+            //make the player's animation faster
+            player.getAnimation().setRate(player.getAnimation().getRate()+deltaTime/60.0);
         }
 
         //STAR movement and collisions
@@ -890,14 +894,14 @@ public class AstroJump extends Application {
     //OBSTACLE METHODS
     public void createSpike(){
         //add new obstacle
-        obstacles.add(new SimpleMovingImage(new ImageView("Obstacle3.png"), SPIKE_WIDTH, SPIKE_HEIGHT,objectSpeed,0));
+        obstacles.add(new SimpleMovingImage(new ImageView("Obstacle.png"), SPIKE_WIDTH, SPIKE_HEIGHT,objectSpeed,0));
 
         //change image view
         ImageView imgV = obstacles.getLast().getImage();
         SimpleMovingImage obstacle = obstacles.getLast();
 
         //set to the right spike image (random spike on the current planet)
-        imgV.setViewport(new Rectangle2D((int)(Math.random()*6)*21,currentPlanetInt*32,21,32));
+        imgV.setViewport(new Rectangle2D((int)(Math.random()*5)*210,currentPlanetInt*280,210,280));
 
         //add imageView to game objects
         gameObjects.getChildren().add(imgV);
@@ -909,14 +913,14 @@ public class AstroJump extends Application {
     }
     public void createMeteorite(){
         //add new meteorite
-        obstacles.add(new SimpleMovingImage(new ImageView("MeteoriteSheet2.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
+        obstacles.add(new SimpleMovingImage(new ImageView("Meteorite.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
 
         //set obstacle to the right position
         SimpleMovingImage obstacle = obstacles.getLast();
 
         //change image view
         ImageView imgV = obstacle.getImage();
-        imgV.setViewport(new Rectangle2D(0,(Math.round(Math.random()))*10,35,10));
+        imgV.setViewport(new Rectangle2D(Math.round(Math.random())*320,0,320,100));
 
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()));
         obstacle.setX(screenWidth);//CHECK
@@ -939,13 +943,13 @@ public class AstroJump extends Application {
     //STAR METHODS
     public void initializeStar(){
         //create star
-        star = new Star(new ImageView("StarAnimationSheet.png"),STAR_WIDTH, STAR_HEIGHT, 0, 0, 0);
+        star = new Star(new ImageView("Star.png"),STAR_WIDTH, STAR_HEIGHT, 0, 0, 0);
 
         //get random index 0-1
         int index = (int)(Math.round(Math.random()));
 
-        //randomize the star
-        star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
+        //randomize the star image
+        star.getImage().setViewport(new Rectangle2D(index*230,0,230,230));
 
         //set position and size
         star.setX(screenWidth);
@@ -960,7 +964,7 @@ public class AstroJump extends Application {
         //get random index 0-1
         int index = (int)(Math.round(Math.random()));
         //randomize the star image
-        star.getImage().setViewport(new Rectangle2D(index*29,0,29,30));
+        star.getImage().setViewport(new Rectangle2D(index*230,0,230,230));
     }
 
     //BACKGROUND METHOD
@@ -1028,10 +1032,6 @@ public class AstroJump extends Application {
         mediaPlayer = new MediaPlayer(media);
         //mediaPlayer.play();
 
-        //if player dead stop loop
-        if(stopAnimationTimer){
-            levelChanger.stop();
-        }
     }
 
     //GAMEPLAY SPAWNING METHODS
