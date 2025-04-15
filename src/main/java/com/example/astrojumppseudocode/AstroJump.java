@@ -116,10 +116,6 @@ public class AstroJump extends Application {
     private static int GROUND_Y;
     private static double definingSize;
 
-    //game controls
-    private static String jumpControl = "SPACE";
-    private String netThrow = "";
-
     public static void main(String[] args) {
         //get screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -642,7 +638,7 @@ public class AstroJump extends Application {
         // deltaTime is the time elapsed since the last frame in seconds
         //you can multiply a value of speed or position by deltaTime to make it pixels/second
         //increase object speeds
-        objectSpeed += (float) (objectSpeed*0.01*deltaTime);
+        objectSpeed += (float) (objectSpeed*0.005*deltaTime);
         updateGameObjectsSpeed();
 
         //update txGameInfo
@@ -1119,9 +1115,6 @@ public class AstroJump extends Application {
         for (SimpleMovingImage obstacle : obstacles) {
             obstacle.setSpeedX(objectSpeed);
         }
-        //update star
-        // if(star.getSpeedX()!=0)
-        //star.setSpeedX(objectSpeed);
 
     }
 
