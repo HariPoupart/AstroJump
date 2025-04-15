@@ -826,7 +826,6 @@ public class AstroJump extends Application {
         playerAnimation.play();
 
         //create player object
-
         player = new Player(playerIV,playerAnimation);
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y-player.getHeight());
@@ -935,7 +934,7 @@ public class AstroJump extends Application {
                 //change the viewport to the right planet
                 //set to the right spike image (same spike on the current planet)
                  Rectangle2D oldViewport = obstacle.getImage().getViewport();
-                obstacle.getImage().setViewport(new Rectangle2D(oldViewport.getMinX(), currentPlanetInt*32,21,32));
+                obstacle.getImage().setViewport(new Rectangle2D(oldViewport.getMinX(), currentPlanetInt*280,210,280));
             }
         }
     }
