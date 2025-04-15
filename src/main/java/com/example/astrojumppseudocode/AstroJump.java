@@ -451,7 +451,7 @@ public class AstroJump extends Application {
         Scene scene = new Scene(new Pane(new ImageView("tutorial.bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
-//add listener
+        //add listener
         scene.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 try {
@@ -563,8 +563,10 @@ public class AstroJump extends Application {
         //jump event handler
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.SPACE&&!player.getIsJumping()) {
+                //player.getAnimation().setRate();
                 player.setIsJumping(true);
                 player.setY(GROUND_Y-1-player.getHeight());
+                player.setAnimationState(Player.JUMPING);
             }
         });
 
@@ -702,6 +704,7 @@ public class AstroJump extends Application {
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
             score+=(long)star.getScoreValue();
+            System.out.println(star.getScoreValue());
             //reset star
             spawnStar(screenWidth,0,0,0,0);
         }
@@ -787,16 +790,16 @@ public class AstroJump extends Application {
 
     //PLAYER METHODS
     private void createPlayer(){
-        final Image IMAGE = new Image("playerSpriteSheet.png");
+        final Image IMAGE = new Image("Character.png");
         //number of columns in the spriteSheet
-        final int COLUMNS = 5;
+        final int COLUMNS = 4;
         final int STARTING_ROW = Player.RUN;
         //beginning offset
         final int OFFSET_X = 0;
         final int OFFSET_Y = 0;
         //size of one image
-        final int SPRITE_WIDTH = 32;
-        final int SPRITE_HEIGHT = 32;
+        final int SPRITE_WIDTH = 230;
+        final int SPRITE_HEIGHT = 240;
         ImageView playerIV = new ImageView(IMAGE);
         //set player imageView to first image
         playerIV.setViewport(new Rectangle2D(OFFSET_X, OFFSET_Y, SPRITE_WIDTH, SPRITE_HEIGHT));
@@ -825,13 +828,16 @@ public class AstroJump extends Application {
     }
     private void playerJump(float gravitationalForce,float initialJumpSpeed){
         //set player animation to jump
-        player.setAnimationState(Player.JUMP); // TO DO: move to action event
         //move player
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed*initialJumpSpeed;
         double acceleratedDisplacement = -0.5*gravitationalForce*Math.pow(timeElapsed,2);
 
         player.setY(GROUND_Y-player.getHeight()+baseDisplacement+acceleratedDisplacement);
+
+        //if the player is falling set state to falling
+        if(gravitationalForce*timeElapsed+initialJumpSpeed<0)
+            player.setAnimationState(Player.FALLING);
 
         //if the player is back on the floor set is jumping to false
         if(player.getY()>=(GROUND_Y-player.getHeight())){
@@ -956,7 +962,7 @@ public class AstroJump extends Application {
 
     //BACKGROUND METHOD
     public void createBackground(){
-        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,512,128,objectSpeed ,512,currentPlanetInt);
+        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,5120,1280,objectSpeed ,512,currentPlanetInt);
     }
 
     //PATH METHOD
@@ -1052,8 +1058,6 @@ public class AstroJump extends Application {
             randomizeStarSpawnTime(); // Gradually increase spawn speed
         }
 
-        //System.out.println(now);
-
         // Spawn a new portal if the spawn interval has passed
         if (now - lastPortalSpawnTime >= portalSpawnIntervalNano && now> startSpawnPortalStarTime) {
             spawnPortal();
@@ -1087,7 +1091,6 @@ public class AstroJump extends Application {
         // Decrease the spawn interval (make it faster)
         long SPAWN_TIME_DECREMENT = 20_000_000;
         obstacleSpawnIntervalNano = Math.max(300_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT);// Don't go below 0.2 seconds
-        System.out.println(obstacleSpawnIntervalNano);
     }
     private void updateGameObjectsSpeed(){
         //update background

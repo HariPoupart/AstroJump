@@ -17,8 +17,9 @@ public class Player implements Collidable{
 
     //animation constants
     public static final int RUN = 0;
-    public static final int JUMP = 1;
-    public static final int DEAD = 2;
+    public static final int JUMPING = 1;
+    public static final int FALLING = 2;
+    public static final int DEAD = 3;
 
 
     Player(ImageView img,Sprite animation){
