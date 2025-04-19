@@ -14,10 +14,8 @@ public class Planet {
     int size;
 
     //constructor
-    Planet(String name, float gravity, float jumpForce, float netForce, double setTranslateX, double setTranslateY, int size) {
+    Planet(String name, float gravity, double setTranslateX, double setTranslateY, int size) {
         this.gravity = gravity;
-        this.jumpForce = jumpForce;
-        this.netForce = netForce;
         this.name = name;
         this.setTranslateX = setTranslateX;
         this.setTranslateY = setTranslateY;
@@ -28,22 +26,10 @@ public class Planet {
     public void setGravity(float gravity) {
         this.gravity = gravity;
     }
-    public void setjumpForce(float jumpForce) {
-        this.jumpForce = jumpForce;
-    }
-    public void setNetForce(float netForce) {
-        this.netForce = netForce;
-    }
-
     public float getGravity() {
         return gravity;
     }
-    public float getjumpForce() {
-        return jumpForce;
-    }
-    public float getNetForce() {
-        return netForce;
-    }
+
     public String toString() {
         return name;
     }
