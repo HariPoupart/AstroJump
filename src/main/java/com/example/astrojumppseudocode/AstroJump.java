@@ -40,7 +40,7 @@ import static javafx.scene.text.TextAlignment.LEFT;
 public class AstroJump extends Application {
 
     //gameloop method propreties
-    private static final int TARGET_FPS = 10;
+    private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
 
@@ -606,7 +606,6 @@ public class AstroJump extends Application {
                     player.setAnimationState(Player.JUMPING);
                 }
                 else if(!player.getIsJumping()) {
-                    //player.getAnimation().setRate();
                     player.setIsJumping(true);
                     player.setY(GROUND_Y-1-player.getHeight());
                     player.setAnimationState(Player.JUMPING);
@@ -742,7 +741,7 @@ public class AstroJump extends Application {
             }
 
             //make the player's animation faster
-            player.getAnimation().setRate(player.getAnimation().getRate()+deltaTime/60.0);
+            player.getAnimation().setRate(player.getAnimation().getRate()+deltaTime/100.0);
         }
 
         //STAR movement and collisions
