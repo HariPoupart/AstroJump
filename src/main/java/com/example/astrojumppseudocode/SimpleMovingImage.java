@@ -73,11 +73,7 @@ public class SimpleMovingImage implements Collidable{
         setY(getY()+speedY*deltaTime);
     }
     public boolean isCollidingWith(ImageView other){
-        boolean isColliding = false;
-        if(this.getImage().getBoundsInParent().intersects(other.getBoundsInParent())){
-            isColliding = true;
-        }
-        return isColliding;
+        return this.getImage().getBoundsInParent().intersects(other.getBoundsInParent());
     }
     public boolean isOutOfBounds(double groundLevel){
         return (getX() + getWidth() <= 0 || getY() >= groundLevel);

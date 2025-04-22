@@ -98,6 +98,7 @@ public class AstroJump extends Application {
     private double lastKnownMouseX;
     private double lastKnownMouseY;
     private static float NET_FORCE;
+    private float windDeceleration;
 
     //Background
     Background background;
@@ -502,9 +503,11 @@ public class AstroJump extends Application {
 
     //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
-        score = 0;
+
+        //reset player
         player.setStarsCaught(0);
         player.getAnimation().setRate(1.0);
+
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -518,11 +521,12 @@ public class AstroJump extends Application {
         //start all timers
         stopAnimationTimer = false;
 
-        //game scene setup
+        //game scene setup reset
         objectSpeed = -500;
+        windDeceleration=0;
+        score =0;
         if(gameObjects!=null)
             gameObjects.getChildren().clear();
-        score = 0;
 
         //initialise txGameInfo
         txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0/definingSize + " m/s*s\nScore: " + score + "\nStars: " + player.getStarsCaught());
@@ -660,11 +664,13 @@ public class AstroJump extends Application {
         }.start();
     }
     private void update(double deltaTime, Stage stage) {
-        // deltaTime is the time elapsed since the last frame in seconds
-        //you can multiply a value of speed or position by deltaTime to make it pixels/second
+        // deltaTime is the time elapsed since the last frame in seconds; you can multiply a value of speed or position by deltaTime to make it pixels/second
         //increase object speeds
         objectSpeed += (float) (objectSpeed*0.005*deltaTime);
         updateGameObjectsSpeed();
+
+        //increase wind acceleration on nets
+        windDeceleration += (float) (deltaTime*definingSize*-1.5);
 
         //update txGameInfo
         txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551/definingSize)/100.0 + " m/s²\nScore: " + score + "\nStars: " + player.getStarsCaught());
@@ -803,7 +809,6 @@ public class AstroJump extends Application {
             double initialSpeedY = -NET_FORCE* Math.sin(angle);
             //get acceleration
             double accelerationY = planetArray.get(currentPlanetInt).getGravity();
-            double accelerationX = 0;
 
             //draw line
             // Create a path for the parabola
@@ -826,8 +831,9 @@ public class AstroJump extends Application {
                     "\nAngle thrown: " + roundTo2Dec(Math.toDegrees(angle)) + "(degrees)" +
                     "\nInitial Speed X: " + (int)initialSpeedX + "(px/s)" +
                     "\nInitial Speed Y: " + (int)-initialSpeedY + "(px/s)" +
-                    "\nAcceleration X: " + accelerationX + "(px/s²)" +
-                    "\nAcceleration Y: "+ roundTo2Dec(accelerationY)+ "(px/s²)");
+                    "\nAcceleration X: " + roundTo2Dec(windDeceleration) + "(px/s²)" +
+                    "\nAcceleration Y: "+ roundTo2Dec(accelerationY)+ "(px/s²)"
+            );
         }
 
 
@@ -916,7 +922,7 @@ public class AstroJump extends Application {
         //create net
 
         //adds a new net to the nets array
-        nets.add(new Net(new ImageView("Net.png"),initialPosX,initialPosY,initialSpeedX,initialSpeedY,gravity,0));
+        nets.add(new Net(new ImageView("Net.png"),initialPosX,initialPosY,initialSpeedX,initialSpeedY,gravity,windDeceleration));
         //adds the last net added to nets to the game object group
         gameObjects.getChildren().add(nets.getLast().getImage());
         //set its initial Positions to the nets initial positions
@@ -1128,7 +1134,7 @@ public class AstroJump extends Application {
     private void increaseSpawnSpeed() {
         // Decrease the spawn interval (make it faster)
         long SPAWN_TIME_DECREMENT = 20_000_000;
-        obstacleSpawnIntervalNano = Math.max(300_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT);// Don't go below 0.2 seconds
+        obstacleSpawnIntervalNano = Math.max(300_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT);// Don't go below 0.3 seconds
     }
     private void updateGameObjectsSpeed(){
         //update background

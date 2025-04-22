@@ -6,16 +6,14 @@ public class Background extends SimpleMovingImage {
     //general info
     private final int WIDTH;
     private final int HEIGHT;
-    private final int INITIAL_PLANET_INDEX;
 
     Background(ImageView img,int fitWidth,int fitHeight,int width, int height,float speedX,int planetIndex){
         super(img,fitWidth,fitHeight,speedX,0);
         this.WIDTH = width;
         this.HEIGHT = height;
-        this.INITIAL_PLANET_INDEX = planetIndex;
 
         //set viewport
-        changePlanet(INITIAL_PLANET_INDEX);
+        changePlanet(planetIndex);
 
         //set coordinates
         this.setX(0);

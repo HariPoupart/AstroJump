@@ -101,12 +101,7 @@ public class Player implements Collidable{
 
     //jumping methods
     public void updateIsOnGround(double floorY){
-        if(floorY>=(getY()+this.height)){
-            this.isOnGround = true;
-        }
-        else{
-            this.isOnGround = false;
-        }
+        this.isOnGround = floorY >= (getY() + this.height);
     }
     public boolean getIsOnGround(){
         return this.isOnGround;

@@ -49,7 +49,7 @@ public class Net implements Collidable{
     public void updatePosition(){
         //update x
         double baseDisplacementX = getTimeElapsed()*INITIAL_SPEED_X;
-        double acceleratedDisplacementX = -0.5*accelerationX*Math.pow(getTimeElapsed(),2);
+        double acceleratedDisplacementX = 0.5*accelerationX*Math.pow(getTimeElapsed(),2);
         this.setX(INITIAL_POS_X+baseDisplacementX+acceleratedDisplacementX);
 
         //update y
