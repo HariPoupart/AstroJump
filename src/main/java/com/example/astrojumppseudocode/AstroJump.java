@@ -319,30 +319,34 @@ public class AstroJump extends Application {
         vbox2.setPadding(new Insets(0, 0, 20, 0));
         Label lbControls = new Label("CONTROL:");
         lbControls.setFont(new Font(40));
-        lbControls.setTranslateY(-2.5);
+        lbControls.setTranslateY(2.5);
 
         TextField tfJump = new TextField("SPACEBAR");
         tfJump.setFont(new Font(20));
         tfJump.setAlignment(Pos.CENTER);
         tfJump.setEditable(false);
+        tfJump.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         TextField tfThrow = new TextField("RIGHT CLICK");
         tfThrow.setFont(new Font(20));
         tfThrow.setAlignment(Pos.CENTER);
         tfThrow.setTranslateY(-3);
         tfThrow.setEditable(false);
+        tfThrow.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         TextField tfExit = new TextField("ESCAPE");
         tfExit.setFont(new Font(20));
         tfExit.setAlignment(Pos.CENTER);
         tfExit.setTranslateY(-5);
         tfExit.setEditable(false);
+        tfExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         TextField tfAim = new TextField("MOUSE");
         tfAim.setFont(new Font(20));
         tfAim.setAlignment(Pos.CENTER);
         tfAim.setTranslateY(-7);
         tfAim.setEditable(false);
+        tfAim.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         vbox2.getChildren().addAll(lbControls, tfJump, tfThrow, tfExit, tfAim);
         borderPane1.setCenter(vbox2);
@@ -353,20 +357,24 @@ public class AstroJump extends Application {
         vbox3.setSpacing(30);
         vbox3.setPadding(new Insets(0, 150, 8, 150));
         Label lbSound = new Label("SOUND SETTING:");
-        lbSound.setTranslateY(-19);
+        lbSound.setFont(new Font(40));
+        lbSound.setTranslateY(-15);
 
         // Music
         Label lbMusic = new Label("Music:");
+        lbMusic.setFont(new Font(30));
+        lbMusic.setPadding(new Insets(25,0,0,0));
         HBox hbox = new HBox();
+        hbox.setAlignment(Pos.CENTER);
         Slider slMusic = new Slider();
         slMusic.setMin(0);
         slMusic.setMax(100);
         slMusic.setValue(50);
         Label lbSlider = new Label((int)slMusic.getValue() + "%");
-        lbSlider.setMinWidth(30);
-        lbSlider.setMinHeight(30);
+        lbSlider.setFont(new Font(20));
+        lbSlider.setMinWidth(50);
+        lbSlider.setMinHeight(50);
         lbSlider.setTranslateX(10);
-        lbSlider.setTranslateY(-10);
         slMusic.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider.setText(newValue.intValue() + "%");
             musicSliderValue = newValue.intValue();
@@ -376,16 +384,18 @@ public class AstroJump extends Application {
 
         // Sound Effects
         Label lbEffects = new Label("Sound Effects:");
+        lbEffects.setFont(new Font(30));
         HBox hbox1 = new HBox();
+        hbox1.setAlignment(Pos.CENTER);
         Slider slSoundEffects = new Slider();
         slSoundEffects.setMin(0);
         slSoundEffects.setMax(100);
         slSoundEffects.setValue(50);
         Label lbSlider1 = new Label((int)slSoundEffects.getValue() + "%");
-        lbSlider1.setMinWidth(30);
-        lbSlider1.setMinHeight(30);
+        lbSlider1.setFont(new Font(20));
+        lbSlider1.setMinWidth(50);
+        lbSlider1.setMinHeight(50);
         lbSlider1.setTranslateX(10);
-        lbSlider1.setTranslateY(-10);
         slSoundEffects.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider1.setText(newValue.intValue() + "%");
             soundEffectSliderValue = newValue.intValue();
@@ -448,6 +458,7 @@ public class AstroJump extends Application {
         Button btBack = new Button("Back");
         btBack.setFont(new Font(20));
         btBack.setOnAction(e -> primaryStage.setScene(scene));
+        btBack.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
         borderPane2.setLeft(btBack);
         borderPane1.setBottom(borderPane2);
 
