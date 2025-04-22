@@ -88,6 +88,7 @@ public class Net implements Collidable{
     public double getWidth(){
         return this.width;
     }
+
     public void setImage(ImageView imageView){
         this.image = imageView;
     }
@@ -97,11 +98,7 @@ public class Net implements Collidable{
 
     //check if this works
     public boolean isCollidingWith(ImageView other){
-        boolean isColliding = false;
-        if(image.getBoundsInParent().intersects(other.getBoundsInParent())){
-            isColliding = true;
-        }
-        return isColliding;
+        return image.getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
     public long getCREATION_TIME(){

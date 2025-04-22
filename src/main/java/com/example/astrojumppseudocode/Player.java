@@ -79,17 +79,10 @@ public class Player implements Collidable{
     public int getStarsCaught(){
         return this.starsCaught;
     }
-    public void resetStars() {
-        starsCaught = 0;
-    }
 
     //check if this works
     public boolean isCollidingWith(ImageView other){
-        boolean isColliding = false;
-        if(image.getBoundsInParent().intersects(other.getBoundsInParent())){
-            isColliding = true;
-        }
-        return isColliding;
+        return image.getBoundsInParent().intersects(other.getBoundsInParent());
     }
 
     //animation accessor and mutator

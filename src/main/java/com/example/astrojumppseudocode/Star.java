@@ -16,9 +16,6 @@ public class Star extends SimpleMovingImage{
     public double getScoreValue(){
         return this.ScoreValue;
     }
-    public boolean isOutOfBounds(double groundLevel){
-        return (getX() + getWidth() <= 0 || getY() >= groundLevel);
-    }
 
 
 }

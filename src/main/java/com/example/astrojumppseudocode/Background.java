@@ -8,7 +8,7 @@ public class Background extends SimpleMovingImage {
     private final int HEIGHT;
     private final int INITIAL_PLANET_INDEX;
 
-    Background(ImageView img,int fitWidth,int fitHeight,int width, int height,float speedX,int totalWidth,int planetIndex){
+    Background(ImageView img,int fitWidth,int fitHeight,int width, int height,float speedX,int planetIndex){
         super(img,fitWidth,fitHeight,speedX,0);
         this.WIDTH = width;
         this.HEIGHT = height;
@@ -20,10 +20,6 @@ public class Background extends SimpleMovingImage {
         //set coordinates
         this.setX(0);
         this.setY(0);
-    }
-
-    public boolean isHalfway(){
-        return (getX() <=-0.5*WIDTH);
     }
 
     @Override
@@ -41,8 +37,5 @@ public class Background extends SimpleMovingImage {
         //set the viewpoint to a rectangle situated at the planet's index
         this.getImage().setViewport(new Rectangle2D(0,HEIGHT*planetIndex,WIDTH,HEIGHT));
     }
-
-    //background imageview array
-
 
 }

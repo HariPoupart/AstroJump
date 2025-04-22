@@ -40,7 +40,7 @@ import static javafx.scene.text.TextAlignment.LEFT;
 public class AstroJump extends Application {
 
     //gameloop method propreties
-    private static final int TARGET_FPS = 60;
+    private static final int TARGET_FPS = 10;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
 
@@ -171,6 +171,7 @@ public class AstroJump extends Application {
         planetArray.add(saturn);
         planetArray.add(uranus);
         planetArray.add(neptune);
+
         //launch args
         launch(args);
     }
@@ -750,7 +751,6 @@ public class AstroJump extends Application {
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
             score+=(long)star.getScoreValue();
-            System.out.println(star.getScoreValue());
             //reset star
             spawnStar(screenWidth,0,0,0,0);
         }
@@ -1006,7 +1006,7 @@ public class AstroJump extends Application {
 
     //BACKGROUND METHOD
     public void createBackground(){
-        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,5120,1280,objectSpeed ,512,currentPlanetInt);
+        background = new Background(new ImageView("Background.png"),BACKGROUND_WIDTH,BACKGROUND_HEIGHT,5120,1280,objectSpeed ,currentPlanetInt);
     }
 
     //PATH METHOD
@@ -1050,7 +1050,6 @@ public class AstroJump extends Application {
 
     //PLANET CHANGE METHOD
     private void changePlanet(){
-        System.out.println("Change, score:" + score + " speed:" + objectSpeed + "highscoreOLD: " + IOMethods.getHighScore());
         int newPlanetInt = (int) Math.round((Math.random() * 7));
         while(currentPlanetInt == newPlanetInt) {
             newPlanetInt = (int) Math.round((Math.random() * 7));
