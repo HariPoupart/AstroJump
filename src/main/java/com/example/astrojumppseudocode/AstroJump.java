@@ -64,7 +64,7 @@ public class AstroJump extends Application {
 
     public static boolean stopAnimationTimer;
 
-    public MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
 
     //GAME OBJECTS
     private Group gameObjects;
@@ -109,12 +109,14 @@ public class AstroJump extends Application {
     private static int PORTAL_WIDTH;
     private static int PORTAL_HEIGHT;
 
-    //planets
+    //Planets
     protected static ArrayList<Planet> planetArray;
 
-    //game pane properties
+    //Same pane properties
     private static int GROUND_Y;
     private static double definingSize;
+    private static int musicSliderValue;
+    private static int soundEffectSliderValue;
 
     public static void main(String[] args) {
         //get screen resolution
@@ -130,7 +132,8 @@ public class AstroJump extends Application {
             definingSize = (screenWidth/1000.0);
 
         }
-        //adjusting game objects based on screen resolution
+        musicSliderValue = 50;
+        soundEffectSliderValue = 50;
 
         //adjusting game objects based on screen resolution
 
@@ -176,6 +179,8 @@ public class AstroJump extends Application {
         launch(args);
     }
 
+
+    //SHOW MAIN MENU
     public void start(Stage primaryStage) throws IOException {
         GridPane generalPane = new GridPane();
         Text txFiller = new Text("\n\n\n");
@@ -259,6 +264,7 @@ public class AstroJump extends Application {
             blackout.setBrightness(-1);
             planetImage.setTranslateX(planetArray.get(i).getSetTranslateX()*ratio);
 
+            //if planet is not discovered
             if(isBlackedOut(i)){
                 planetImage.setEffect(blackout);
                 Label lbPlanet = new Label("???");
@@ -266,8 +272,10 @@ public class AstroJump extends Application {
                 lbPlanet.setTranslateY(planetArray.get(i).getSetTranslateY()*ratio);
                 vbPlanet.getChildren().addAll(planetImage, lbPlanet);
             }
+
+            //if planet is discovered
             else {
-                Tooltip tooltipPlanet = new Tooltip("Gravitational acceleration\nof " + planetArray.get(i).toString() + " : " + Math.round(planetArray.get(i).gravity/-1.5551)/100.0 + " m/s²");
+                Tooltip tooltipPlanet = new Tooltip("Gravitational acceleration\nof " + planetArray.get(i).toString() + " : " + Math.round(planetArray.get(i).gravity/-1.5551/definingSize)/100.0 + " m/s²");
                 tooltipPlanet.setTextAlignment(CENTER);
                 Tooltip.install(planetImage, tooltipPlanet);
                 Label lbPlanet = new Label(planetArray.get(i).toString());
@@ -349,34 +357,39 @@ public class AstroJump extends Application {
         // Music
         Label lbMusic = new Label("Music:");
         HBox hbox = new HBox();
-        Slider slider = new Slider();
-        slider.setMin(0);
-        slider.setMax(100);
-        Label lbSlider = new Label((int)slider.getValue() + "%");
+        Slider slMusic = new Slider();
+        slMusic.setMin(0);
+        slMusic.setMax(100);
+        slMusic.setValue(50);
+        Label lbSlider = new Label((int)slMusic.getValue() + "%");
         lbSlider.setMinWidth(30);
         lbSlider.setMinHeight(30);
         lbSlider.setTranslateX(10);
         lbSlider.setTranslateY(-10);
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+        slMusic.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider.setText(newValue.intValue() + "%");
+            musicSliderValue = newValue.intValue();
+            mediaPlayer.setVolume(((double)musicSliderValue) / 100.0);
         });
-        hbox.getChildren().addAll(slider, lbSlider);
+        hbox.getChildren().addAll(slMusic, lbSlider);
 
         // Sound Effects
         Label lbEffects = new Label("Sound Effects:");
         HBox hbox1 = new HBox();
-        Slider slider1 = new Slider();
-        slider1.setMin(0);
-        slider1.setMax(100);
-        Label lbSlider1 = new Label((int)slider1.getValue() + "%");
+        Slider slSoundEffects = new Slider();
+        slSoundEffects.setMin(0);
+        slSoundEffects.setMax(100);
+        slSoundEffects.setValue(50);
+        Label lbSlider1 = new Label((int)slSoundEffects.getValue() + "%");
         lbSlider1.setMinWidth(30);
         lbSlider1.setMinHeight(30);
         lbSlider1.setTranslateX(10);
         lbSlider1.setTranslateY(-10);
-        slider1.valueProperty().addListener((observable, oldValue, newValue) -> {
+        slSoundEffects.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider1.setText(newValue.intValue() + "%");
+            soundEffectSliderValue = newValue.intValue();
         });
-        hbox1.getChildren().addAll(slider1, lbSlider1);
+        hbox1.getChildren().addAll(slSoundEffects, lbSlider1);
         vbox3.getChildren().addAll(lbSound, lbMusic, hbox, lbEffects, hbox1);
         borderPane1.setRight(vbox3);
 
@@ -392,15 +405,20 @@ public class AstroJump extends Application {
         Media media;
         MediaView mv;
         Pane pane = new Pane();
+
         try{
+            if(mediaPlayer != null) {
+                mediaPlayer.stop();
+            }
             File file = new File("MenuMusic.mp3");
             media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             mv = new MediaView();
+            mediaPlayer.setVolume(((double)musicSliderValue) / 100.0);
             pane.getChildren().add(mv);
             mv.setMediaPlayer(mediaPlayer);
-            //mediaPlayer.play();
-
+            mediaPlayer.play();
+            mediaPlayer.setAutoPlay(false);
         }
 
         catch(NullPointerException e) {
@@ -459,7 +477,7 @@ public class AstroJump extends Application {
 
     }
 
-    //show different stages
+    //SHOW SETTING/TUTORIAL
     protected void showTutorial(Stage primaryStage) {
         Scene scene = new Scene(new Pane(new ImageView("tutorial" + currentTutorialInt + ".bmp")),screenWidth,screenHeight);
         primaryStage.setScene(scene);
@@ -477,10 +495,12 @@ public class AstroJump extends Application {
             if (event.getCode() == KeyCode.LEFT && currentTutorialInt < 5) {
                     currentTutorialInt++;
                     showTutorial(primaryStage);
+                    System.out.print("LEFT");
             }
             if (event.getCode() == KeyCode.RIGHT && currentTutorialInt > 0) {
                 currentTutorialInt--;
                 showTutorial(primaryStage);
+                System.out.print("RIGHT");
             }
         });
     }
@@ -502,9 +522,11 @@ public class AstroJump extends Application {
 
     //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
+        //reset variables:
         score = 0;
         player.setStarsCaught(0);
         player.getAnimation().setRate(1.0);
+
         //add first planet to planetsDiscovered
         if(!IOMethods.getPlanetsDiscovered().isEmpty()) {
             planetsDiscovered = IOMethods.getPlanetsDiscovered();
@@ -524,8 +546,18 @@ public class AstroJump extends Application {
             gameObjects.getChildren().clear();
         score = 0;
 
+        //start music
+        //Change media for music
+        mediaPlayer.stop();
+        File file = new File("InGameMusic.mp3");
+        Media media = new Media(file.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(((double)musicSliderValue) / 100.0);
+        mediaPlayer.play();
+        mediaPlayer.setAutoPlay(true);
+
         //initialise txGameInfo
-        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551)/100.0/definingSize + " m/s*s\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo = new Text( "Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity/-1.5551/definingSize)/100.0 + " m/s*s\nScore: " + score + "\nStars: " + player.getStarsCaught());
         txGameInfo.setFont(Font.font("Copperplate Gothic Bold", FontWeight.NORMAL, FontPosture.REGULAR,15 * definingSize));
         txGameInfo.setFill(Color.WHITE);
         txGameInfo.setStrokeWidth(.8 * definingSize);
@@ -718,6 +750,7 @@ public class AstroJump extends Application {
                 stopAnimationTimer = true;
                 player.setAnimationState(Player.DEAD);
                 txGameOver.setText("GAME OVER\nPRESS ESCAPE TO EXIT TO MAIN MENU OR R TO RESTART");
+                mediaPlayer.stop();
                 //showGameOverScreen(stage);
             }
 
@@ -1060,13 +1093,6 @@ public class AstroJump extends Application {
         if(planetsDiscovered.charAt(currentPlanetInt) == '0') {
             planetsDiscovered.setCharAt(currentPlanetInt, '1');
         }
-        //Change media for music
-        mediaPlayer.stop();
-        File file = new File(planetArray.get(currentPlanetInt).toString() + "Music.mp3");
-        Media media = new Media(file.toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        //mediaPlayer.play();
-
     }
 
     //GAMEPLAY SPAWNING METHODS
