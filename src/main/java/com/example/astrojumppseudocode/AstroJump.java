@@ -282,6 +282,7 @@ public class AstroJump extends Application {
 
         // Setting page
         BorderPane borderPane1 = new BorderPane();
+        borderPane1.setStyle("-fx-background-color: lavender;");
 
         // Action
         VBox vbox1 = new VBox();
@@ -342,18 +343,40 @@ public class AstroJump extends Application {
         vbox3.setSpacing(30);
         vbox3.setPadding(new Insets(0, 150, 8, 150));
         Label lbSound = new Label("SOUND SETTING:");
-        lbSound.setFont(new Font(40));
-        lbSound.setTranslateY(15);
+        lbSound.setTranslateY(-19);
 
         // Music
         Label lbMusic = new Label("Music:");
-        lbMusic.setFont(new Font(30));
-        lbMusic.setPadding(new Insets(25,0,0,0));
+        HBox hbox = new HBox();
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(100);
+        Label lbSlider = new Label((int)slider.getValue() + "%");
+        lbSlider.setMinWidth(30);
+        lbSlider.setMinHeight(30);
+        lbSlider.setTranslateX(10);
+        lbSlider.setTranslateY(-10);
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            lbSlider.setText(newValue.intValue() + "%");
+        });
+        hbox.getChildren().addAll(slider, lbSlider);
 
         // Sound Effects
         Label lbEffects = new Label("Sound Effects:");
-        lbEffects.setFont(new Font(30));
-        vbox3.getChildren().addAll(lbSound, lbMusic, createSlider(), lbEffects, createSlider());
+        HBox hbox1 = new HBox();
+        Slider slider1 = new Slider();
+        slider1.setMin(0);
+        slider1.setMax(100);
+        Label lbSlider1 = new Label((int)slider1.getValue() + "%");
+        lbSlider1.setMinWidth(30);
+        lbSlider1.setMinHeight(30);
+        lbSlider1.setTranslateX(10);
+        lbSlider1.setTranslateY(-10);
+        slider1.valueProperty().addListener((observable, oldValue, newValue) -> {
+            lbSlider1.setText(newValue.intValue() + "%");
+        });
+        hbox1.getChildren().addAll(slider1, lbSlider1);
+        vbox3.getChildren().addAll(lbSound, lbMusic, hbox, lbEffects, hbox1);
         borderPane1.setRight(vbox3);
 
 
