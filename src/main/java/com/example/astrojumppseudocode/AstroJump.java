@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -26,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -52,9 +55,9 @@ public class AstroJump extends Application {
     private long obstacleSpawnIntervalNano;
     private long starSpawnIntervalNano;
     private long portalSpawnIntervalNano;
-    private long lastObstacleSpawnTime =0;
+    private long lastObstacleSpawnTime = 0;
     private long lastStarSpawnTime = 0;
-    private long lastPortalSpawnTime =0;
+    private long lastPortalSpawnTime = 0;
 
     public static double screenHeight = 500;
     public static double screenWidth = 1000;
@@ -216,26 +219,21 @@ public class AstroJump extends Application {
         Button btStart = new Button("Start");
         btStart.setPrefWidth(250);
         btStart.setPrefHeight(30);
-        btStart.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
-
 
         // Tutorial button
         Button btTutorial = new Button("Tutorial");
         btTutorial.setPrefWidth(250);
         btTutorial.setPrefHeight(30);
-        btTutorial.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         // Settings button
         Button btSettings = new Button("Settings");
         btSettings.setPrefWidth(250);
         btSettings.setPrefHeight(30);
-        btSettings.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         // Exit button
         Button btExit = new Button("Exit");
         btExit.setPrefWidth(250);
         btExit.setPrefHeight(30);
-        btExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         vBox2.getChildren().addAll(txFiller, btStart, btTutorial, btSettings, btExit);
         generalPane.add(vBox2, 1,1);
@@ -400,16 +398,40 @@ public class AstroJump extends Application {
             lbSlider1.setText(newValue.intValue() + "%");
             soundEffectSliderValue = newValue.intValue();
         });
+        StackPane mediaAndVisuals = new StackPane();
+
+        //add reset save files button
+        Button btReset = new Button("Reset Files");
+        btReset.setPrefWidth(250);
+        btReset.setPrefHeight(30);
+        setButtonStyle(btReset);
+        btReset.setOnAction(e -> {
+            IOMethods.reset();
+            System.out.println("RESET FILES");
+            //tfStars.setText(IOMethods.getTotalStarsCollected() + "");
+            //tfScore.setText(IOMethods.getHighScore() + "");
+            try{
+                start(primaryStage);
+            }
+            catch(IOException ex) {
+                System.out.println(ex);
+            };
+        });
+
         hbox1.getChildren().addAll(slSoundEffects, lbSlider1);
-        vbox3.getChildren().addAll(lbSound, lbMusic, hbox, lbEffects, hbox1);
+        vbox3.getChildren().addAll(lbSound, lbMusic, hbox, lbEffects, hbox1,btReset);
         borderPane1.setRight(vbox3);
 
 
         //buttons action handler
         btStart.setOnAction(e -> startGameLoop(primaryStage));
+        setButtonStyle(btStart);
         btTutorial.setOnAction(e -> showTutorial(primaryStage));
+        setButtonStyle(btTutorial);
         btSettings.setOnAction(e -> showSettings(primaryStage));
+        setButtonStyle(btSettings);
         btExit.setOnAction(e -> System.exit(0));
+        setButtonStyle(btExit);
 
 
         //music from Menu
@@ -448,7 +470,9 @@ public class AstroJump extends Application {
         ivBackground.setFitHeight(screenHeight);
         ivBackground.setFitWidth(screenWidth);
         pane.getChildren().add(ivBackground);
-        StackPane mediaAndVisuals = new StackPane(pane,generalPane);
+        mediaAndVisuals.getChildren().add(pane);
+        mediaAndVisuals.getChildren().add(generalPane);
+
         Scene scene = new Scene(mediaAndVisuals,screenWidth,screenHeight);
         mediaAndVisuals.requestFocus();
 
@@ -458,7 +482,7 @@ public class AstroJump extends Application {
         Button btBack = new Button("Back");
         btBack.setFont(new Font(20));
         btBack.setOnAction(e -> primaryStage.setScene(scene));
-        btBack.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
+        setButtonStyle(btBack);
         borderPane2.setLeft(btBack);
         borderPane1.setBottom(borderPane2);
 
@@ -487,6 +511,12 @@ public class AstroJump extends Application {
         primaryStage.show();
 
 
+    }
+    //BUTTON SET STYLES
+    protected void setButtonStyle(Button btObject) {
+        btObject.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
+        btObject.setOnMousePressed(e -> btObject.setStyle("-fx-background-color: thistle;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 2.4;\n-fx-font-size: 20px;"));
+        btObject.setOnMouseReleased(e -> btObject.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;"));
     }
 
     //SHOW SETTING/TUTORIAL
@@ -1008,7 +1038,7 @@ public class AstroJump extends Application {
         ImageView imgV = obstacle.getImage();
         imgV.setViewport(new Rectangle2D((Math.round(Math.random()))*320,0,320,100));
 
-        obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()));
+        obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()-10));
         obstacle.setX(screenWidth);//CHECK
         //add imageView to game objects
         gameObjects.getChildren().add(obstacles.getLast().getImage());

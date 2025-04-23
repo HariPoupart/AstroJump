@@ -40,8 +40,6 @@ public class IOMethods {
         //setting planetsDiscoveredBitString
         setPlanetsDiscoveredBitString();
 
-        //TAKEOFF
-        System.out.println("Highscore: " + playerHighScore + " TotalStars: " + playerTotalStarsCollected + " Planets: " + playerPlanetsDiscovered);
     }
 
     //accessor methods
@@ -230,5 +228,24 @@ public class IOMethods {
         }
 
         return netThrow;
+    }
+
+    public static void reset() {
+        playerHighScore = 0;
+        currentHighScore = 0;
+        currentStarsCollected = 0;
+        playerTotalStarsCollected = 0;
+        planetsDiscoveredBitString = new StringBuilder("00000000");
+        playerPlanetsDiscovered = new StringBuilder("00000000");
+        setHighScore();
+        setPlanetsDiscoveredBitString();
+        setTotalStarsCollected();
+        File fileHS = new File("highScore.txt");
+        fileHS.delete();
+        File fileNS = new File("totalNumberStar.txt");
+        fileNS.delete();
+        File filePD =new File("planetsDiscovered.txt");
+        filePD.delete();
+
     }
 }
