@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -27,8 +26,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -42,7 +39,7 @@ import static javafx.scene.text.TextAlignment.LEFT;
 
 public class AstroJump extends Application {
 
-    //gameloop method propreties
+    //game loop method properties
     private static final int TARGET_FPS = 60;
     private static final long NANOSECONDS_PER_FRAME = 1_000_000_000 / TARGET_FPS;
     private long lastUpdateMethodTime = 0;
@@ -85,8 +82,8 @@ public class AstroJump extends Application {
     private final ArrayList<SimpleMovingImage> obstacles = new ArrayList<>();
     private static int SPIKE_WIDTH;
     private static int SPIKE_HEIGHT;
-    private static int METEO_WIDTH;
-    private static int METEO_HEIGHT;
+    private static int METEOR_WIDTH;
+    private static int METEOR_HEIGHT;
 
     //star
     private Star star;
@@ -145,8 +142,8 @@ public class AstroJump extends Application {
         PLAYER_HEIGHT = (int) (50 * definingSize);
         SPIKE_WIDTH = (int) (21 * definingSize);
         SPIKE_HEIGHT = (int) (37 * definingSize);
-        METEO_WIDTH = (int) (105 *  definingSize);
-        METEO_HEIGHT = (int) (30 *  definingSize);
+        METEOR_WIDTH = (int) (105 *  definingSize);
+        METEOR_HEIGHT = (int) (30 *  definingSize);
         STAR_WIDTH = (int) (50 *  definingSize);
         STAR_HEIGHT = (int) (50 *  definingSize);
         NET_SIZE = (int) (30 *  definingSize);
@@ -408,8 +405,6 @@ public class AstroJump extends Application {
         btReset.setOnAction(e -> {
             IOMethods.reset();
             System.out.println("RESET FILES");
-            //tfStars.setText(IOMethods.getTotalStarsCollected() + "");
-            //tfScore.setText(IOMethods.getHighScore() + "");
             try{
                 start(primaryStage);
             }
@@ -661,6 +656,7 @@ public class AstroJump extends Application {
                 }
             }
         });
+
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.R) {
                 try {
@@ -825,7 +821,6 @@ public class AstroJump extends Application {
 
         //STAR movement and collisions
         star.updatePosition(deltaTime);
-
         if(star.isCollidingWith(player.getImage())){
             player.addOneStar();
             score+=(long)star.getScoreValue();
@@ -866,7 +861,7 @@ public class AstroJump extends Application {
 
         //Path updated
         if(updatePath){
-            //calculate the inital position of the net
+            //calculate the initial position of the net
             double initialPosX = player.getX()+player.getWidth();
             double initialPosY = player.getY()+(0.5*player.getHeight())-(Net.WIDTH*0.5);
 
@@ -992,7 +987,6 @@ public class AstroJump extends Application {
             initialSpeedX*=-1;
             initialSpeedY*=-1;
         }
-        //create net
 
         //adds a new net to the nets array
         nets.add(new Net(new ImageView("Net.png"),initialPosX,initialPosY,initialSpeedX,initialSpeedY,gravity,windDeceleration));
@@ -1003,8 +997,6 @@ public class AstroJump extends Application {
         nets.getLast().setY(initialPosY);
         nets.getLast().setHeight(NET_SIZE);
         nets.getLast().setWidth(NET_SIZE);
-
-
     }
 
     //OBSTACLE METHODS
@@ -1025,11 +1017,11 @@ public class AstroJump extends Application {
         //set obstacle to the right position
         obstacle.setY(GROUND_Y-obstacle.getHeight());
         obstacle.setX(screenWidth);//CHECK
-
     }
+
     public void createMeteorite(){
         //add new meteorite
-        obstacles.add(new SimpleMovingImage(new ImageView("Meteorite.png"), METEO_WIDTH, METEO_HEIGHT,objectSpeed,0));
+        obstacles.add(new SimpleMovingImage(new ImageView("Meteorite.png"), METEOR_WIDTH, METEOR_HEIGHT,objectSpeed,0));
 
         //set obstacle to the right position
         SimpleMovingImage obstacle = obstacles.getLast();
@@ -1039,10 +1031,12 @@ public class AstroJump extends Application {
         imgV.setViewport(new Rectangle2D((Math.round(Math.random()))*320,0,320,100));
 
         obstacle.setY(Math.random()*(GROUND_Y-obstacle.getHeight()-player.getHeight()-10));
-        obstacle.setX(screenWidth);//CHECK
+        obstacle.setX(screenWidth);
+
         //add imageView to game objects
         gameObjects.getChildren().add(obstacles.getLast().getImage());
     }
+
     public void updateSpikePlanet(){
         for (SimpleMovingImage obstacle : obstacles) {
             //make sure the object is a spike
@@ -1179,7 +1173,6 @@ public class AstroJump extends Application {
 
     }
     private void spawnObstacle(){
-        //REMOVE LATER
         //currentPlanetInt=0;
         int index = (int)(Math.round(Math.random()));
         switch(index){
