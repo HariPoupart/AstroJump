@@ -287,7 +287,7 @@ public class AstroJump extends Application {
 
         //Setting page
         BorderPane borderPane1 = new BorderPane();
-        borderPane1.setStyle("-fx-background-color: lavender;");
+        borderPane1.setStyle("-fx-background-color: rgb(" + 203+ "," + 205 + ", " + 236 + ");");
 
         //Action
         VBox vbox1 = new VBox();
@@ -1185,26 +1185,6 @@ public class AstroJump extends Application {
     //IsBlackedOut method
     public boolean isBlackedOut(int planetInt) {
         return IOMethods.getPlanetsDiscovered().charAt(planetInt) == '0';
-    }
-
-    //CreateSlider method
-    public Node createSlider() {
-        HBox hbox = new HBox();
-        hbox.setAlignment(Pos.CENTER);
-        Slider slider = new Slider();
-        slider.setMin(0);
-        slider.setMax(100);
-        Label lbSlider = new Label((int) slider.getValue() + "%");
-        lbSlider.setFont(new Font(30));
-        lbSlider.setMinWidth(80);
-        lbSlider.setMinHeight(80);
-        lbSlider.setTranslateX(10);
-        lbSlider.setTranslateY(0);
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            lbSlider.setText(newValue.intValue() + "%");
-        });
-        hbox.getChildren().addAll(slider, lbSlider);
-        return hbox;
     }
 
     //MATH METHOD
