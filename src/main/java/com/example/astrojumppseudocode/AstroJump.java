@@ -217,8 +217,8 @@ public class AstroJump extends Application {
         btStart.setPrefWidth(250);
         btStart.setPrefHeight(30);
 
-        //Tutorial button
-        Button btTutorial = new Button("Tutorial");
+        //Tutorial button *Tutorial refers to the projectile physics menu*
+        Button btTutorial = new Button("Projectile Physics");
         btTutorial.setPrefWidth(250);
         btTutorial.setPrefHeight(30);
 
@@ -425,7 +425,7 @@ public class AstroJump extends Application {
             pane.getChildren().add(mv);
             mv.setMediaPlayer(mediaPlayer);
             mediaPlayer.play();
-            mediaPlayer.setAutoPlay(false);
+            mediaPlayer.setAutoPlay(true);
 
         } catch (NullPointerException e) {
             System.out.print("Error NULL for MediaPlayer");
@@ -498,7 +498,10 @@ public class AstroJump extends Application {
     //SHOW SETTING-TUTORIAL
     protected void showTutorial(Stage primaryStage) {
         //Create scene and add tutorial page according to currentTutorialInt
-        Scene scene = new Scene(new Pane(new ImageView("tutorial" + currentTutorialInt + ".bmp")), screenWidth, screenHeight);
+        ImageView tutorialPage = new ImageView("Page" + (currentTutorialInt + 1) + ".png");
+        tutorialPage.setFitWidth(screenWidth);
+        tutorialPage.setFitHeight(screenHeight);
+        Scene scene = new Scene(new Pane(tutorialPage));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.requestFocus();
@@ -512,12 +515,12 @@ public class AstroJump extends Application {
                     throw new RuntimeException(e);
                 }
             }
-            if (event.getCode() == KeyCode.LEFT && currentTutorialInt < 5) {
+            if (event.getCode() == KeyCode.RIGHT && currentTutorialInt < 5) {
                 currentTutorialInt++;
                 showTutorial(primaryStage);
                 System.out.print("LEFT");
             }
-            if (event.getCode() == KeyCode.RIGHT && currentTutorialInt > 0) {
+            if (event.getCode() == KeyCode.LEFT && currentTutorialInt > 0) {
                 currentTutorialInt--;
                 showTutorial(primaryStage);
                 System.out.print("RIGHT");
