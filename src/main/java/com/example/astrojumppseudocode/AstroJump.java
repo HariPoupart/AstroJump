@@ -515,7 +515,7 @@ public class AstroJump extends Application {
                     throw new RuntimeException(e);
                 }
             }
-            if (event.getCode() == KeyCode.RIGHT && currentTutorialInt < 5) {
+            if (event.getCode() == KeyCode.RIGHT && currentTutorialInt < 4) {
                 currentTutorialInt++;
                 showTutorial(primaryStage);
                 System.out.print("LEFT");
