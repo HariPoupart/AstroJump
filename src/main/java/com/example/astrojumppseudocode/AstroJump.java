@@ -446,6 +446,7 @@ public class AstroJump extends Application {
         mediaAndVisuals.getChildren().add(generalPane);
 
         Scene scene = new Scene(mediaAndVisuals, screenWidth, screenHeight);
+        scene.getStylesheets().add("menuCSS.css");
         mediaAndVisuals.requestFocus();
 
         //Back button
@@ -459,6 +460,8 @@ public class AstroJump extends Application {
         borderPane1.setBottom(borderPane2);
 
         Scene scene2 = new Scene(borderPane1, screenWidth, screenHeight);
+        scene2.getStylesheets().add("menuCSS.css");
+
         btSettings.setOnAction(e -> primaryStage.setScene(scene2));
         primaryStage.setTitle("AstroJump");
 

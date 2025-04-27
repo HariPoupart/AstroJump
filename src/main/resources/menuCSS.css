@@ -1,5 +1,3 @@
-#pane {
-    -fx-background-color: #C4CFED;
-    -fx-stroke-line-join: miter;
-    -fx-font: 
+.button {
+    -fx-text-fill: black;
 }
