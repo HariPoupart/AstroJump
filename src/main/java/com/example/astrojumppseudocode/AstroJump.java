@@ -55,7 +55,7 @@ public class AstroJump extends Application {
     public static double screenHeight = 500;
     public static double screenWidth = 1000;
     private static double definingSize;
-    private static int musicSliderValue;
+    private static int musicSliderValue = 50;
     public int currentPlanetInt = (int) Math.round((Math.random() * 7));
     public int currentTutorialInt = 0;
     public static MediaPlayer mediaPlayer;
@@ -135,8 +135,6 @@ public class AstroJump extends Application {
             definingSize = (screenWidth / 1000.0);
 
         }
-        musicSliderValue = 50;
-
         //Adjusting game objects based on screen resolution
         PLAYER_WIDTH = (int) (50 * definingSize);
         PLAYER_HEIGHT = (int) (50 * definingSize);
@@ -365,11 +363,12 @@ public class AstroJump extends Application {
         slMusic.setMin(0);
         slMusic.setMax(100);
         slMusic.setValue(50);
-        Label lbSlider = new Label((int) slMusic.getValue() + "%");
+        Label lbSlider = new Label((int) musicSliderValue + "%");
         lbSlider.setFont(new Font(20));
         lbSlider.setMinWidth(50);
         lbSlider.setMinHeight(50);
         lbSlider.setTranslateX(10);
+        slMusic.setValue(musicSliderValue);
         slMusic.valueProperty().addListener((observable, oldValue, newValue) -> {
             lbSlider.setText(newValue.intValue() + "%");
             musicSliderValue = newValue.intValue();
@@ -426,6 +425,7 @@ public class AstroJump extends Application {
             mv.setMediaPlayer(mediaPlayer);
             mediaPlayer.play();
             mediaPlayer.setAutoPlay(true);
+            mediaPlayer.setVolume(((double) musicSliderValue) / 100.0);
 
         } catch (NullPointerException e) {
             System.out.print("Error NULL for MediaPlayer");
