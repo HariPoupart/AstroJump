@@ -187,49 +187,6 @@ public class IOMethods {
         }
     }
 
-    public static String getJumpControl() {
-        File file = new File("controls.txt");
-        String jumpControl = "SPACE";
-        try {
-            BufferedReader input;
-            input = new BufferedReader(new FileReader(file));
-            jumpControl = input.readLine();
-            input.close();
-        } catch (Exception e) {
-            System.out.println("File missing/corrupted: controls.txt");
-        }
-
-        return jumpControl;
-    }
-
-    public static void setJumpControl(String newJumpControl) {
-        File file = new File ("controls.txt");
-        jumpControl = newJumpControl;
-        try{
-            BufferedWriter output = new BufferedWriter( new FileWriter(file));
-            output.write(jumpControl + "\n" + netThrow);
-            output.close();
-        } catch (Exception e) {
-        System.out.println("File missing/corrupted: controls.txt");
-    }
-    }
-
-    public static String getNetThrow() {
-        File file = new File("controls.txt");
-        String netThrow = "";
-        try {
-            BufferedReader input;
-            input = new BufferedReader(new FileReader(file));
-            input.readLine();
-            netThrow = input.readLine();
-            input.close();
-        } catch (Exception e) {
-            System.out.println("File missing/corrupted: controls.txt");
-        }
-
-        return netThrow;
-    }
-
     public static void reset() {
         File fileHS = new File("highScore.txt");
         fileHS.delete();
