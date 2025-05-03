@@ -320,7 +320,7 @@ public class AstroJump extends Application {
         tfJump.setEditable(false);
         tfJump.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
-        TextField tfThrow = new TextField("RIGHT CLICK");
+        TextField tfThrow = new TextField("LEFT CLICK");
         tfThrow.setFont(new Font(20));
         tfThrow.setAlignment(Pos.CENTER);
         tfThrow.setTranslateY(-4);
