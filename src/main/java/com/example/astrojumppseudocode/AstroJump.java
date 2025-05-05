@@ -7,12 +7,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -27,11 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.scene.text.Font;
-import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -135,6 +130,8 @@ public class AstroJump extends Application {
             definingSize = (screenWidth / 1000.0);
 
         }
+        musicSliderValue = 3;
+
         //Adjusting game objects based on screen resolution
         PLAYER_WIDTH = (int) (50 * definingSize);
         PLAYER_HEIGHT = (int) (50 * definingSize);
@@ -177,7 +174,6 @@ public class AstroJump extends Application {
         //Launch args
         launch(args);
     }
-
 
     //SHOW MAIN MENU GUI, MUSIC,
     public void start(Stage primaryStage) throws IOException {
@@ -293,15 +289,15 @@ public class AstroJump extends Application {
         vbox1.setSpacing(40);
         vbox1.setPadding(new Insets(0, 150, 30, 150));
         Label lbAction = new Label("ACTION:");
-        lbAction.setFont(new Font(40));
+        lbAction.setStyle("-fx-font-size: 40px;\n-fx-font-weight: bold;\n-fx-underline: true;");
         Label lbJump = new Label("Jump:");
-        lbJump.setFont(new Font(30));
+        lbJump.setStyle("-fx-font-size: 30px;\n-fx-font-weight: bold;");
         Label lbThrow = new Label("Throw:");
-        lbThrow.setFont(new Font(30));
+        lbThrow.setStyle("-fx-font-size: 30px;\n-fx-font-weight: bold;");
         Label lbExit = new Label("Exit:");
-        lbExit.setFont(new Font(30));
+        lbExit.setStyle("-fx-font-size: 30px;\n-fx-font-weight: bold;");
         Label lbAim = new Label("Aim:");
-        lbAim.setFont(new Font(30));
+        lbAim.setStyle("-fx-font-size: 30px;\n-fx-font-weight: bold;");
         vbox1.getChildren().addAll(lbAction, lbJump, lbThrow, lbExit, lbAim);
         borderPane1.setLeft(vbox1);
 
@@ -311,8 +307,8 @@ public class AstroJump extends Application {
         vbox2.setSpacing(43);
         vbox2.setPadding(new Insets(0, 0, 20, 0));
         Label lbControls = new Label("CONTROL:");
-        lbControls.setFont(new Font(40));
-        lbControls.setTranslateY(2.5);
+        lbControls.setStyle("-fx-font-size: 40px;\n-fx-font-weight: bold;\n-fx-underline: true;");
+        lbControls.setTranslateY(5);
 
         TextField tfJump = new TextField("SPACEBAR");
         tfJump.setFont(new Font(20));
@@ -320,24 +316,24 @@ public class AstroJump extends Application {
         tfJump.setEditable(false);
         tfJump.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
-        TextField tfThrow = new TextField("RIGHT CLICK");
+        TextField tfThrow = new TextField("LEFT CLICK");
         tfThrow.setFont(new Font(20));
         tfThrow.setAlignment(Pos.CENTER);
-        tfThrow.setTranslateY(-3);
+        tfThrow.setTranslateY(-4);
         tfThrow.setEditable(false);
         tfThrow.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         TextField tfExit = new TextField("ESCAPE");
         tfExit.setFont(new Font(20));
         tfExit.setAlignment(Pos.CENTER);
-        tfExit.setTranslateY(-5);
+        tfExit.setTranslateY(-8);
         tfExit.setEditable(false);
         tfExit.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
         TextField tfAim = new TextField("MOUSE");
         tfAim.setFont(new Font(20));
         tfAim.setAlignment(Pos.CENTER);
-        tfAim.setTranslateY(-7);
+        tfAim.setTranslateY(-12);
         tfAim.setEditable(false);
         tfAim.setStyle("-fx-background-color: lavender;\n-fx-stroke-line-join: miter;\n-fx-border-color: black;\n-fx-border-width: 1.8;\n-fx-font-size: 20px;");
 
@@ -348,14 +344,14 @@ public class AstroJump extends Application {
         VBox vbox3 = new VBox();
         vbox3.setAlignment(Pos.CENTER);
         vbox3.setSpacing(30);
-        vbox3.setPadding(new Insets(0, 150, 8, 150));
+        vbox3.setPadding(new Insets(0, 150, 8, 100));
         Label lbSound = new Label("SOUND SETTING:");
-        lbSound.setFont(new Font(40));
-        lbSound.setTranslateY(-15);
+        lbSound.setStyle("-fx-font-size: 40px;\n-fx-font-weight: bold;\n-fx-underline: true;");
+        lbSound.setTranslateY(15);
 
         //Music
         Label lbMusic = new Label("Music:");
-        lbMusic.setFont(new Font(30));
+        lbMusic.setStyle("-fx-font-size: 30px;\n-fx-font-weight: bold;");
         lbMusic.setPadding(new Insets(25, 0, 0, 0));
         HBox hbox = new HBox();
         hbox.setAlignment(Pos.CENTER);
@@ -364,7 +360,7 @@ public class AstroJump extends Application {
         slMusic.setMax(100);
         slMusic.setValue(50);
         Label lbSlider = new Label((int) musicSliderValue + "%");
-        lbSlider.setFont(new Font(20));
+        lbSlider.setStyle("-fx-font-size: 20px;\n-fx-font-weight: bold;");
         lbSlider.setMinWidth(50);
         lbSlider.setMinHeight(50);
         lbSlider.setTranslateX(10);
@@ -455,7 +451,7 @@ public class AstroJump extends Application {
 
         //Back button
         BorderPane borderPane2 = new BorderPane();
-        borderPane2.setPadding(new Insets(-50, 50, 50, 50));
+        borderPane2.setPadding(new Insets(-60, 60, 60, 60));
         Button btBack = new Button("Back");
         btBack.setFont(new Font(20));
         btBack.setOnAction(e -> primaryStage.setScene(scene));
@@ -937,7 +933,7 @@ public class AstroJump extends Application {
         player.setY(GROUND_Y - player.getHeight() + baseDisplacement + acceleratedDisplacement);
 
         //If the player is falling set state to falling
-        if (gravitationalForce * timeElapsed + initialJumpSpeed < 0)
+        if (-gravitationalForce * timeElapsed + initialJumpSpeed > 0)
             player.setAnimationState(Player.FALLING);
 
         //If the player is back on the floor set is jumping to false
