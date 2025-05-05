@@ -398,7 +398,11 @@ public class AstroJump extends Application {
 
 
         //Main buttons action handler
-        btStart.setOnAction(e -> startGameLoop(primaryStage));
+        btStart.setOnAction(e -> {
+            //resetting planets
+            currentPlanetInt = (int) Math.round((Math.random() * 7));
+            startGameLoop(primaryStage);
+        });
         setButtonStyle(btStart);
         btTutorial.setOnAction(e -> showTutorial(primaryStage));
         setButtonStyle(btTutorial);
@@ -415,12 +419,12 @@ public class AstroJump extends Application {
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
+
             }
             File file = new File("MenuMusic.mp3");
             media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
             mv = new MediaView();
-            mediaPlayer.setVolume(((double) musicSliderValue) / 100.0);
             pane.getChildren().add(mv);
             mv.setMediaPlayer(mediaPlayer);
             mediaPlayer.play();
@@ -484,8 +488,6 @@ public class AstroJump extends Application {
         //Set scene and show stage
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
     }
 
     //BUTTON SET STYLES
@@ -528,6 +530,8 @@ public class AstroJump extends Application {
 
     //GAMELOOP METHODS
     protected void startGameLoop(Stage primaryStage) {
+        score = 0;
+        lastUpdateMethodTime = 0;
         //Reset player
         player.setStarsCaught(0);
         player.getAnimation().setRate(1.0);
@@ -555,6 +559,7 @@ public class AstroJump extends Application {
 
         //Change media for music
         mediaPlayer.stop();
+
         File file = new File("InGameMusic.mp3");
         Media media = new Media(file.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
@@ -617,6 +622,7 @@ public class AstroJump extends Application {
         game.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 try {
+                    stopAnimationTimer = true;
                     start(primaryStage);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -629,7 +635,9 @@ public class AstroJump extends Application {
             if (event.getCode() == KeyCode.R) {
                 try {
                     IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
+                    currentPlanetInt = (int) Math.round((Math.random() * 7));
                     score = 0;
+                    lastUpdateMethodTime = 0;
                     player.setStarsCaught(0);
                     startGameLoop(primaryStage);
                 } catch (Exception e) {
@@ -682,11 +690,14 @@ public class AstroJump extends Application {
                 // Calculate the time elapsed since the last frame
                 if (stopAnimationTimer) {
                     this.stop();
+                    score = 0;
+                    objectSpeed = 0;
+                    lastUpdateMethodTime = 0;
                 }
                 if (lastUpdateMethodTime > 0) {
                     long elapsedTime = now - lastUpdateMethodTime;
                     // If enough time has passed, call update and save lastUpdateTime
-                    if (elapsedTime >= NANOSECONDS_PER_FRAME) {
+                    if (elapsedTime >= NANOSECONDS_PER_FRAME && ! stopAnimationTimer) {
                         //update score
                         score += (long) ((-0.0000000001) * elapsedTime * objectSpeed);
                         update(elapsedTime / 1_000_000_000.0, primaryStage); // Convert nanoseconds to seconds
@@ -711,7 +722,7 @@ public class AstroJump extends Application {
         windDeceleration += (float) (deltaTime * definingSize * -1.5);
 
         //Update txGameInfo
-        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravitiy: " + Math.round(planetArray.get(currentPlanetInt).gravity / -1.5551 / definingSize) / 100.0 + " m/s²\nScore: " + score + "\nStars: " + player.getStarsCaught());
+        txGameInfo.setText("Current Planet: " + planetArray.get(currentPlanetInt).toString() + "\nCurrent Gravity: " + Math.round(planetArray.get(currentPlanetInt).gravity / -1.5551 / definingSize) / 100.0 + " m/s²\nScore: " + score + "\nStars: " + player.getStarsCaught());
 
         //Update PLAYER jump
         if (player.getIsJumping()) {
@@ -756,13 +767,15 @@ public class AstroJump extends Application {
             obstacle.updatePosition(deltaTime);
 
             //Check for collisions with player
-            if (obstacle.isCollidingWith(player.getImage())) {
+            if (obstacle.isCollidingWith(player.getImage()) && !stopAnimationTimer) {
                 //Game over methods
                 IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
                 stopAnimationTimer = true;
+                objectSpeed = 0;
                 player.setAnimationState(Player.DEAD);
                 txGameOver.setText("GAME OVER\nPRESS ESCAPE TO EXIT TO MAIN MENU OR R TO RESTART");
                 mediaPlayer.stop();
+
                 //ShowGameOverScreen(stage);
             }
 
