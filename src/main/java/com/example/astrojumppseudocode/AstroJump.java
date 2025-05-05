@@ -447,7 +447,7 @@ public class AstroJump extends Application {
 
         //Back button
         BorderPane borderPane2 = new BorderPane();
-        borderPane2.setPadding(new Insets(-50, 50, 50, 50));
+        borderPane2.setPadding(new Insets(-60, 60, 60, 60));
         Button btBack = new Button("Back");
         btBack.setFont(new Font(20));
         btBack.setOnAction(e -> primaryStage.setScene(scene));
