@@ -603,6 +603,10 @@ public class AstroJump extends Application {
         nets.clear();
         obstacles.clear();
 
+        //update background
+        background.changePlanet(currentPlanetInt);
+
+
         //Reset timers
         obstacleSpawnIntervalNano = (long) 3.5 * 1_000_000_000;
         starSpawnIntervalNano = (long) 4 * 1_000_000_000;
