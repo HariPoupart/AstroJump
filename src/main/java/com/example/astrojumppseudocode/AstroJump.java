@@ -847,7 +847,7 @@ public class AstroJump extends Application {
         if (updatePath) {
             //Calculate the initial position of the net
             double initialPosX = player.getX() + player.getWidth();
-            double initialPosY = player.getY() + (0.5 * player.getHeight()) - (Net.WIDTH * 0.5);
+            double initialPosY = player.getY() + (0.5 * player.getHeight()) - (NET_SIZE * 0.5);
 
             //Calculate the angle of the throw
             double dx = lastKnownMouseX - initialPosX;
@@ -862,7 +862,6 @@ public class AstroJump extends Application {
             //Get acceleration
             double accelerationY = planetArray.get(currentPlanetInt).getGravity();
 
-            //Draw line
             // Create a path for the parabola
             double k = (Math.pow(initialSpeedY, 2) / (2 * accelerationY)) + initialPosY;
             double h = initialSpeedX * initialSpeedY / accelerationY + initialPosX;
@@ -1084,15 +1083,15 @@ public class AstroJump extends Application {
         path.setFill(null); //Important for a line (not filled)
 
         double endX = screenWidth;    //End at screen width
-        double step = 1;          //Smaller step = smoother curve
+        double step = 15;          //Smaller step = smoother curve
 
         //Move to starting point
-        double startY = a * Math.pow(startX - h, 2) + k + Net.WIDTH * 0.5;
+        double startY = a * Math.pow(startX - h, 2) + k + NET_SIZE * 0.5;
         path.getElements().add(new MoveTo(startX, startY));
 
         //Create the parabola by adding line segments
         for (double x = startX + step; x <= endX; x += step) {
-            double y = a * Math.pow(x - h, 2) + k + Net.WIDTH * 0.5;
+            double y = a * Math.pow(x - h, 2) + k + NET_SIZE * 0.5;
             path.getElements().add(new LineTo(x, y));
         }
 

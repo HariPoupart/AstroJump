@@ -16,7 +16,6 @@ public class Net implements Collidable{
     private float accelerationY;
     private float accelerationX;
     private final long CREATION_TIME;
-    public static final int WIDTH = 32;
 
     Net(ImageView img,double initialPositionX, double initialPositionY,double initialSpeedX,double initialSpeedY, float gravity, float accelerationX){
         this.image = img;
