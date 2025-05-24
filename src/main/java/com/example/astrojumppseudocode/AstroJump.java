@@ -117,6 +117,7 @@ public class AstroJump extends Application {
 
     //MAIN METHOD - SETTING USER ATTRIBUTES, PLANET ARRAY, OBJECT SIZE
     public static void main(String[] args) {
+
         //Get user's screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         screenWidth = screenSize.getWidth();
@@ -130,7 +131,6 @@ public class AstroJump extends Application {
             definingSize = (screenWidth / 1000.0);
 
         }
-        musicSliderValue = 3;
 
         //Adjusting game objects based on screen resolution
         PLAYER_WIDTH = (int) (50 * definingSize);
@@ -170,6 +170,9 @@ public class AstroJump extends Application {
         planetArray.add(saturn);
         planetArray.add(uranus);
         planetArray.add(neptune);
+
+        //default audio value
+        musicSliderValue = 3;
 
         //Launch args
         launch(args);
