@@ -922,12 +922,11 @@ public class AstroJump extends Application {
         player = new Player(playerIV, playerAnimation);
         player.setAnimationState(Player.RUN);
         player.setY(GROUND_Y - player.getHeight());
-        player.setX(0);
+        player.setX(20*definingSize);
 
     }
 
     private void playerJump(float gravitationalForce, float initialJumpSpeed) {
-        //Set player animation to jump
         //Move player
         double timeElapsed = player.getJumpTimeElapsed();
         double baseDisplacement = timeElapsed * initialJumpSpeed;
@@ -949,7 +948,7 @@ public class AstroJump extends Application {
     }
 
     //NET METHOD
-    public void createNet(float gravity, float netForce) {
+    public void createNet(float gravity, float netSpeed) {
         //Calculate the inital position of the net
         double initialPosX = player.getX() + player.getWidth();
         double initialPosY = player.getY() + (0.5 * player.getHeight()) - (0.5 * NET_SIZE);
@@ -962,27 +961,24 @@ public class AstroJump extends Application {
         double angle = Math.atan2(dy, dx);
 
         //Calculate the speed in each axis
-        double initialSpeedX = netForce * Math.cos(angle);
-        double initialSpeedY = -netForce * Math.sin(angle);
+        double initialSpeedX = netSpeed * Math.cos(angle);
+        double initialSpeedY = -netSpeed * Math.sin(angle);
 
-        //If the player is aiming backwards shot the net like a slingshot
+        //If the player is aiming backwards shoot the net like a slingshot
         if (initialSpeedX < 0) {
             initialSpeedX *= -1;
             initialSpeedY *= -1;
         }
-        //Create net
 
         //Adds a new net to the nets array
-        nets.add(new Net(new ImageView("Net.png"), initialPosX, initialPosY, initialSpeedX, initialSpeedY, gravity, windDeceleration));
+        nets.add(new Net(new ImageView("Net.png"), initialPosX, initialPosY, initialSpeedX,
+                initialSpeedY, gravity, windDeceleration));
         //Adds the last net added to nets to the game object group
         gameObjects.getChildren().add(nets.getLast().getImage());
-        //Set its initial Positions to the nets initial positions
-        nets.getLast().setX(initialPosX);
-        nets.getLast().setY(initialPosY);
+
+        //Set image sizes
         nets.getLast().setHeight(NET_SIZE);
         nets.getLast().setWidth(NET_SIZE);
-
-
     }
 
     //OBSTACLE METHODS

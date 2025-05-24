@@ -34,8 +34,8 @@ public class Sprite extends Transition {
 
     public void interpolate(double k) {
         //k is a fraction from 0.0 to 1.0 that shows the progress of the transition
-        //sets the index to either the last image of the progression* the last image
-        final int index = Math.min((int) Math.floor(k * NO_OF_COLUMNS), NO_OF_COLUMNS - 1);
+        //sets the index to k*number of columns (don't go past the last index)
+        final int index = Math.min((int) Math.floor(k * NO_OF_COLUMNS),NO_OF_COLUMNS-1);
         if (index != lastIndex) {
             //set coordinates of the image to show
             final int x = index  * WIDTH + OFFSET_x;
