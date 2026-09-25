@@ -51,7 +51,7 @@ public class AstroJump extends Application {
     public static double screenWidth = 1000;
     private static double definingSize;
     private static int musicSliderValue = 50;
-    public int currentPlanetInt = (int) Math.round((Math.random() * 7));
+    public int currentPlanetInt = 0;
     public int currentTutorialInt = 0;
     public static MediaPlayer mediaPlayer;
 
@@ -152,15 +152,26 @@ public class AstroJump extends Application {
         PLAYER_JUMP_FORCE = (float) (-800f * definingSize);
         NET_FORCE = (float) (800f * definingSize);
 
+        //Planet gravity strenght constants
+        final float MERCURY_GRAVITY = -1000f;
+        final float VENUS_GRAVITY = -1382f;
+        final float EARTH_GRAVITY = -1524f;
+        final float MARS_GRAVITY = -1000f;
+        final float JUPITER_GRAVITY = -2000f;
+        final float SATURN_GRAVITY = -1396f;
+        final float URANUS_GRAVITY = -1355;
+        final float NEPTUNE_GRAVITY = -1707f;
+
+
         //Initiate planetArray with gravities from NSSDC
-        Planet mercury = new Planet("Mercury", (float) (-576f * definingSize), 0, 0, 30);
-        Planet venus = new Planet("Venus", (float) (-1382f * definingSize), -6, 0, 30);
-        Planet earth = new Planet("Earth", (float) (-1524f * definingSize), -8, 0, 30);
-        Planet mars = new Planet("Mars", (float) (-574f * definingSize), 0, 0, 30);
-        Planet jupiter = new Planet("Jupiter", (float) (-3596f * definingSize), 0, 0, 30);
-        Planet saturn = new Planet("Saturn", (float) (-1396f * definingSize), -5, -16.5, 64);
-        Planet uranus = new Planet("Uranus", (float) (-1355f * definingSize), -7.5, -2.5, 36);
-        Planet neptune = new Planet("Neptune", (float) (-1707f * definingSize), 0, 0, 30);
+        Planet mercury = new Planet("Mercury", (float) (MERCURY_GRAVITY * definingSize), 0, 0, 30);
+        Planet venus = new Planet("Venus", (float) (VENUS_GRAVITY * definingSize), -6, 0, 30);
+        Planet earth = new Planet("Earth", (float) (EARTH_GRAVITY * definingSize), -8, 0, 30);
+        Planet mars = new Planet("Mars", (float) (MARS_GRAVITY * definingSize), 0, 0, 30);
+        Planet jupiter = new Planet("Jupiter", (float) (JUPITER_GRAVITY * definingSize), 0, 0, 30);
+        Planet saturn = new Planet("Saturn", (float) (SATURN_GRAVITY* definingSize), -5, -16.5, 64);
+        Planet uranus = new Planet("Uranus", (float) (URANUS_GRAVITY * definingSize), -7.5, -2.5, 36);
+        Planet neptune = new Planet("Neptune", (float) (NEPTUNE_GRAVITY * definingSize), 0, 0, 30);
         planetArray = new ArrayList<>();
         planetArray.add(mercury);
         planetArray.add(venus);
@@ -399,7 +410,7 @@ public class AstroJump extends Application {
         //Main buttons action handler
         btStart.setOnAction(e -> {
             //resetting planets
-            currentPlanetInt = (int) Math.round((Math.random() * 7));
+            currentPlanetInt = 0;
             startGameLoop(primaryStage);
         });
         setButtonStyle(btStart);
@@ -550,7 +561,7 @@ public class AstroJump extends Application {
         stopAnimationTimer = false;
 
         //Game scene setup reset
-        objectSpeed = -500;
+        objectSpeed = -800;
         windDeceleration = 0;
         score = 0;
         if (gameObjects != null)
@@ -611,10 +622,10 @@ public class AstroJump extends Application {
 
 
         //Reset timers
-        obstacleSpawnIntervalNano = (long) 3.5 * 1_000_000_000;
+        obstacleSpawnIntervalNano = (long) 2 *1_000_000_000;
         starSpawnIntervalNano = (long) 4 * 1_000_000_000;
         portalSpawnIntervalNano = (long) 30 * 1_000_000_000;
-
+        
         Scene game = new Scene(gameObjects, screenWidth, screenHeight);
 
         //Initialize the next star spawning
@@ -638,7 +649,7 @@ public class AstroJump extends Application {
             if (event.getCode() == KeyCode.R) {
                 try {
                     IOMethods saveData = new IOMethods(score, player.getStarsCaught(), planetsDiscovered);
-                    currentPlanetInt = (int) Math.round((Math.random() * 7));
+                    currentPlanetInt = 0;
                     score = 0;
                     lastUpdateMethodTime = 0;
                     player.setStarsCaught(0);
@@ -718,7 +729,7 @@ public class AstroJump extends Application {
     private void update(double deltaTime, Stage stage) {
         //DeltaTime is the time elapsed since the last frame in seconds; you can multiply a value of speed or position by deltaTime to make it pixels/second
         //Increase object speeds
-        objectSpeed += (float) (objectSpeed * 0.005 * deltaTime);
+        objectSpeed += (float) (objectSpeed * 0.004 * deltaTime);
         updateGameObjectsSpeed();
 
         //Increase wind acceleration on nets
@@ -1108,12 +1119,19 @@ public class AstroJump extends Application {
 
     //PLANET CHANGE METHOD
     private void changePlanet() {
-        //Determine new planet and update currentPlanetInt
-        int newPlanetInt = (int) Math.round((Math.random() * 7));
-        while (currentPlanetInt == newPlanetInt) {
-            newPlanetInt = (int) Math.round((Math.random() * 7));
+        //OLD MMETHOD
+        // Determine new planet and update currentPlanetInt
+        //int newPlanetInt = (int) Math.round((Math.random() * 7));
+        //while (currentPlanetInt == newPlanetInt) {
+            //newPlanetInt = (int) Math.round((Math.random() * 7));
+        //}
+        //Next planet is the next one
+        currentPlanetInt++;
+
+        //if escapes solar system reset to mercury
+        if (currentPlanetInt>=8) {
+            currentPlanetInt = 0;
         }
-        currentPlanetInt = newPlanetInt;
         //Update background
         background.changePlanet(currentPlanetInt);
         //Add planet to planetsDiscovered
@@ -1162,7 +1180,7 @@ public class AstroJump extends Application {
 
     private void spawnObstacle() {
         //Create new random obstacle
-        int index = (int) (Math.round(Math.random()));
+        int index = (int) (Math.round(2*Math.random()));
         switch (index) {
             case 0: //Spawn spike
                 createSpike();
@@ -1170,6 +1188,11 @@ public class AstroJump extends Application {
             case 1: //Spawn meteor
                 createMeteorite();
                 break;
+
+            case 2:
+                createMeteorite();
+                break;
+
         }
     }
 
@@ -1183,8 +1206,10 @@ public class AstroJump extends Application {
 
     private void increaseSpawnSpeed() {
         //Decrease the spawn interval
-        long SPAWN_TIME_DECREMENT = 20_000_000;
-        obstacleSpawnIntervalNano = Math.max(300_000_000, obstacleSpawnIntervalNano - SPAWN_TIME_DECREMENT);// Don't go below 0.2 seconds
+        long SPAWN_TIME_DECREMENT = 1_000_000;
+        obstacleSpawnIntervalNano -= SPAWN_TIME_DECREMENT;
+        obstacleSpawnIntervalNano = Math.max(10_000_000,obstacleSpawnIntervalNano );// Don't go below 0.1 seconds
+        System.out.println("SPAWN_TIME "+ obstacleSpawnIntervalNano);
     }
 
     private void updateGameObjectsSpeed() {
