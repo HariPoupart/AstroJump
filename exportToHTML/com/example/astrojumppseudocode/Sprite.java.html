@@ -1,0 +1,76 @@
+<html>
+<head>
+<title>Sprite.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Sprite.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">astrojumppseudocode</span><span class="s2">;</span>
+
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">ImageView</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">Interpolator</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">Transition</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Rectangle2D</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Duration</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">Sprite </span><span class="s0">extends </span><span class="s1">Transition </span><span class="s2">{</span>
+
+    <span class="s0">private final </span><span class="s1">ImageView IMAGE_VIEW</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">row</span><span class="s2">;</span>
+    <span class="s0">private final int </span><span class="s1">NO_OF_COLUMNS</span><span class="s2">;</span>
+    <span class="s0">private final int </span><span class="s1">OFFSET_x</span><span class="s2">;</span>
+    <span class="s0">private final int </span><span class="s1">OFFSET_Y</span><span class="s2">;</span>
+    <span class="s0">private final int </span><span class="s1">WIDTH</span><span class="s2">;</span>
+    <span class="s0">private final int </span><span class="s1">HEIGHT</span><span class="s2">;</span>
+
+    <span class="s0">private int </span><span class="s1">lastIndex</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">Sprite</span><span class="s2">(</span><span class="s1">ImageView imageView</span><span class="s2">, </span><span class="s1">Duration duration</span><span class="s2">, </span><span class="s0">int </span><span class="s1">row</span><span class="s2">, </span><span class="s0">int </span><span class="s1">columns</span><span class="s2">, </span><span class="s0">int </span><span class="s1">offsetX</span><span class="s2">, </span><span class="s0">int </span><span class="s1">offsetY</span><span class="s2">, </span><span class="s0">int </span><span class="s1">width</span><span class="s2">, </span><span class="s0">int </span><span class="s1">height</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">IMAGE_VIEW </span><span class="s2">= </span><span class="s1">imageView</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">row </span><span class="s2">= </span><span class="s1">row</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">NO_OF_COLUMNS </span><span class="s2">= </span><span class="s1">columns</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">OFFSET_x </span><span class="s2">= </span><span class="s1">offsetX</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">OFFSET_Y </span><span class="s2">= </span><span class="s1">offsetY</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">WIDTH </span><span class="s2">= </span><span class="s1">width</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">HEIGHT </span><span class="s2">= </span><span class="s1">height</span><span class="s2">;</span>
+        <span class="s1">setCycleDuration</span><span class="s2">(</span><span class="s1">duration</span><span class="s2">);</span>
+        <span class="s1">setInterpolator</span><span class="s2">(</span><span class="s1">Interpolator</span><span class="s2">.</span><span class="s1">LINEAR</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">interpolate</span><span class="s2">(</span><span class="s0">double </span><span class="s1">k</span><span class="s2">) {</span>
+        <span class="s3">//k is a fraction from 0.0 to 1.0 that shows the progress of the transition</span>
+        <span class="s3">//sets the index to k*number of columns (don't go past the last index)</span>
+        <span class="s0">final int </span><span class="s1">index </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">min</span><span class="s2">((</span><span class="s0">int</span><span class="s2">) </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">floor</span><span class="s2">(</span><span class="s1">k </span><span class="s2">* </span><span class="s1">NO_OF_COLUMNS</span><span class="s2">),</span><span class="s1">NO_OF_COLUMNS</span><span class="s2">-</span><span class="s4">1</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">index </span><span class="s2">!= </span><span class="s1">lastIndex</span><span class="s2">) {</span>
+            <span class="s3">//set coordinates of the image to show</span>
+            <span class="s0">final int </span><span class="s1">x </span><span class="s2">= </span><span class="s1">index  </span><span class="s2">* </span><span class="s1">WIDTH </span><span class="s2">+ </span><span class="s1">OFFSET_x</span><span class="s2">;</span>
+            <span class="s0">final int </span><span class="s1">y </span><span class="s2">= </span><span class="s1">row </span><span class="s2">* </span><span class="s1">HEIGHT </span><span class="s2">+ </span><span class="s1">OFFSET_Y</span><span class="s2">;</span>
+            <span class="s3">//show only the image</span>
+            <span class="s1">IMAGE_VIEW</span><span class="s2">.</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">(</span><span class="s1">x</span><span class="s2">, </span><span class="s1">y</span><span class="s2">, </span><span class="s1">WIDTH</span><span class="s2">, </span><span class="s1">HEIGHT</span><span class="s2">));</span>
+            <span class="s1">lastIndex </span><span class="s2">= </span><span class="s1">index</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">setRow</span><span class="s2">(</span><span class="s0">int </span><span class="s1">row</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">row </span><span class="s2">= </span><span class="s1">row</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public int </span><span class="s1">getRow</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">row</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

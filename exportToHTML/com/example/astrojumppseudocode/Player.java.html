@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>Player.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Player.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">astrojumppseudocode</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">ImageView</span><span class="s2">;</span>
+
+
+<span class="s0">public class </span><span class="s1">Player </span><span class="s0">implements </span><span class="s1">Collidable</span><span class="s2">{</span>
+    <span class="s3">//general</span>
+    <span class="s0">private </span><span class="s1">ImageView image</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Sprite animation</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">width</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">height</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">starsCaught</span><span class="s2">;</span>
+    <span class="s3">//jumping</span>
+    <span class="s0">private boolean </span><span class="s1">isOnGround</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">isJumping</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">startJumpTime</span><span class="s2">;</span>
+
+    <span class="s3">//animation constants</span>
+    <span class="s0">public static final int </span><span class="s1">RUN </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">public static final int </span><span class="s1">JUMPING </span><span class="s2">= </span><span class="s4">1</span><span class="s2">;</span>
+    <span class="s0">public static final int </span><span class="s1">FALLING </span><span class="s2">= </span><span class="s4">2</span><span class="s2">;</span>
+    <span class="s0">public static final int </span><span class="s1">DEAD </span><span class="s2">= </span><span class="s4">3</span><span class="s2">;</span>
+
+
+    <span class="s1">Player</span><span class="s2">(</span><span class="s1">ImageView img</span><span class="s2">,</span><span class="s1">Sprite animation</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">img</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">animation </span><span class="s2">= </span><span class="s1">animation</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">width </span><span class="s2">= </span><span class="s1">img</span><span class="s2">.</span><span class="s1">getFitWidth</span><span class="s2">();</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">height </span><span class="s2">= </span><span class="s1">img</span><span class="s2">.</span><span class="s1">getFitHeight</span><span class="s2">();</span>
+        <span class="s3">//default values</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">isOnGround </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">isJumping </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">starsCaught </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//position accessors and mutators</span>
+    <span class="s0">public void </span><span class="s1">setX</span><span class="s2">(</span><span class="s0">double </span><span class="s1">x</span><span class="s2">){</span>
+        <span class="s1">image</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">x</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setY</span><span class="s2">(</span><span class="s0">double </span><span class="s1">y</span><span class="s2">){</span>
+        <span class="s1">image</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">y</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getX</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">image</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getY</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">image</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//accessors and mutators for image</span>
+    <span class="s0">public void </span><span class="s1">setHeight</span><span class="s2">(</span><span class="s0">double </span><span class="s1">height</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">height </span><span class="s2">= </span><span class="s1">height</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">height</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setWidth</span><span class="s2">(</span><span class="s0">double </span><span class="s1">width</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">width </span><span class="s2">= </span><span class="s1">width</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">width</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getHeight</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">height</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getWidth</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">width</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">ImageView imageView</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">imageView</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public </span><span class="s1">ImageView getImage</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//stars accessor and mutator</span>
+    <span class="s0">public void </span><span class="s1">setStarsCaught</span><span class="s2">(</span><span class="s0">int </span><span class="s1">newstarsCaught</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">starsCaught</span><span class="s2">=</span><span class="s1">newstarsCaught</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">addOneStar</span><span class="s2">(){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">starsCaught</span><span class="s2">++;</span>
+    <span class="s2">}</span>
+    <span class="s0">public int </span><span class="s1">getStarsCaught</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">starsCaught</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//check if this works</span>
+    <span class="s0">public boolean </span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">ImageView other</span><span class="s2">){</span>
+        <span class="s0">return </span><span class="s1">image</span><span class="s2">.</span><span class="s1">getBoundsInParent</span><span class="s2">().</span><span class="s1">intersects</span><span class="s2">(</span><span class="s1">other</span><span class="s2">.</span><span class="s1">getBoundsInParent</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//animation accessor and mutator</span>
+    <span class="s0">public void </span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s0">int </span><span class="s1">animationState</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">setRow</span><span class="s2">(</span><span class="s1">animationState</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public int </span><span class="s1">getAnimationState</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">getRow</span><span class="s2">();</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setAnimation</span><span class="s2">(</span><span class="s1">Sprite animation</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">animation </span><span class="s2">= </span><span class="s1">animation</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public </span><span class="s1">Sprite getAnimation</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//jumping methods</span>
+    <span class="s0">public void </span><span class="s1">updateIsOnGround</span><span class="s2">(</span><span class="s0">double </span><span class="s1">floorY</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">isOnGround </span><span class="s2">= </span><span class="s1">floorY </span><span class="s2">&gt;= (</span><span class="s1">getY</span><span class="s2">() + </span><span class="s0">this</span><span class="s2">.</span><span class="s1">height</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public boolean </span><span class="s1">getIsOnGround</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">isOnGround</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">setIsJumping</span><span class="s2">(</span><span class="s0">boolean </span><span class="s1">isJumping</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">isJumping </span><span class="s2">= </span><span class="s1">isJumping</span><span class="s2">;</span>
+        <span class="s3">//if the player starts jumping record time</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">isJumping</span><span class="s2">)</span>
+            <span class="s0">this</span><span class="s2">.</span><span class="s1">startJumpTime </span><span class="s2">= </span><span class="s1">System</span><span class="s2">.</span><span class="s1">currentTimeMillis</span><span class="s2">();</span>
+        <span class="s0">else</span>
+            <span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">RUN</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public boolean </span><span class="s1">getIsJumping</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">isJumping</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public long </span><span class="s1">getStartJumpTime</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">startJumpTime</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getJumpTimeElapsed</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s2">(</span><span class="s1">System</span><span class="s2">.</span><span class="s1">currentTimeMillis</span><span class="s2">()-</span><span class="s0">this</span><span class="s2">.</span><span class="s1">startJumpTime</span><span class="s2">)/</span><span class="s4">1000.0</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

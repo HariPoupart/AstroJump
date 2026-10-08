@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>SimpleMovingImage.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SimpleMovingImage.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">astrojumppseudocode</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">Image</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">ImageView</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">SimpleMovingImage </span><span class="s0">implements </span><span class="s1">Collidable</span><span class="s2">{</span>
+    <span class="s0">private </span><span class="s1">ImageView image</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">width</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">height</span><span class="s2">;</span>
+    <span class="s0">private float </span><span class="s1">speedX</span><span class="s2">;</span>
+    <span class="s0">private float </span><span class="s1">speedY</span><span class="s2">;</span>
+
+    <span class="s1">SimpleMovingImage</span><span class="s2">(</span><span class="s1">ImageView img</span><span class="s2">,</span><span class="s0">int </span><span class="s1">width</span><span class="s2">, </span><span class="s0">int </span><span class="s1">height</span><span class="s2">, </span><span class="s0">float </span><span class="s1">speedX</span><span class="s2">, </span><span class="s0">float </span><span class="s1">speedY</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">img</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">speedX </span><span class="s2">= </span><span class="s1">speedX</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">speedY </span><span class="s2">= </span><span class="s1">speedY</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setWidth</span><span class="s2">(</span><span class="s1">width</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">setHeight</span><span class="s2">(</span><span class="s1">height</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s3">//position &amp; speed accessors and mutators</span>
+    <span class="s0">public void </span><span class="s1">setX</span><span class="s2">(</span><span class="s0">double </span><span class="s1">x</span><span class="s2">){</span>
+        <span class="s1">image</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">x</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setY</span><span class="s2">(</span><span class="s0">double </span><span class="s1">y</span><span class="s2">){</span>
+        <span class="s1">image</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">y</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getX</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">image</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getY</span><span class="s2">(){</span>
+        <span class="s0">return </span><span class="s1">image</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setSpeedX</span><span class="s2">(</span><span class="s0">float </span><span class="s1">speedX</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">speedX </span><span class="s2">= </span><span class="s1">speedX</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public float </span><span class="s1">getSpeedX</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">speedX</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setSpeedY</span><span class="s2">(</span><span class="s0">float </span><span class="s1">speedY</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">speedY </span><span class="s2">= </span><span class="s1">speedY</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public float </span><span class="s1">getSpeedY</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">speedY</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s3">//accessors and mutators for width &amp; height</span>
+    <span class="s0">public void </span><span class="s1">setHeight</span><span class="s2">(</span><span class="s0">double </span><span class="s1">height</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">height </span><span class="s2">= </span><span class="s1">height</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">height</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setWidth</span><span class="s2">(</span><span class="s0">double </span><span class="s1">width</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">width </span><span class="s2">= </span><span class="s1">width</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">width</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getHeight</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">height</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public double </span><span class="s1">getWidth</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">width</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">ImageView imageView</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image </span><span class="s2">= </span><span class="s1">imageView</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">Image image</span><span class="s2">){</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">setImage</span><span class="s2">(</span><span class="s1">image</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public </span><span class="s1">ImageView getImage</span><span class="s2">(){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">image</span><span class="s2">;</span>
+    <span class="s2">}</span>
+    <span class="s0">public void </span><span class="s1">updatePosition</span><span class="s2">(</span><span class="s0">double </span><span class="s1">deltaTime</span><span class="s2">){</span>
+        <span class="s3">//update x</span>
+        <span class="s1">setX</span><span class="s2">(</span><span class="s1">getX</span><span class="s2">()+</span><span class="s1">speedX</span><span class="s2">*</span><span class="s1">deltaTime</span><span class="s2">);</span>
+        <span class="s3">//update y</span>
+        <span class="s1">setY</span><span class="s2">(</span><span class="s1">getY</span><span class="s2">()+</span><span class="s1">speedY</span><span class="s2">*</span><span class="s1">deltaTime</span><span class="s2">);</span>
+    <span class="s2">}</span>
+    <span class="s0">public boolean </span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">ImageView other</span><span class="s2">){</span>
+        <span class="s0">return this</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">().</span><span class="s1">getBoundsInParent</span><span class="s2">().</span><span class="s1">intersects</span><span class="s2">(</span><span class="s1">other</span><span class="s2">.</span><span class="s1">getBoundsInParent</span><span class="s2">());</span>
+    <span class="s2">}</span>
+    <span class="s0">public boolean </span><span class="s1">isOutOfBounds</span><span class="s2">(</span><span class="s0">double </span><span class="s1">groundLevel</span><span class="s2">){</span>
+        <span class="s0">return </span><span class="s2">(</span><span class="s1">getX</span><span class="s2">() + </span><span class="s1">getWidth</span><span class="s2">() &lt;= </span><span class="s4">0 </span><span class="s2">|| </span><span class="s1">getY</span><span class="s2">() &gt;= </span><span class="s1">groundLevel</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

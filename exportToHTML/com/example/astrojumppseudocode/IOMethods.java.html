@@ -1,0 +1,221 @@
+<html>
+<head>
+<title>IOMethods.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+IOMethods.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">astrojumppseudocode</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">nio</span><span class="s2">.</span><span class="s1">charset</span><span class="s2">.</span><span class="s1">StandardCharsets</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">IOMethods </span><span class="s2">{</span>
+
+    <span class="s3">//old/player written attributes</span>
+    <span class="s0">private static long </span><span class="s1">playerHighScore</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">playerTotalStarsCollected</span><span class="s2">;</span>
+    <span class="s0">private static </span><span class="s1">StringBuilder playerPlanetsDiscovered</span><span class="s2">;</span>
+
+    <span class="s3">//current attributes</span>
+    <span class="s0">private static long </span><span class="s1">currentHighScore </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">currentStarsCollected </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s3">//bit string of 8 digits, nth bit is 0 if player has yet to encounter it, turned into a 1 when player encounters</span>
+    <span class="s0">private static </span><span class="s1">StringBuilder planetsDiscoveredBitString</span><span class="s2">;</span>
+
+    <span class="s3">//attributes for settings</span>
+    <span class="s0">private static </span><span class="s1">String jumpControl </span><span class="s2">= </span><span class="s5">&quot;SPACE&quot;</span><span class="s2">;</span>
+    <span class="s0">private static </span><span class="s1">String netThrow </span><span class="s2">= </span><span class="s5">&quot;&quot;</span><span class="s2">;</span>
+
+
+    <span class="s3">//constructor</span>
+    <span class="s1">IOMethods</span><span class="s2">(</span><span class="s0">long </span><span class="s1">currentHighScore</span><span class="s2">, </span><span class="s0">int </span><span class="s1">newStarsCollected</span><span class="s2">, </span><span class="s1">StringBuilder planetsDiscoveredBitString</span><span class="s2">) {</span>
+        <span class="s3">//set attributes</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">currentHighScore </span><span class="s2">= </span><span class="s1">currentHighScore</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">currentStarsCollected </span><span class="s2">= </span><span class="s1">newStarsCollected</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">planetsDiscoveredBitString </span><span class="s2">= </span><span class="s1">planetsDiscoveredBitString</span><span class="s2">;</span>
+        <span class="s3">//updating player's attribute</span>
+        <span class="s1">playerHighScore </span><span class="s2">= </span><span class="s1">getHighScore</span><span class="s2">();</span>
+        <span class="s1">playerTotalStarsCollected </span><span class="s2">= </span><span class="s1">getTotalStarsCollected</span><span class="s2">();</span>
+        <span class="s1">playerPlanetsDiscovered </span><span class="s2">= </span><span class="s1">getPlanetsDiscovered</span><span class="s2">();</span>
+        <span class="s3">//setting currentHighScore</span>
+        <span class="s1">setHighScore</span><span class="s2">();</span>
+
+        <span class="s3">//setting currentTotalStarsCollected</span>
+        <span class="s1">setTotalStarsCollected</span><span class="s2">();</span>
+
+        <span class="s3">//setting planetsDiscoveredBitString</span>
+        <span class="s1">setPlanetsDiscoveredBitString</span><span class="s2">();</span>
+
+    <span class="s2">}</span>
+
+    <span class="s3">//accessor methods</span>
+    <span class="s0">public static long </span><span class="s1">getHighScore</span><span class="s2">() {</span>
+        <span class="s1">File fileHS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;highScore.txt&quot;</span><span class="s2">);</span>
+        <span class="s0">if</span><span class="s2">(!</span><span class="s1">fileHS</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+            <span class="s0">try</span><span class="s2">{</span>
+            <span class="s1">PrintWriter create </span><span class="s2">= </span><span class="s0">new </span><span class="s1">PrintWriter</span><span class="s2">(</span><span class="s1">fileHS</span><span class="s2">);</span>
+            <span class="s1">create</span><span class="s2">.</span><span class="s1">write</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+            <span class="s1">create</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch</span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">FileInputStream fileStreamHS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileInputStream</span><span class="s2">(</span><span class="s1">fileHS</span><span class="s2">);</span>
+            <span class="s1">DataInputStream inputHS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DataInputStream</span><span class="s2">(</span><span class="s1">fileStreamHS</span><span class="s2">);</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">inputHS</span><span class="s2">.</span><span class="s1">available</span><span class="s2">() != </span><span class="s4">0</span><span class="s2">) {</span>
+                <span class="s1">playerHighScore </span><span class="s2">= </span><span class="s1">inputHS</span><span class="s2">.</span><span class="s1">readInt</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">playerHighScore </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s1">inputHS</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;highScore.txt file not found IOMethods constructor&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;error getHighScore&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">playerHighScore</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static int </span><span class="s1">getTotalStarsCollected</span><span class="s2">() {</span>
+        <span class="s1">File fileTS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;totalNumberStar.txt&quot;</span><span class="s2">);</span>
+        <span class="s0">if</span><span class="s2">(!</span><span class="s1">fileTS</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+            <span class="s0">try</span><span class="s2">{</span>
+                <span class="s1">PrintWriter create </span><span class="s2">= </span><span class="s0">new </span><span class="s1">PrintWriter</span><span class="s2">(</span><span class="s1">fileTS</span><span class="s2">);</span>
+                <span class="s1">create</span><span class="s2">.</span><span class="s1">write</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+                <span class="s1">create</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch</span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">FileInputStream fileStreamTS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileInputStream</span><span class="s2">(</span><span class="s1">fileTS</span><span class="s2">);</span>
+            <span class="s1">DataInputStream inputTS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DataInputStream</span><span class="s2">(</span><span class="s1">fileStreamTS</span><span class="s2">);</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">inputTS</span><span class="s2">.</span><span class="s1">available</span><span class="s2">() != </span><span class="s4">0</span><span class="s2">) {</span>
+                <span class="s1">playerTotalStarsCollected </span><span class="s2">= </span><span class="s1">inputTS</span><span class="s2">.</span><span class="s1">readInt</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">playerTotalStarsCollected </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s1">inputTS</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;totalNumberStar.txt file not found IOMethods constructor&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">playerTotalStarsCollected</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static </span><span class="s1">StringBuilder getPlanetsDiscovered</span><span class="s2">() {</span>
+        <span class="s1">File filePD </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;planetsDiscovered.txt&quot;</span><span class="s2">);</span>
+        <span class="s0">if</span><span class="s2">(!</span><span class="s1">filePD</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+            <span class="s0">try</span><span class="s2">{</span>
+                <span class="s1">PrintWriter create </span><span class="s2">= </span><span class="s0">new </span><span class="s1">PrintWriter</span><span class="s2">(</span><span class="s1">filePD</span><span class="s2">);</span>
+                <span class="s1">create</span><span class="s2">.</span><span class="s1">write</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+                <span class="s1">create</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch</span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">filePD</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) {</span>
+            <span class="s0">try </span><span class="s2">{</span>
+                <span class="s1">FileInputStream fileStreamPD </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileInputStream</span><span class="s2">(</span><span class="s1">filePD</span><span class="s2">);</span>
+                <span class="s1">BufferedInputStream input </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BufferedInputStream</span><span class="s2">(</span><span class="s1">fileStreamPD</span><span class="s2">);</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">input</span><span class="s2">.</span><span class="s1">available</span><span class="s2">() != </span><span class="s4">0</span><span class="s2">) {</span>
+                    <span class="s1">String planetsByteToString </span><span class="s2">= </span><span class="s0">new </span><span class="s1">String</span><span class="s2">(</span><span class="s1">input</span><span class="s2">.</span><span class="s1">readAllBytes</span><span class="s2">(), </span><span class="s1">StandardCharsets</span><span class="s2">.</span><span class="s1">UTF_8</span><span class="s2">);</span>
+                    <span class="s1">playerPlanetsDiscovered </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">(</span><span class="s1">planetsByteToString</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">playerPlanetsDiscovered </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">(</span><span class="s5">&quot;00000000&quot;</span><span class="s2">);</span>
+                <span class="s2">}</span>
+                <span class="s1">input</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;planetsDiscovered.txt file not found IOMethods constructor&quot;</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;error getPlanetDiscovered&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">playerPlanetsDiscovered</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//mutator methods</span>
+    <span class="s0">public static void </span><span class="s1">setHighScore</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">currentHighScore </span><span class="s2">&gt; </span><span class="s1">playerHighScore</span><span class="s2">) {</span>
+            <span class="s1">File file </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;highScore.txt&quot;</span><span class="s2">);</span>
+            <span class="s0">try </span><span class="s2">{</span>
+                <span class="s1">FileOutputStream fileStream </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileOutputStream</span><span class="s2">(</span><span class="s1">file</span><span class="s2">);</span>
+                <span class="s1">DataOutputStream output </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DataOutputStream</span><span class="s2">(</span><span class="s1">fileStream</span><span class="s2">);</span>
+                <span class="s1">output</span><span class="s2">.</span><span class="s1">writeInt</span><span class="s2">((</span><span class="s0">int</span><span class="s2">) </span><span class="s1">currentHighScore</span><span class="s2">);</span>
+                <span class="s1">output</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;highScore.txt file not found IOMethods setHighScore&quot;</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;error setHighScore&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static void </span><span class="s1">setTotalStarsCollected</span><span class="s2">() {</span>
+        <span class="s1">File file </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;totalNumberStar.txt&quot;</span><span class="s2">);</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">FileOutputStream fileStream </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileOutputStream</span><span class="s2">(</span><span class="s1">file</span><span class="s2">);</span>
+            <span class="s1">DataOutputStream output </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DataOutputStream</span><span class="s2">(</span><span class="s1">fileStream</span><span class="s2">);</span>
+            <span class="s1">output</span><span class="s2">.</span><span class="s1">writeInt</span><span class="s2">((</span><span class="s1">playerTotalStarsCollected </span><span class="s2">+ </span><span class="s1">currentStarsCollected</span><span class="s2">));</span>
+            <span class="s1">output</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;totalNumberStar.txt file not found IOMethods setTotalStarsCollected&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;error setStars&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static void </span><span class="s1">setPlanetsDiscoveredBitString</span><span class="s2">() {</span>
+        <span class="s3">//merge both bit strings current and total</span>
+        <span class="s1">StringBuilder totalPlanets </span><span class="s2">= </span><span class="s1">getPlanetsDiscovered</span><span class="s2">();</span>
+        <span class="s1">StringBuilder currentPlanets </span><span class="s2">= </span><span class="s1">planetsDiscoveredBitString</span><span class="s2">;</span>
+        <span class="s1">StringBuilder mergedPlanets </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">(</span><span class="s5">&quot;00000000&quot;</span><span class="s2">);</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">totalPlanets</span><span class="s2">.</span><span class="s1">length</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">totalPlanets</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">) &gt;= </span><span class="s1">currentPlanets</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">)) {</span>
+                <span class="s1">mergedPlanets</span><span class="s2">.</span><span class="s1">setCharAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">, </span><span class="s1">totalPlanets</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">));</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">mergedPlanets</span><span class="s2">.</span><span class="s1">setCharAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">, </span><span class="s1">currentPlanets</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">i</span><span class="s2">));</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s3">//write new mergedPlanets into file</span>
+        <span class="s1">File file </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;planetsDiscovered.txt&quot;</span><span class="s2">);</span>
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s1">FileOutputStream fileStream </span><span class="s2">= </span><span class="s0">new </span><span class="s1">FileOutputStream</span><span class="s2">(</span><span class="s1">file</span><span class="s2">);</span>
+            <span class="s1">BufferedOutputStream output </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BufferedOutputStream</span><span class="s2">(</span><span class="s1">fileStream</span><span class="s2">);</span>
+            <span class="s1">output</span><span class="s2">.</span><span class="s1">write</span><span class="s2">(</span><span class="s1">mergedPlanets</span><span class="s2">.</span><span class="s1">toString</span><span class="s2">().</span><span class="s1">getBytes</span><span class="s2">());</span>
+            <span class="s1">output</span><span class="s2">.</span><span class="s1">close</span><span class="s2">();</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">FileNotFoundException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;planetsDiscovered.txt file not found IOMethods setPlanetsDiscoveredBitString&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;error setPlanet&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public static void </span><span class="s1">reset</span><span class="s2">() {</span>
+        <span class="s1">File fileHS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;highScore.txt&quot;</span><span class="s2">);</span>
+        <span class="s1">fileHS</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">();</span>
+        <span class="s1">File fileNS </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;totalNumberStar.txt&quot;</span><span class="s2">);</span>
+        <span class="s1">fileNS</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">();</span>
+        <span class="s1">File filePD </span><span class="s2">=</span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;planetsDiscovered.txt&quot;</span><span class="s2">);</span>
+        <span class="s1">filePD</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">();</span>
+
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

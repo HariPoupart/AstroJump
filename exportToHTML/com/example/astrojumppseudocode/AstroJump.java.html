@@ -1,0 +1,1256 @@
+<html>
+<head>
+<title>AstroJump.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #2aacb8;}
+.s5 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#191a1c">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+AstroJump.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">astrojumppseudocode</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">Animation</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">animation</span><span class="s2">.</span><span class="s1">AnimationTimer</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">application</span><span class="s2">.</span><span class="s1">Application</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Insets</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Pos</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">geometry</span><span class="s2">.</span><span class="s1">Rectangle2D</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">Group</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">Scene</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">control</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">control</span><span class="s2">.</span><span class="s1">Button</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">control</span><span class="s2">.</span><span class="s1">Label</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">control</span><span class="s2">.</span><span class="s1">TextField</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">effect</span><span class="s2">.</span><span class="s1">ColorAdjust</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">Image</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">image</span><span class="s2">.</span><span class="s1">ImageView</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">input</span><span class="s2">.</span><span class="s1">KeyCode</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">input</span><span class="s2">.</span><span class="s1">KeyEvent</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">media</span><span class="s2">.</span><span class="s1">Media</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">media</span><span class="s2">.</span><span class="s1">MediaPlayer</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">media</span><span class="s2">.</span><span class="s1">MediaView</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">paint</span><span class="s2">.</span><span class="s1">Color</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">shape</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">text</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">text</span><span class="s2">.</span><span class="s1">Font</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">stage</span><span class="s2">.</span><span class="s1">Stage</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Duration</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">IOException</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">ArrayList</span><span class="s2">;</span>
+
+<span class="s0">import static </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">text</span><span class="s2">.</span><span class="s1">TextAlignment</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">;</span>
+<span class="s0">import static </span><span class="s1">javafx</span><span class="s2">.</span><span class="s1">scene</span><span class="s2">.</span><span class="s1">text</span><span class="s2">.</span><span class="s1">TextAlignment</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">AstroJump </span><span class="s0">extends </span><span class="s1">Application </span><span class="s2">{</span>
+
+    <span class="s3">//GLOBAL ATTRIBUTES</span>
+
+    <span class="s3">//Game loop objects</span>
+    <span class="s0">private static final int </span><span class="s1">TARGET_FPS </span><span class="s2">= </span><span class="s4">60</span><span class="s2">;</span>
+    <span class="s0">private static final long </span><span class="s1">NANOSECONDS_PER_FRAME </span><span class="s2">= </span><span class="s4">1_000_000_000 </span><span class="s2">/ </span><span class="s1">TARGET_FPS</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+
+    <span class="s3">//User attributes</span>
+    <span class="s0">private long </span><span class="s1">score </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">StringBuilder planetsDiscovered </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StringBuilder</span><span class="s2">(</span><span class="s5">&quot;00000000&quot;</span><span class="s2">);</span>
+    <span class="s0">public static double </span><span class="s1">screenHeight </span><span class="s2">= </span><span class="s4">500</span><span class="s2">;</span>
+    <span class="s0">public static double </span><span class="s1">screenWidth </span><span class="s2">= </span><span class="s4">1000</span><span class="s2">;</span>
+    <span class="s0">private static double </span><span class="s1">definingSize</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">musicSliderValue </span><span class="s2">= </span><span class="s4">50</span><span class="s2">;</span>
+    <span class="s0">public int </span><span class="s1">currentPlanetInt </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">public int </span><span class="s1">currentTutorialInt </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">public static </span><span class="s1">MediaPlayer mediaPlayer</span><span class="s2">;</span>
+
+    <span class="s3">//Timer attributes</span>
+    <span class="s0">private static long </span><span class="s1">startSpawnPortalStarTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">private float </span><span class="s1">objectSpeed</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">obstacleSpawnIntervalNano</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">starSpawnIntervalNano</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">portalSpawnIntervalNano</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">lastObstacleSpawnTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">lastStarSpawnTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">private long </span><span class="s1">lastPortalSpawnTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+    <span class="s0">public static boolean </span><span class="s1">stopAnimationTimer</span><span class="s2">;</span>
+
+    <span class="s3">//General game objects</span>
+    <span class="s0">private </span><span class="s1">Group gameObjects</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Text txGameInfo</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Text txGameOver</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Text txNetInfo</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">GROUND_Y</span><span class="s2">;</span>
+
+    <span class="s3">//Player objects</span>
+    <span class="s0">private </span><span class="s1">Player player</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">PLAYER_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">PLAYER_HEIGHT</span><span class="s2">;</span>
+    <span class="s0">private static float </span><span class="s1">PLAYER_JUMP_FORCE</span><span class="s2">;</span>
+
+    <span class="s3">//Obstacles attributes</span>
+    <span class="s0">private final </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">SimpleMovingImage</span><span class="s2">&gt; </span><span class="s1">obstacles </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private static int </span><span class="s1">SPIKE_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">SPIKE_HEIGHT</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">METEOR_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">METEOR_HEIGHT</span><span class="s2">;</span>
+
+    <span class="s3">//Star attributes</span>
+    <span class="s0">private </span><span class="s1">Star star</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">STAR_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">STAR_HEIGHT</span><span class="s2">;</span>
+
+    <span class="s3">//Net attributes</span>
+    <span class="s0">private final </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Net</span><span class="s2">&gt; </span><span class="s1">nets </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+    <span class="s0">private static int </span><span class="s1">NET_SIZE</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">Path parabolaPath</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">updatePath </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">lastKnownMouseX</span><span class="s2">;</span>
+    <span class="s0">private double </span><span class="s1">lastKnownMouseY</span><span class="s2">;</span>
+    <span class="s0">private static float </span><span class="s1">NET_FORCE</span><span class="s2">;</span>
+    <span class="s0">private float </span><span class="s1">windDeceleration</span><span class="s2">;</span>
+
+    <span class="s3">//Background attributes</span>
+    <span class="s1">Background background</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">BACKGROUND_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">BACKGROUND_HEIGHT</span><span class="s2">;</span>
+
+    <span class="s3">//Portal attributes</span>
+    <span class="s1">SimpleMovingImage portal</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">PORTAL_WIDTH</span><span class="s2">;</span>
+    <span class="s0">private static int </span><span class="s1">PORTAL_HEIGHT</span><span class="s2">;</span>
+
+    <span class="s3">//Planets objects</span>
+    <span class="s0">protected static </span><span class="s1">ArrayList</span><span class="s2">&lt;</span><span class="s1">Planet</span><span class="s2">&gt; </span><span class="s1">planetArray</span><span class="s2">;</span>
+
+
+    <span class="s3">//MAIN METHOD - SETTING USER ATTRIBUTES, PLANET ARRAY, OBJECT SIZE</span>
+    <span class="s0">public static void </span><span class="s1">main</span><span class="s2">(</span><span class="s1">String</span><span class="s2">[] </span><span class="s1">args</span><span class="s2">) {</span>
+
+        <span class="s3">//Get user's screen resolution</span>
+        <span class="s1">Dimension screenSize </span><span class="s2">= </span><span class="s1">Toolkit</span><span class="s2">.</span><span class="s1">getDefaultToolkit</span><span class="s2">().</span><span class="s1">getScreenSize</span><span class="s2">();</span>
+        <span class="s1">screenWidth </span><span class="s2">= </span><span class="s1">screenSize</span><span class="s2">.</span><span class="s1">getWidth</span><span class="s2">();</span>
+        <span class="s1">screenHeight </span><span class="s2">= </span><span class="s1">screenSize</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">();</span>
+
+        <span class="s3">//Defining &quot;used&quot; width/height</span>
+        <span class="s0">if </span><span class="s2">(!(</span><span class="s1">screenWidth </span><span class="s2">/ </span><span class="s1">screenHeight </span><span class="s2">&gt;= </span><span class="s4">2</span><span class="s2">)) {</span>
+            <span class="s1">definingSize </span><span class="s2">= </span><span class="s1">screenHeight </span><span class="s2">/ </span><span class="s4">500.0</span><span class="s2">;</span>
+
+        <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+            <span class="s1">definingSize </span><span class="s2">= (</span><span class="s1">screenWidth </span><span class="s2">/ </span><span class="s4">1000.0</span><span class="s2">);</span>
+
+        <span class="s2">}</span>
+
+        <span class="s3">//Adjusting game objects based on screen resolution</span>
+        <span class="s1">PLAYER_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">50 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">PLAYER_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">50 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">SPIKE_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">21 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">SPIKE_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">37 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">METEOR_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">105 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">METEOR_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">30 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">STAR_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">50 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">STAR_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">50 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">NET_SIZE </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">30 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">BACKGROUND_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">2000 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">BACKGROUND_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">500 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">PORTAL_WIDTH </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">96 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">PORTAL_HEIGHT </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">96 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">GROUND_Y </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s4">390 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+
+        <span class="s3">//Initiate forces</span>
+        <span class="s1">PLAYER_JUMP_FORCE </span><span class="s2">= (</span><span class="s0">float</span><span class="s2">) (-</span><span class="s4">800f </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">NET_FORCE </span><span class="s2">= (</span><span class="s0">float</span><span class="s2">) (</span><span class="s4">800f </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+
+        <span class="s3">//Planet gravity strenght constants</span>
+        <span class="s0">final float </span><span class="s1">MERCURY_GRAVITY </span><span class="s2">= -</span><span class="s4">1000f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">VENUS_GRAVITY </span><span class="s2">= -</span><span class="s4">1382f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">EARTH_GRAVITY </span><span class="s2">= -</span><span class="s4">1524f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">MARS_GRAVITY </span><span class="s2">= -</span><span class="s4">1000f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">JUPITER_GRAVITY </span><span class="s2">= -</span><span class="s4">2000f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">SATURN_GRAVITY </span><span class="s2">= -</span><span class="s4">1396f</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">URANUS_GRAVITY </span><span class="s2">= -</span><span class="s4">1355</span><span class="s2">;</span>
+        <span class="s0">final float </span><span class="s1">NEPTUNE_GRAVITY </span><span class="s2">= -</span><span class="s4">1707f</span><span class="s2">;</span>
+
+
+        <span class="s3">//Initiate planetArray with gravities from NSSDC</span>
+        <span class="s1">Planet mercury </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Mercury&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">MERCURY_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">Planet venus </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Venus&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">VENUS_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), -</span><span class="s4">6</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">Planet earth </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Earth&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">EARTH_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), -</span><span class="s4">8</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">Planet mars </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Mars&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">MARS_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">Planet jupiter </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Jupiter&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">JUPITER_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">Planet saturn </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Saturn&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">SATURN_GRAVITY</span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), -</span><span class="s4">5</span><span class="s2">, -</span><span class="s4">16.5</span><span class="s2">, </span><span class="s4">64</span><span class="s2">);</span>
+        <span class="s1">Planet uranus </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Uranus&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">URANUS_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), -</span><span class="s4">7.5</span><span class="s2">, -</span><span class="s4">2.5</span><span class="s2">, </span><span class="s4">36</span><span class="s2">);</span>
+        <span class="s1">Planet neptune </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Planet</span><span class="s2">(</span><span class="s5">&quot;Neptune&quot;</span><span class="s2">, (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">NEPTUNE_GRAVITY </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">planetArray </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mercury</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">venus</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">earth</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mars</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">jupiter</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">saturn</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">uranus</span><span class="s2">);</span>
+        <span class="s1">planetArray</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">neptune</span><span class="s2">);</span>
+
+        <span class="s3">//default audio value</span>
+        <span class="s1">musicSliderValue </span><span class="s2">= </span><span class="s4">3</span><span class="s2">;</span>
+
+        <span class="s3">//Launch args</span>
+        <span class="s1">launch</span><span class="s2">(</span><span class="s1">args</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//SHOW MAIN MENU GUI, MUSIC,</span>
+    <span class="s0">public void </span><span class="s1">start</span><span class="s2">(</span><span class="s1">Stage primaryStage</span><span class="s2">) </span><span class="s0">throws </span><span class="s1">IOException </span><span class="s2">{</span>
+        <span class="s1">GridPane generalPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">GridPane</span><span class="s2">();</span>
+        <span class="s1">Text txFiller </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Text</span><span class="s2">(</span><span class="s5">&quot;</span><span class="s0">\n\n\n</span><span class="s5">&quot;</span><span class="s2">);</span>
+
+        <span class="s3">//High score and total stars collected</span>
+        <span class="s1">VBox vBox1 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vBox1</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">BOTTOM_CENTER</span><span class="s2">);</span>
+        <span class="s1">vBox1</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">20</span><span class="s2">);</span>
+        <span class="s1">vBox1</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">150</span><span class="s2">));</span>
+        <span class="s1">Label lbScore </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;High Score:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbScore</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;&quot;</span><span class="s2">);</span>
+        <span class="s1">TextField tfScore </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getHighScore</span><span class="s2">() + </span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+        <span class="s1">tfScore</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+        <span class="s1">tfScore</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfScore</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">Label lbStars </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Total Stars Collected:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbStars</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;&quot;</span><span class="s2">);</span>
+        <span class="s1">lbStars</span><span class="s2">.</span><span class="s1">setMinWidth</span><span class="s2">(</span><span class="s4">200 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">TextField tfStars </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getTotalStarsCollected</span><span class="s2">() + </span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+        <span class="s1">tfStars</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+        <span class="s1">tfStars</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfStars</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">vBox1</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">lbScore</span><span class="s2">, </span><span class="s1">tfScore</span><span class="s2">, </span><span class="s1">lbStars</span><span class="s2">, </span><span class="s1">tfStars</span><span class="s2">);</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">vBox1</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">1</span><span class="s2">);</span>
+
+        <span class="s3">//Start, tutorial, settings and exit</span>
+        <span class="s1">VBox vBox2 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vBox2</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">BOTTOM_CENTER</span><span class="s2">);</span>
+        <span class="s1">vBox2</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">20</span><span class="s2">);</span>
+
+        <span class="s3">//Start button</span>
+        <span class="s1">Button btStart </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Start&quot;</span><span class="s2">);</span>
+        <span class="s1">btStart</span><span class="s2">.</span><span class="s1">setPrefWidth</span><span class="s2">(</span><span class="s4">250</span><span class="s2">);</span>
+        <span class="s1">btStart</span><span class="s2">.</span><span class="s1">setPrefHeight</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+
+        <span class="s3">//Tutorial button *Tutorial refers to the projectile physics menu*</span>
+        <span class="s1">Button btTutorial </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Projectile Physics&quot;</span><span class="s2">);</span>
+        <span class="s1">btTutorial</span><span class="s2">.</span><span class="s1">setPrefWidth</span><span class="s2">(</span><span class="s4">250</span><span class="s2">);</span>
+        <span class="s1">btTutorial</span><span class="s2">.</span><span class="s1">setPrefHeight</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+
+        <span class="s3">//Settings button</span>
+        <span class="s1">Button btSettings </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Settings&quot;</span><span class="s2">);</span>
+        <span class="s1">btSettings</span><span class="s2">.</span><span class="s1">setPrefWidth</span><span class="s2">(</span><span class="s4">250</span><span class="s2">);</span>
+        <span class="s1">btSettings</span><span class="s2">.</span><span class="s1">setPrefHeight</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+
+        <span class="s3">//Exit button</span>
+        <span class="s1">Button btExit </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Exit&quot;</span><span class="s2">);</span>
+        <span class="s1">btExit</span><span class="s2">.</span><span class="s1">setPrefWidth</span><span class="s2">(</span><span class="s4">250</span><span class="s2">);</span>
+        <span class="s1">btExit</span><span class="s2">.</span><span class="s1">setPrefHeight</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+
+        <span class="s1">vBox2</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">txFiller</span><span class="s2">, </span><span class="s1">btStart</span><span class="s2">, </span><span class="s1">btTutorial</span><span class="s2">, </span><span class="s1">btSettings</span><span class="s2">, </span><span class="s1">btExit</span><span class="s2">);</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">vBox2</span><span class="s2">, </span><span class="s4">1</span><span class="s2">, </span><span class="s4">1</span><span class="s2">);</span>
+
+        <span class="s3">//Planets discovered</span>
+        <span class="s1">VBox vBox3 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vBox3</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">BOTTOM_CENTER</span><span class="s2">);</span>
+        <span class="s1">vBox3</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">20</span><span class="s2">);</span>
+        <span class="s1">vBox3</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">150</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">));</span>
+        <span class="s1">Label lbPlanets </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Planets Discovered:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbPlanets</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;&quot;</span><span class="s2">);</span>
+        <span class="s1">GridPane gridPane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">GridPane</span><span class="s2">();</span>
+        <span class="s1">gridPane</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">gridPane</span><span class="s2">.</span><span class="s1">setHgap</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">gridPane</span><span class="s2">.</span><span class="s1">setVgap</span><span class="s2">(</span><span class="s4">5</span><span class="s2">);</span>
+
+        <span class="s3">//Setting planet image</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s4">8</span><span class="s2">; </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s0">double </span><span class="s1">ratio </span><span class="s2">= </span><span class="s1">definingSize</span><span class="s2">;</span>
+            <span class="s1">VBox vbPlanet </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+            <span class="s1">vbPlanet</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+            <span class="s1">vbPlanet</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">5 </span><span class="s2">* </span><span class="s1">ratio</span><span class="s2">);</span>
+            <span class="s1">ImageView planetImage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;file:&quot; </span><span class="s2">+ </span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">() + </span><span class="s5">&quot;.png&quot;</span><span class="s2">);</span>
+            <span class="s1">planetImage</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSize</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+            <span class="s1">planetImage</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSize</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+            <span class="s1">ColorAdjust blackout </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ColorAdjust</span><span class="s2">();</span>
+            <span class="s1">blackout</span><span class="s2">.</span><span class="s1">setBrightness</span><span class="s2">(-</span><span class="s4">1</span><span class="s2">);</span>
+            <span class="s1">planetImage</span><span class="s2">.</span><span class="s1">setTranslateX</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSetTranslateX</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+
+            <span class="s3">//If planet is not discovered</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">isBlackedOut</span><span class="s2">(</span><span class="s1">i</span><span class="s2">)) {</span>
+                <span class="s1">planetImage</span><span class="s2">.</span><span class="s1">setEffect</span><span class="s2">(</span><span class="s1">blackout</span><span class="s2">);</span>
+                <span class="s1">Label lbPlanet </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;???&quot;</span><span class="s2">);</span>
+                <span class="s1">lbPlanet</span><span class="s2">.</span><span class="s1">setTranslateX</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSetTranslateX</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+                <span class="s1">lbPlanet</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSetTranslateY</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+                <span class="s1">vbPlanet</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">planetImage</span><span class="s2">, </span><span class="s1">lbPlanet</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+            <span class="s3">//If planet is discovered</span>
+            <span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">Tooltip tooltipPlanet </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Tooltip</span><span class="s2">(</span><span class="s5">&quot;Gravitational acceleration</span><span class="s0">\n</span><span class="s5">of &quot; </span><span class="s2">+ </span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">() + </span><span class="s5">&quot; : &quot; </span><span class="s2">+ </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">gravity </span><span class="s2">/ -</span><span class="s4">1.5551 </span><span class="s2">/ </span><span class="s1">definingSize</span><span class="s2">) / </span><span class="s4">100.0 </span><span class="s2">+ </span><span class="s5">&quot; m/s²&quot;</span><span class="s2">);</span>
+                <span class="s1">tooltipPlanet</span><span class="s2">.</span><span class="s1">setTextAlignment</span><span class="s2">(</span><span class="s1">CENTER</span><span class="s2">);</span>
+                <span class="s1">Tooltip</span><span class="s2">.</span><span class="s1">install</span><span class="s2">(</span><span class="s1">planetImage</span><span class="s2">, </span><span class="s1">tooltipPlanet</span><span class="s2">);</span>
+                <span class="s1">Label lbPlanet </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">());</span>
+                <span class="s1">lbPlanet</span><span class="s2">.</span><span class="s1">setTranslateX</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSetTranslateX</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+                <span class="s1">lbPlanet</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">).</span><span class="s1">getSetTranslateY</span><span class="s2">() * </span><span class="s1">ratio</span><span class="s2">);</span>
+                <span class="s1">vbPlanet</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">planetImage</span><span class="s2">, </span><span class="s1">lbPlanet</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s3">//Add to gridpane</span>
+            <span class="s1">gridPane</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">vbPlanet</span><span class="s2">, </span><span class="s1">i </span><span class="s2">% </span><span class="s4">4</span><span class="s2">, </span><span class="s1">i </span><span class="s2">/ </span><span class="s4">4</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s1">vBox3</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">txFiller</span><span class="s2">, </span><span class="s1">lbPlanets</span><span class="s2">, </span><span class="s1">gridPane</span><span class="s2">);</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">vBox3</span><span class="s2">, </span><span class="s4">2</span><span class="s2">, </span><span class="s4">1</span><span class="s2">);</span>
+
+        <span class="s3">//Setting page</span>
+        <span class="s1">BorderPane borderPane1 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BorderPane</span><span class="s2">();</span>
+        <span class="s1">borderPane1</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: rgb(&quot; </span><span class="s2">+ </span><span class="s4">203</span><span class="s2">+ </span><span class="s5">&quot;,&quot; </span><span class="s2">+ </span><span class="s4">205 </span><span class="s2">+ </span><span class="s5">&quot;, &quot; </span><span class="s2">+ </span><span class="s4">236 </span><span class="s2">+ </span><span class="s5">&quot;);&quot;</span><span class="s2">);</span>
+
+        <span class="s3">//Action</span>
+        <span class="s1">VBox vbox1 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vbox1</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">vbox1</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">40</span><span class="s2">);</span>
+        <span class="s1">vbox1</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">150</span><span class="s2">, </span><span class="s4">30</span><span class="s2">, </span><span class="s4">150</span><span class="s2">));</span>
+        <span class="s1">Label lbAction </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;ACTION:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbAction</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 40px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;</span><span class="s0">\n</span><span class="s5">-fx-underline: true;&quot;</span><span class="s2">);</span>
+        <span class="s1">Label lbJump </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Jump:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbJump</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">Label lbThrow </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Throw:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbThrow</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">Label lbExit </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Exit:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbExit</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">Label lbAim </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Aim:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbAim</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">vbox1</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">lbAction</span><span class="s2">, </span><span class="s1">lbJump</span><span class="s2">, </span><span class="s1">lbThrow</span><span class="s2">, </span><span class="s1">lbExit</span><span class="s2">, </span><span class="s1">lbAim</span><span class="s2">);</span>
+        <span class="s1">borderPane1</span><span class="s2">.</span><span class="s1">setLeft</span><span class="s2">(</span><span class="s1">vbox1</span><span class="s2">);</span>
+
+        <span class="s3">//Control</span>
+        <span class="s1">VBox vbox2 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vbox2</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">vbox2</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">43</span><span class="s2">);</span>
+        <span class="s1">vbox2</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">20</span><span class="s2">, </span><span class="s4">0</span><span class="s2">));</span>
+        <span class="s1">Label lbControls </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;CONTROL:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbControls</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 40px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;</span><span class="s0">\n</span><span class="s5">-fx-underline: true;&quot;</span><span class="s2">);</span>
+        <span class="s1">lbControls</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(</span><span class="s4">5</span><span class="s2">);</span>
+
+        <span class="s1">TextField tfJump </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s5">&quot;SPACEBAR&quot;</span><span class="s2">);</span>
+        <span class="s1">tfJump</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+        <span class="s1">tfJump</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfJump</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">tfJump</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+
+        <span class="s1">TextField tfThrow </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s5">&quot;LEFT CLICK&quot;</span><span class="s2">);</span>
+        <span class="s1">tfThrow</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+        <span class="s1">tfThrow</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfThrow</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(-</span><span class="s4">4</span><span class="s2">);</span>
+        <span class="s1">tfThrow</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">tfThrow</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+
+        <span class="s1">TextField tfExit </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s5">&quot;ESCAPE&quot;</span><span class="s2">);</span>
+        <span class="s1">tfExit</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+        <span class="s1">tfExit</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfExit</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(-</span><span class="s4">8</span><span class="s2">);</span>
+        <span class="s1">tfExit</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">tfExit</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+
+        <span class="s1">TextField tfAim </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TextField</span><span class="s2">(</span><span class="s5">&quot;MOUSE&quot;</span><span class="s2">);</span>
+        <span class="s1">tfAim</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+        <span class="s1">tfAim</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">tfAim</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(-</span><span class="s4">12</span><span class="s2">);</span>
+        <span class="s1">tfAim</span><span class="s2">.</span><span class="s1">setEditable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">tfAim</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+
+        <span class="s1">vbox2</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">lbControls</span><span class="s2">, </span><span class="s1">tfJump</span><span class="s2">, </span><span class="s1">tfThrow</span><span class="s2">, </span><span class="s1">tfExit</span><span class="s2">, </span><span class="s1">tfAim</span><span class="s2">);</span>
+        <span class="s1">borderPane1</span><span class="s2">.</span><span class="s1">setCenter</span><span class="s2">(</span><span class="s1">vbox2</span><span class="s2">);</span>
+
+        <span class="s3">//Sound setting</span>
+        <span class="s1">VBox vbox3 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">VBox</span><span class="s2">();</span>
+        <span class="s1">vbox3</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">vbox3</span><span class="s2">.</span><span class="s1">setSpacing</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">vbox3</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">0</span><span class="s2">, </span><span class="s4">150</span><span class="s2">, </span><span class="s4">8</span><span class="s2">, </span><span class="s4">100</span><span class="s2">));</span>
+        <span class="s1">Label lbSound </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;SOUND SETTING:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbSound</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 40px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;</span><span class="s0">\n</span><span class="s5">-fx-underline: true;&quot;</span><span class="s2">);</span>
+        <span class="s1">lbSound</span><span class="s2">.</span><span class="s1">setTranslateY</span><span class="s2">(</span><span class="s4">15</span><span class="s2">);</span>
+
+        <span class="s3">//Music</span>
+        <span class="s1">Label lbMusic </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">(</span><span class="s5">&quot;Music:&quot;</span><span class="s2">);</span>
+        <span class="s1">lbMusic</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 30px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">lbMusic</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(</span><span class="s4">25</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">));</span>
+        <span class="s1">HBox hbox </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HBox</span><span class="s2">();</span>
+        <span class="s1">hbox</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">Slider slMusic </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Slider</span><span class="s2">();</span>
+        <span class="s1">slMusic</span><span class="s2">.</span><span class="s1">setMin</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s1">slMusic</span><span class="s2">.</span><span class="s1">setMax</span><span class="s2">(</span><span class="s4">100</span><span class="s2">);</span>
+        <span class="s1">slMusic</span><span class="s2">.</span><span class="s1">setValue</span><span class="s2">(</span><span class="s4">50</span><span class="s2">);</span>
+        <span class="s1">Label lbSlider </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Label</span><span class="s2">((</span><span class="s0">int</span><span class="s2">) </span><span class="s1">musicSliderValue </span><span class="s2">+ </span><span class="s5">&quot;%&quot;</span><span class="s2">);</span>
+        <span class="s1">lbSlider</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-font-size: 20px;</span><span class="s0">\n</span><span class="s5">-fx-font-weight: bold;&quot;</span><span class="s2">);</span>
+        <span class="s1">lbSlider</span><span class="s2">.</span><span class="s1">setMinWidth</span><span class="s2">(</span><span class="s4">50</span><span class="s2">);</span>
+        <span class="s1">lbSlider</span><span class="s2">.</span><span class="s1">setMinHeight</span><span class="s2">(</span><span class="s4">50</span><span class="s2">);</span>
+        <span class="s1">lbSlider</span><span class="s2">.</span><span class="s1">setTranslateX</span><span class="s2">(</span><span class="s4">10</span><span class="s2">);</span>
+        <span class="s1">slMusic</span><span class="s2">.</span><span class="s1">setValue</span><span class="s2">(</span><span class="s1">musicSliderValue</span><span class="s2">);</span>
+        <span class="s1">slMusic</span><span class="s2">.</span><span class="s1">valueProperty</span><span class="s2">().</span><span class="s1">addListener</span><span class="s2">((</span><span class="s1">observable</span><span class="s2">, </span><span class="s1">oldValue</span><span class="s2">, </span><span class="s1">newValue</span><span class="s2">) </span><span class="s1">-&gt; </span><span class="s2">{</span>
+            <span class="s1">lbSlider</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">newValue</span><span class="s2">.</span><span class="s1">intValue</span><span class="s2">() + </span><span class="s5">&quot;%&quot;</span><span class="s2">);</span>
+            <span class="s1">musicSliderValue </span><span class="s2">= </span><span class="s1">newValue</span><span class="s2">.</span><span class="s1">intValue</span><span class="s2">();</span>
+            <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">setVolume</span><span class="s2">(((</span><span class="s0">double</span><span class="s2">) </span><span class="s1">musicSliderValue</span><span class="s2">) / </span><span class="s4">100.0</span><span class="s2">);</span>
+        <span class="s2">});</span>
+        <span class="s1">hbox</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">slMusic</span><span class="s2">, </span><span class="s1">lbSlider</span><span class="s2">);</span>
+
+
+        <span class="s1">StackPane mediaAndVisuals </span><span class="s2">= </span><span class="s0">new </span><span class="s1">StackPane</span><span class="s2">();</span>
+
+        <span class="s3">//Reset button</span>
+        <span class="s1">Button btReset </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Reset Files&quot;</span><span class="s2">);</span>
+        <span class="s1">btReset</span><span class="s2">.</span><span class="s1">setPrefWidth</span><span class="s2">(</span><span class="s4">250</span><span class="s2">);</span>
+        <span class="s1">btReset</span><span class="s2">.</span><span class="s1">setPrefHeight</span><span class="s2">(</span><span class="s4">30</span><span class="s2">);</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btReset</span><span class="s2">);</span>
+        <span class="s1">btReset</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">reset</span><span class="s2">();</span>
+            <span class="s0">try </span><span class="s2">{</span>
+                <span class="s1">start</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException ex</span><span class="s2">) {</span>
+                <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;Error, files corrupted&quot;</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s1">vbox3</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s1">lbSound</span><span class="s2">, </span><span class="s1">lbMusic</span><span class="s2">, </span><span class="s1">hbox</span><span class="s2">, </span><span class="s1">btReset</span><span class="s2">);</span>
+        <span class="s1">borderPane1</span><span class="s2">.</span><span class="s1">setRight</span><span class="s2">(</span><span class="s1">vbox3</span><span class="s2">);</span>
+
+
+        <span class="s3">//Main buttons action handler</span>
+        <span class="s1">btStart</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; </span><span class="s2">{</span>
+            <span class="s3">//resetting planets</span>
+            <span class="s1">currentPlanetInt </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+            <span class="s1">startGameLoop</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+        <span class="s2">});</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btStart</span><span class="s2">);</span>
+        <span class="s1">btTutorial</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; showTutorial</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">));</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btTutorial</span><span class="s2">);</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btSettings</span><span class="s2">);</span>
+        <span class="s1">btExit</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; System</span><span class="s2">.</span><span class="s1">exit</span><span class="s2">(</span><span class="s4">0</span><span class="s2">));</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btExit</span><span class="s2">);</span>
+
+
+        <span class="s3">//Music for menu screen</span>
+        <span class="s1">Media media</span><span class="s2">;</span>
+        <span class="s1">MediaView mv</span><span class="s2">;</span>
+        <span class="s1">Pane pane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Pane</span><span class="s2">();</span>
+
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">mediaPlayer </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+
+            <span class="s2">}</span>
+            <span class="s1">File file </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;MenuMusic.mp3&quot;</span><span class="s2">);</span>
+            <span class="s1">media </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Media</span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">toURI</span><span class="s2">().</span><span class="s1">toString</span><span class="s2">());</span>
+            <span class="s1">mediaPlayer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MediaPlayer</span><span class="s2">(</span><span class="s1">media</span><span class="s2">);</span>
+            <span class="s1">mv </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MediaView</span><span class="s2">();</span>
+            <span class="s1">pane</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">mv</span><span class="s2">);</span>
+            <span class="s1">mv</span><span class="s2">.</span><span class="s1">setMediaPlayer</span><span class="s2">(</span><span class="s1">mediaPlayer</span><span class="s2">);</span>
+            <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">play</span><span class="s2">();</span>
+            <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">setAutoPlay</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+            <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">setVolume</span><span class="s2">(((</span><span class="s0">double</span><span class="s2">) </span><span class="s1">musicSliderValue</span><span class="s2">) / </span><span class="s4">100.0</span><span class="s2">);</span>
+
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">NullPointerException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;Error NULL for MediaPlayer&quot;</span><span class="s2">);</span>
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">print</span><span class="s2">(</span><span class="s5">&quot;Error for MediaPlayer&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Scene</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">setHgap</span><span class="s2">(</span><span class="s4">125</span><span class="s2">);</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">setVgap</span><span class="s2">(</span><span class="s4">100</span><span class="s2">);</span>
+        <span class="s1">generalPane</span><span class="s2">.</span><span class="s1">setAlignment</span><span class="s2">(</span><span class="s1">Pos</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">Image menuImage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Image</span><span class="s2">(</span><span class="s5">&quot;file:menuScreen.bmp&quot;</span><span class="s2">);</span>
+        <span class="s1">ImageView ivBackground </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s1">menuImage</span><span class="s2">);</span>
+        <span class="s1">ivBackground</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">screenHeight</span><span class="s2">);</span>
+        <span class="s1">ivBackground</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span>
+        <span class="s1">pane</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">ivBackground</span><span class="s2">);</span>
+        <span class="s1">mediaAndVisuals</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">pane</span><span class="s2">);</span>
+        <span class="s1">mediaAndVisuals</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">generalPane</span><span class="s2">);</span>
+
+        <span class="s1">Scene scene </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">mediaAndVisuals</span><span class="s2">, </span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s1">screenHeight</span><span class="s2">);</span>
+        <span class="s1">scene</span><span class="s2">.</span><span class="s1">getStylesheets</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s5">&quot;menuCSS.css&quot;</span><span class="s2">);</span>
+        <span class="s1">mediaAndVisuals</span><span class="s2">.</span><span class="s1">requestFocus</span><span class="s2">();</span>
+
+        <span class="s3">//Back button</span>
+        <span class="s1">BorderPane borderPane2 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BorderPane</span><span class="s2">();</span>
+        <span class="s1">borderPane2</span><span class="s2">.</span><span class="s1">setPadding</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Insets</span><span class="s2">(-</span><span class="s4">60</span><span class="s2">, </span><span class="s4">60</span><span class="s2">, </span><span class="s4">60</span><span class="s2">, </span><span class="s4">60</span><span class="s2">));</span>
+        <span class="s1">Button btBack </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Button</span><span class="s2">(</span><span class="s5">&quot;Back&quot;</span><span class="s2">);</span>
+        <span class="s1">btBack</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">20</span><span class="s2">));</span>
+        <span class="s1">btBack</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene</span><span class="s2">));</span>
+        <span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">btBack</span><span class="s2">);</span>
+        <span class="s1">borderPane2</span><span class="s2">.</span><span class="s1">setLeft</span><span class="s2">(</span><span class="s1">btBack</span><span class="s2">);</span>
+        <span class="s1">borderPane1</span><span class="s2">.</span><span class="s1">setBottom</span><span class="s2">(</span><span class="s1">borderPane2</span><span class="s2">);</span>
+
+        <span class="s1">Scene scene2 </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">borderPane1</span><span class="s2">, </span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s1">screenHeight</span><span class="s2">);</span>
+        <span class="s1">scene2</span><span class="s2">.</span><span class="s1">getStylesheets</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s5">&quot;menuCSS.css&quot;</span><span class="s2">);</span>
+
+        <span class="s1">btSettings</span><span class="s2">.</span><span class="s1">setOnAction</span><span class="s2">(</span><span class="s1">e -&gt; primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene2</span><span class="s2">));</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setTitle</span><span class="s2">(</span><span class="s5">&quot;AstroJump&quot;</span><span class="s2">);</span>
+
+        <span class="s3">//Listener for back button</span>
+        <span class="s1">scene2</span><span class="s2">.</span><span class="s1">addEventHandler</span><span class="s2">(</span><span class="s1">KeyEvent</span><span class="s2">.</span><span class="s1">KEY_PRESSED</span><span class="s2">, </span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">ESCAPE</span><span class="s2">) {</span>
+                <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">//Create player</span>
+        <span class="s1">createPlayer</span><span class="s2">();</span>
+
+        <span class="s3">//Initialize star</span>
+        <span class="s1">initializeStar</span><span class="s2">();</span>
+
+        <span class="s3">//Create background</span>
+        <span class="s1">createBackground</span><span class="s2">();</span>
+
+        <span class="s3">//Set scene and show stage</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene</span><span class="s2">);</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//BUTTON SET STYLES</span>
+    <span class="s0">protected void </span><span class="s1">setButtonStyle</span><span class="s2">(</span><span class="s1">Button btObject</span><span class="s2">) {</span>
+        <span class="s1">btObject</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">);</span>
+        <span class="s1">btObject</span><span class="s2">.</span><span class="s1">setOnMousePressed</span><span class="s2">(</span><span class="s1">e -&gt; btObject</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 2.6;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 22px;&quot;</span><span class="s2">));</span>
+        <span class="s1">btObject</span><span class="s2">.</span><span class="s1">setOnMouseReleased</span><span class="s2">(</span><span class="s1">e -&gt; btObject</span><span class="s2">.</span><span class="s1">setStyle</span><span class="s2">(</span><span class="s5">&quot;-fx-background-color: lavender;</span><span class="s0">\n</span><span class="s5">-fx-stroke-line-join: miter;</span><span class="s0">\n</span><span class="s5">-fx-border-color: black;</span><span class="s0">\n</span><span class="s5">-fx-border-width: 1.8;</span><span class="s0">\n</span><span class="s5">-fx-font-size: 20px;&quot;</span><span class="s2">));</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//SHOW SETTING-TUTORIAL</span>
+    <span class="s0">protected void </span><span class="s1">showTutorial</span><span class="s2">(</span><span class="s1">Stage primaryStage</span><span class="s2">) {</span>
+        <span class="s3">//Create scene and add tutorial page according to currentTutorialInt</span>
+        <span class="s1">ImageView tutorialPage </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Page&quot; </span><span class="s2">+ (</span><span class="s1">currentTutorialInt </span><span class="s2">+ </span><span class="s4">1</span><span class="s2">) + </span><span class="s5">&quot;.png&quot;</span><span class="s2">);</span>
+        <span class="s1">tutorialPage</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span>
+        <span class="s1">tutorialPage</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">screenHeight</span><span class="s2">);</span>
+        <span class="s1">Scene scene </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Pane</span><span class="s2">(</span><span class="s1">tutorialPage</span><span class="s2">));</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">scene</span><span class="s2">);</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">requestFocus</span><span class="s2">();</span>
+
+        <span class="s3">//Add listener to go back to main menu or switch slides in tutorial</span>
+        <span class="s1">scene</span><span class="s2">.</span><span class="s1">addEventHandler</span><span class="s2">(</span><span class="s1">KeyEvent</span><span class="s2">.</span><span class="s1">KEY_PRESSED</span><span class="s2">, </span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">ESCAPE</span><span class="s2">) {</span>
+                <span class="s0">try </span><span class="s2">{</span>
+                    <span class="s1">start</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+                    <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s1">e</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">RIGHT </span><span class="s2">&amp;&amp; </span><span class="s1">currentTutorialInt </span><span class="s2">&lt; </span><span class="s4">3</span><span class="s2">) {</span>
+                <span class="s1">currentTutorialInt</span><span class="s2">++;</span>
+                <span class="s1">showTutorial</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">LEFT </span><span class="s2">&amp;&amp; </span><span class="s1">currentTutorialInt </span><span class="s2">&gt; </span><span class="s4">0</span><span class="s2">) {</span>
+                <span class="s1">currentTutorialInt</span><span class="s2">--;</span>
+                <span class="s1">showTutorial</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//GAMELOOP METHODS</span>
+    <span class="s0">protected void </span><span class="s1">startGameLoop</span><span class="s2">(</span><span class="s1">Stage primaryStage</span><span class="s2">) {</span>
+        <span class="s1">score </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s3">//Reset player</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">setStarsCaught</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">getAnimation</span><span class="s2">().</span><span class="s1">setRate</span><span class="s2">(</span><span class="s4">1.0</span><span class="s2">);</span>
+
+        <span class="s3">//Add first planet to planetsDiscovered</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getPlanetsDiscovered</span><span class="s2">().</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s1">planetsDiscovered </span><span class="s2">= </span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getPlanetsDiscovered</span><span class="s2">();</span>
+        <span class="s2">}</span>
+        <span class="s1">planetsDiscovered </span><span class="s2">= </span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getPlanetsDiscovered</span><span class="s2">();</span>
+
+        <span class="s3">//Add planet to planetsDiscovered</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">planetsDiscovered</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">) == </span><span class="s5">'0'</span><span class="s2">) {</span>
+            <span class="s1">planetsDiscovered</span><span class="s2">.</span><span class="s1">setCharAt</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">, </span><span class="s5">'1'</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Start all timers</span>
+        <span class="s1">stopAnimationTimer </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+
+        <span class="s3">//Game scene setup reset</span>
+        <span class="s1">objectSpeed </span><span class="s2">= -</span><span class="s4">800</span><span class="s2">;</span>
+        <span class="s1">windDeceleration </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s1">score </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">gameObjects </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">clear</span><span class="s2">();</span>
+
+        <span class="s3">//Change media for music</span>
+        <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+
+        <span class="s1">File file </span><span class="s2">= </span><span class="s0">new </span><span class="s1">File</span><span class="s2">(</span><span class="s5">&quot;InGameMusic.mp3&quot;</span><span class="s2">);</span>
+        <span class="s1">Media media </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Media</span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">toURI</span><span class="s2">().</span><span class="s1">toString</span><span class="s2">());</span>
+        <span class="s1">mediaPlayer </span><span class="s2">= </span><span class="s0">new </span><span class="s1">MediaPlayer</span><span class="s2">(</span><span class="s1">media</span><span class="s2">);</span>
+        <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">setVolume</span><span class="s2">(((</span><span class="s0">double</span><span class="s2">) </span><span class="s1">musicSliderValue</span><span class="s2">) / </span><span class="s4">100.0</span><span class="s2">);</span>
+        <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">play</span><span class="s2">();</span>
+        <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">setAutoPlay</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+
+        <span class="s3">//Initialise txGameInfo</span>
+        <span class="s1">txGameInfo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Text</span><span class="s2">(</span><span class="s5">&quot;Current Planet: &quot; </span><span class="s2">+ </span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">() + </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Current Gravity: &quot; </span><span class="s2">+ </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">gravity </span><span class="s2">/ -</span><span class="s4">1.5551 </span><span class="s2">/ </span><span class="s1">definingSize</span><span class="s2">) / </span><span class="s4">100.0 </span><span class="s2">+ </span><span class="s5">&quot; m/s*s</span><span class="s0">\n</span><span class="s5">Score: &quot; </span><span class="s2">+ </span><span class="s1">score </span><span class="s2">+ </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Stars: &quot; </span><span class="s2">+ </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getStarsCaught</span><span class="s2">());</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">Font</span><span class="s2">.</span><span class="s1">font</span><span class="s2">(</span><span class="s5">&quot;Copperplate Gothic Bold&quot;</span><span class="s2">, </span><span class="s1">FontWeight</span><span class="s2">.</span><span class="s1">NORMAL</span><span class="s2">, </span><span class="s1">FontPosture</span><span class="s2">.</span><span class="s1">REGULAR</span><span class="s2">, </span><span class="s4">15 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">));</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setFill</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setStrokeWidth</span><span class="s2">(</span><span class="s4">.8 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLACK</span><span class="s2">);</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setTextAlignment</span><span class="s2">(</span><span class="s1">LEFT</span><span class="s2">);</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s4">6 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s4">22 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+
+        <span class="s3">//Initialise txGameOver</span>
+        <span class="s1">txGameOver </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Text</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+        <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">Font</span><span class="s2">.</span><span class="s1">font</span><span class="s2">(</span><span class="s5">&quot;Copperplate Gothic Bold&quot;</span><span class="s2">, </span><span class="s1">FontWeight</span><span class="s2">.</span><span class="s1">NORMAL</span><span class="s2">, </span><span class="s1">FontPosture</span><span class="s2">.</span><span class="s1">REGULAR</span><span class="s2">, </span><span class="s4">20 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">));</span>
+        <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setFill</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setStrokeWidth</span><span class="s2">(</span><span class="s4">0.8 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLACK</span><span class="s2">);</span>
+        <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setTextAlignment</span><span class="s2">(</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">BorderPane pane </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BorderPane</span><span class="s2">();</span>
+        <span class="s1">pane</span><span class="s2">.</span><span class="s1">setPrefSize</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s1">screenHeight</span><span class="s2">);</span>
+        <span class="s1">pane</span><span class="s2">.</span><span class="s1">setCenter</span><span class="s2">(</span><span class="s1">txGameOver</span><span class="s2">);</span>
+
+        <span class="s3">//Initialise net info text</span>
+        <span class="s1">txNetInfo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Text</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s1">Font</span><span class="s2">.</span><span class="s1">font</span><span class="s2">(</span><span class="s5">&quot;Copperplate Gothic Bold&quot;</span><span class="s2">, </span><span class="s1">FontWeight</span><span class="s2">.</span><span class="s1">NORMAL</span><span class="s2">, </span><span class="s1">FontPosture</span><span class="s2">.</span><span class="s1">REGULAR</span><span class="s2">, </span><span class="s4">15 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">));</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setFill</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setStrokeWidth</span><span class="s2">(</span><span class="s4">.8 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">BLACK</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setTextAlignment</span><span class="s2">(</span><span class="s1">LEFT</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">screenWidth </span><span class="s2">- </span><span class="s4">275 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s4">20 </span><span class="s2">* </span><span class="s1">definingSize</span><span class="s2">);</span>
+        <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setTextAlignment</span><span class="s2">(</span><span class="s1">TextAlignment</span><span class="s2">.</span><span class="s1">RIGHT</span><span class="s2">);</span>
+
+        <span class="s3">//Initialise gameObjects</span>
+        <span class="s1">gameObjects </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Group</span><span class="s2">(</span><span class="s1">background</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">(), </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">(), </span><span class="s1">star</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">(), </span><span class="s1">txGameInfo</span><span class="s2">, </span><span class="s1">txNetInfo</span><span class="s2">, </span><span class="s1">pane</span><span class="s2">);</span>
+
+
+        <span class="s3">//Clear nets, obstacles</span>
+        <span class="s1">nets</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s1">obstacles</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+
+        <span class="s3">//update background</span>
+        <span class="s1">background</span><span class="s2">.</span><span class="s1">changePlanet</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">);</span>
+
+
+        <span class="s3">//Reset timers</span>
+        <span class="s1">obstacleSpawnIntervalNano </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) </span><span class="s4">2 </span><span class="s2">*</span><span class="s4">1_000_000_000</span><span class="s2">;</span>
+        <span class="s1">starSpawnIntervalNano </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) </span><span class="s4">4 </span><span class="s2">* </span><span class="s4">1_000_000_000</span><span class="s2">;</span>
+        <span class="s1">portalSpawnIntervalNano </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) </span><span class="s4">30 </span><span class="s2">* </span><span class="s4">1_000_000_000</span><span class="s2">;</span>
+
+        <span class="s1">Scene game </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Scene</span><span class="s2">(</span><span class="s1">gameObjects</span><span class="s2">, </span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s1">screenHeight</span><span class="s2">);</span>
+
+        <span class="s3">//Initialize the next star spawning</span>
+        <span class="s1">randomizeStarSpawnTime</span><span class="s2">();</span>
+
+        <span class="s3">//Event handlers on scene</span>
+        <span class="s3">//Escape to main menu handler</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">addEventHandler</span><span class="s2">(</span><span class="s1">KeyEvent</span><span class="s2">.</span><span class="s1">KEY_PRESSED</span><span class="s2">, </span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">ESCAPE</span><span class="s2">) {</span>
+                <span class="s0">try </span><span class="s2">{</span>
+                    <span class="s1">stopAnimationTimer </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+                    <span class="s1">start</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IOException e</span><span class="s2">) {</span>
+                    <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s1">e</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">//Game restart handler</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">addEventHandler</span><span class="s2">(</span><span class="s1">KeyEvent</span><span class="s2">.</span><span class="s1">KEY_PRESSED</span><span class="s2">, </span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">R</span><span class="s2">) {</span>
+                <span class="s0">try </span><span class="s2">{</span>
+                    <span class="s1">IOMethods saveData </span><span class="s2">= </span><span class="s0">new </span><span class="s1">IOMethods</span><span class="s2">(</span><span class="s1">score</span><span class="s2">, </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getStarsCaught</span><span class="s2">(), </span><span class="s1">planetsDiscovered</span><span class="s2">);</span>
+                    <span class="s1">currentPlanetInt </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                    <span class="s1">score </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                    <span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setStarsCaught</span><span class="s2">(</span><span class="s4">0</span><span class="s2">);</span>
+                    <span class="s1">startGameLoop</span><span class="s2">(</span><span class="s1">primaryStage</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">Exception e</span><span class="s2">) {</span>
+                    <span class="s0">throw new </span><span class="s1">RuntimeException</span><span class="s2">(</span><span class="s1">e</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">//Jump event handler</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">addEventHandler</span><span class="s2">(</span><span class="s1">KeyEvent</span><span class="s2">.</span><span class="s1">KEY_PRESSED</span><span class="s2">, </span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">event</span><span class="s2">.</span><span class="s1">getCode</span><span class="s2">() == </span><span class="s1">KeyCode</span><span class="s2">.</span><span class="s1">SPACE</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() + </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() &gt;= </span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">screenHeight </span><span class="s2">/ </span><span class="s4">12 </span><span class="s2">&amp;&amp; </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getJumpTimeElapsed</span><span class="s2">() &gt; </span><span class="s4">0.4</span><span class="s2">) {</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setIsJumping</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">Player</span><span class="s2">.</span><span class="s1">JUMPING</span><span class="s2">);</span>
+                <span class="s2">} </span><span class="s0">else if </span><span class="s2">(!</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getIsJumping</span><span class="s2">()) {</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setIsJumping</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s4">1 </span><span class="s2">- </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">());</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">Player</span><span class="s2">.</span><span class="s1">JUMPING</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">});</span>
+
+        <span class="s3">//Create net when mouse released</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">setOnMouseReleased</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s1">parabolaPath</span><span class="s2">.</span><span class="s1">getElements</span><span class="s2">().</span><span class="s1">clear</span><span class="s2">();</span>
+            <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;&quot;</span><span class="s2">);</span>
+            <span class="s1">updatePath </span><span class="s2">= </span><span class="s0">false</span><span class="s2">;</span>
+            <span class="s1">createNet</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">getGravity</span><span class="s2">(), </span><span class="s1">NET_FORCE</span><span class="s2">);</span>
+        <span class="s2">});</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">setOnMousePressed</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s1">updatePath </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+            <span class="s3">//update mouse positions</span>
+            <span class="s1">lastKnownMouseX </span><span class="s2">= </span><span class="s1">event</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+            <span class="s1">lastKnownMouseY </span><span class="s2">= </span><span class="s1">event</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+        <span class="s2">});</span>
+        <span class="s1">game</span><span class="s2">.</span><span class="s1">setOnMouseDragged</span><span class="s2">(</span><span class="s1">event -&gt; </span><span class="s2">{</span>
+            <span class="s3">//update mouse</span>
+            <span class="s1">lastKnownMouseX </span><span class="s2">= </span><span class="s1">event</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">();</span>
+            <span class="s1">lastKnownMouseY </span><span class="s2">= </span><span class="s1">event</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">();</span>
+        <span class="s2">});</span>
+
+        <span class="s3">//Set scene and show stage</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">setScene</span><span class="s2">(</span><span class="s1">game</span><span class="s2">);</span>
+        <span class="s1">primaryStage</span><span class="s2">.</span><span class="s1">show</span><span class="s2">();</span>
+
+        <span class="s3">//Create animationTimer for update method and gameObjectSpawner</span>
+        <span class="s0">new </span><span class="s1">AnimationTimer</span><span class="s2">() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle</span><span class="s2">(</span><span class="s0">long </span><span class="s1">now</span><span class="s2">) {</span>
+                <span class="s3">// Calculate the time elapsed since the last frame</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">stopAnimationTimer</span><span class="s2">) {</span>
+                    <span class="s0">this</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+                    <span class="s1">score </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                    <span class="s1">objectSpeed </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                    <span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                <span class="s2">}</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">lastUpdateMethodTime </span><span class="s2">&gt; </span><span class="s4">0</span><span class="s2">) {</span>
+                    <span class="s0">long </span><span class="s1">elapsedTime </span><span class="s2">= </span><span class="s1">now </span><span class="s2">- </span><span class="s1">lastUpdateMethodTime</span><span class="s2">;</span>
+                    <span class="s3">// If enough time has passed, call update and save lastUpdateTime</span>
+                    <span class="s0">if </span><span class="s2">(</span><span class="s1">elapsedTime </span><span class="s2">&gt;= </span><span class="s1">NANOSECONDS_PER_FRAME </span><span class="s2">&amp;&amp; ! </span><span class="s1">stopAnimationTimer</span><span class="s2">) {</span>
+                        <span class="s3">//update score</span>
+                        <span class="s1">score </span><span class="s2">+= (</span><span class="s0">long</span><span class="s2">) ((-</span><span class="s4">0.0000000001</span><span class="s2">) * </span><span class="s1">elapsedTime </span><span class="s2">* </span><span class="s1">objectSpeed</span><span class="s2">);</span>
+                        <span class="s1">update</span><span class="s2">(</span><span class="s1">elapsedTime </span><span class="s2">/ </span><span class="s4">1_000_000_000.0</span><span class="s2">, </span><span class="s1">primaryStage</span><span class="s2">); </span><span class="s3">// Convert nanoseconds to seconds</span>
+                        <span class="s1">gameObjectSpawner</span><span class="s2">(</span><span class="s1">now</span><span class="s2">);</span>
+                        <span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+                    <span class="s2">}</span>
+                <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                    <span class="s1">lastUpdateMethodTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}.</span><span class="s1">start</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//UPDATE METHOD</span>
+    <span class="s0">private void </span><span class="s1">update</span><span class="s2">(</span><span class="s0">double </span><span class="s1">deltaTime</span><span class="s2">, </span><span class="s1">Stage stage</span><span class="s2">) {</span>
+        <span class="s3">//DeltaTime is the time elapsed since the last frame in seconds; you can multiply a value of speed or position by deltaTime to make it pixels/second</span>
+        <span class="s3">//Increase object speeds</span>
+        <span class="s1">objectSpeed </span><span class="s2">+= (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">objectSpeed </span><span class="s2">* </span><span class="s4">0.004 </span><span class="s2">* </span><span class="s1">deltaTime</span><span class="s2">);</span>
+        <span class="s1">updateGameObjectsSpeed</span><span class="s2">();</span>
+
+        <span class="s3">//Increase wind acceleration on nets</span>
+        <span class="s1">windDeceleration </span><span class="s2">+= (</span><span class="s0">float</span><span class="s2">) (</span><span class="s1">deltaTime </span><span class="s2">* </span><span class="s1">definingSize </span><span class="s2">* -</span><span class="s4">1.5</span><span class="s2">);</span>
+
+        <span class="s3">//Update txGameInfo</span>
+        <span class="s1">txGameInfo</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;Current Planet: &quot; </span><span class="s2">+ </span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">toString</span><span class="s2">() + </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Current Gravity: &quot; </span><span class="s2">+ </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">gravity </span><span class="s2">/ -</span><span class="s4">1.5551 </span><span class="s2">/ </span><span class="s1">definingSize</span><span class="s2">) / </span><span class="s4">100.0 </span><span class="s2">+ </span><span class="s5">&quot; m/s²</span><span class="s0">\n</span><span class="s5">Score: &quot; </span><span class="s2">+ </span><span class="s1">score </span><span class="s2">+ </span><span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Stars: &quot; </span><span class="s2">+ </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getStarsCaught</span><span class="s2">());</span>
+
+        <span class="s3">//Update PLAYER jump</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getIsJumping</span><span class="s2">()) {</span>
+            <span class="s1">playerJump</span><span class="s2">(</span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">getGravity</span><span class="s2">(), </span><span class="s1">PLAYER_JUMP_FORCE</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Update is on ground boolean</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">updateIsOnGround</span><span class="s2">(</span><span class="s1">GROUND_Y</span><span class="s2">);</span>
+
+        <span class="s3">//Net updates</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">nets</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">Net net </span><span class="s2">= </span><span class="s1">nets</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+
+            <span class="s3">//Update position</span>
+            <span class="s1">net</span><span class="s2">.</span><span class="s1">updatePosition</span><span class="s2">();</span>
+
+            <span class="s3">//Check for collision with a star</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">star </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">net</span><span class="s2">.</span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">star</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">())) {</span>
+                    <span class="s1">player</span><span class="s2">.</span><span class="s1">addOneStar</span><span class="s2">();</span>
+                    <span class="s3">//modify score</span>
+                    <span class="s1">score </span><span class="s2">+= (</span><span class="s0">long</span><span class="s2">) </span><span class="s1">star</span><span class="s2">.</span><span class="s1">getScoreValue</span><span class="s2">();</span>
+                    <span class="s3">//reset star</span>
+                    <span class="s1">spawnStar</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">);</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+            <span class="s3">//Check for collision with ground</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">net</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() + </span><span class="s1">net</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() &gt;= </span><span class="s1">GROUND_Y</span><span class="s2">) {</span>
+                <span class="s3">//Delete game object</span>
+                <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">net</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+                <span class="s1">nets</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">net</span><span class="s2">);</span>
+                <span class="s1">net </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+                <span class="s1">i</span><span class="s2">--;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//OBSTACLES UPDATE</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">int </span><span class="s1">i </span><span class="s2">= </span><span class="s4">0</span><span class="s2">; </span><span class="s1">i </span><span class="s2">&lt; </span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">size</span><span class="s2">(); </span><span class="s1">i</span><span class="s2">++) {</span>
+            <span class="s1">SimpleMovingImage obstacle </span><span class="s2">= </span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+
+            <span class="s3">//Update position</span>
+            <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">updatePosition</span><span class="s2">(</span><span class="s1">deltaTime</span><span class="s2">);</span>
+
+            <span class="s3">//Check for collisions with player</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">()) &amp;&amp; !</span><span class="s1">stopAnimationTimer</span><span class="s2">) {</span>
+                <span class="s3">//Game over methods</span>
+                <span class="s1">IOMethods saveData </span><span class="s2">= </span><span class="s0">new </span><span class="s1">IOMethods</span><span class="s2">(</span><span class="s1">score</span><span class="s2">, </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getStarsCaught</span><span class="s2">(), </span><span class="s1">planetsDiscovered</span><span class="s2">);</span>
+                <span class="s1">stopAnimationTimer </span><span class="s2">= </span><span class="s0">true</span><span class="s2">;</span>
+                <span class="s1">objectSpeed </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+                <span class="s1">player</span><span class="s2">.</span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">Player</span><span class="s2">.</span><span class="s1">DEAD</span><span class="s2">);</span>
+                <span class="s1">txGameOver</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;GAME OVER</span><span class="s0">\n</span><span class="s5">PRESS ESCAPE TO EXIT TO MAIN MENU OR R TO RESTART&quot;</span><span class="s2">);</span>
+                <span class="s1">mediaPlayer</span><span class="s2">.</span><span class="s1">stop</span><span class="s2">();</span>
+
+                <span class="s3">//ShowGameOverScreen(stage);</span>
+            <span class="s2">}</span>
+
+            <span class="s3">//If the obstacle is out of bounds delete it</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">isOutOfBounds</span><span class="s2">(</span><span class="s1">GROUND_Y</span><span class="s2">)) {</span>
+                <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+                <span class="s1">obstacle </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+                <span class="s1">obstacles</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+                <span class="s1">i</span><span class="s2">--;</span>
+            <span class="s2">}</span>
+
+            <span class="s3">//Check for collision with portal</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">portal </span><span class="s2">!= </span><span class="s0">null </span><span class="s2">&amp; </span><span class="s1">obstacle </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s0">if </span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">())) {</span>
+                    <span class="s3">//Delete obstacle</span>
+                    <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+                    <span class="s1">obstacle </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+                    <span class="s1">obstacles</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">i</span><span class="s2">);</span>
+                    <span class="s1">i</span><span class="s2">--;</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+
+            <span class="s3">//Make the player's animation faster</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">getAnimation</span><span class="s2">().</span><span class="s1">setRate</span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getAnimation</span><span class="s2">().</span><span class="s1">getRate</span><span class="s2">() + </span><span class="s1">deltaTime </span><span class="s2">/ </span><span class="s4">100.0</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//UPDATE STAR</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">updatePosition</span><span class="s2">(</span><span class="s1">deltaTime</span><span class="s2">);</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">star</span><span class="s2">.</span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">())) {</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">addOneStar</span><span class="s2">();</span>
+            <span class="s1">score </span><span class="s2">+= (</span><span class="s0">long</span><span class="s2">) </span><span class="s1">star</span><span class="s2">.</span><span class="s1">getScoreValue</span><span class="s2">();</span>
+            <span class="s3">//Reset star</span>
+            <span class="s1">spawnStar</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s3">//Reset the star if it is out of bounds</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">star</span><span class="s2">.</span><span class="s1">isOutOfBounds</span><span class="s2">(</span><span class="s1">GROUND_Y</span><span class="s2">)) {</span>
+            <span class="s1">spawnStar</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Background update</span>
+        <span class="s1">background</span><span class="s2">.</span><span class="s1">updatePosition</span><span class="s2">(</span><span class="s1">deltaTime</span><span class="s2">);</span>
+
+        <span class="s3">//UPDATE PORTAL</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">portal </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s3">//Update position</span>
+            <span class="s1">portal</span><span class="s2">.</span><span class="s1">updatePosition</span><span class="s2">(</span><span class="s1">deltaTime</span><span class="s2">);</span>
+            <span class="s3">//Out of bounds deletion</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">isOutOfBounds</span><span class="s2">(</span><span class="s1">GROUND_Y</span><span class="s2">)) {</span>
+                <span class="s3">//Delete portal</span>
+                <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+                <span class="s1">portal </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s3">//Collision detection for portal</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">portal </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">isCollidingWith</span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">()) &amp;&amp; !</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getIsJumping</span><span class="s2">()) {</span>
+                <span class="s3">//Change planet</span>
+                <span class="s1">changePlanet</span><span class="s2">();</span>
+                <span class="s3">//Update spikes graphics</span>
+                <span class="s1">updateSpikePlanet</span><span class="s2">();</span>
+                <span class="s3">//Delete portal</span>
+                <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+                <span class="s1">portal </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//UPDATE PATH</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">updatePath</span><span class="s2">) {</span>
+            <span class="s3">//Calculate the initial position of the net</span>
+            <span class="s0">double </span><span class="s1">initialPosX </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getWidth</span><span class="s2">();</span>
+            <span class="s0">double </span><span class="s1">initialPosY </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() + (</span><span class="s4">0.5 </span><span class="s2">* </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">()) - (</span><span class="s1">NET_SIZE </span><span class="s2">* </span><span class="s4">0.5</span><span class="s2">);</span>
+
+            <span class="s3">//Calculate the angle of the throw</span>
+            <span class="s0">double </span><span class="s1">dx </span><span class="s2">= </span><span class="s1">lastKnownMouseX </span><span class="s2">- </span><span class="s1">initialPosX</span><span class="s2">;</span>
+            <span class="s0">double </span><span class="s1">dy </span><span class="s2">= -</span><span class="s1">lastKnownMouseY </span><span class="s2">+ </span><span class="s1">initialPosY</span><span class="s2">;</span>
+
+            <span class="s3">//Angle from player to point (world angle)</span>
+            <span class="s0">double </span><span class="s1">angle </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">atan2</span><span class="s2">(</span><span class="s1">dy</span><span class="s2">, </span><span class="s1">dx</span><span class="s2">);</span>
+
+            <span class="s3">//Calculate the speed in each axis</span>
+            <span class="s0">double </span><span class="s1">initialSpeedX </span><span class="s2">= </span><span class="s1">NET_FORCE </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">cos</span><span class="s2">(</span><span class="s1">angle</span><span class="s2">);</span>
+            <span class="s0">double </span><span class="s1">initialSpeedY </span><span class="s2">= -</span><span class="s1">NET_FORCE </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s1">angle</span><span class="s2">);</span>
+            <span class="s3">//Get acceleration</span>
+            <span class="s0">double </span><span class="s1">accelerationY </span><span class="s2">= </span><span class="s1">planetArray</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">).</span><span class="s1">getGravity</span><span class="s2">();</span>
+
+            <span class="s3">// Create a path for the parabola</span>
+            <span class="s0">double </span><span class="s1">k </span><span class="s2">= (</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">(</span><span class="s1">initialSpeedY</span><span class="s2">, </span><span class="s4">2</span><span class="s2">) / (</span><span class="s4">2 </span><span class="s2">* </span><span class="s1">accelerationY</span><span class="s2">)) + </span><span class="s1">initialPosY</span><span class="s2">;</span>
+            <span class="s0">double </span><span class="s1">h </span><span class="s2">= </span><span class="s1">initialSpeedX </span><span class="s2">* </span><span class="s1">initialSpeedY </span><span class="s2">/ </span><span class="s1">accelerationY </span><span class="s2">+ </span><span class="s1">initialPosX</span><span class="s2">;</span>
+
+            <span class="s3">//Calculate a</span>
+            <span class="s0">double </span><span class="s1">a </span><span class="s2">= (</span><span class="s1">initialPosY </span><span class="s2">- </span><span class="s1">k</span><span class="s2">) / </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">((</span><span class="s1">initialPosX </span><span class="s2">- </span><span class="s1">h</span><span class="s2">), </span><span class="s4">2</span><span class="s2">);</span>
+            <span class="s1">parabolaPath </span><span class="s2">= </span><span class="s1">createParabola</span><span class="s2">(</span><span class="s1">parabolaPath</span><span class="s2">, </span><span class="s1">a</span><span class="s2">, </span><span class="s1">h</span><span class="s2">, </span><span class="s1">k</span><span class="s2">, </span><span class="s1">initialPosX</span><span class="s2">);</span>
+
+            <span class="s3">//Add parabolaPath if it isn't already there</span>
+            <span class="s0">if </span><span class="s2">(!</span><span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">contains</span><span class="s2">(</span><span class="s1">parabolaPath</span><span class="s2">))</span>
+                <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">parabolaPath</span><span class="s2">);</span>
+
+            <span class="s3">//UPDATE NET INFO</span>
+            <span class="s1">txNetInfo</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s5">&quot;NET THROW INFO:</span><span class="s0">\n</span><span class="s5">&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;Initial Speed: &quot; </span><span class="s2">+ </span><span class="s1">NET_FORCE </span><span class="s2">+ </span><span class="s5">&quot;(px/s)&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Angle thrown: &quot; </span><span class="s2">+ </span><span class="s1">roundTo2Dec</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">toDegrees</span><span class="s2">(</span><span class="s1">angle</span><span class="s2">)) + </span><span class="s5">&quot;(degrees)&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Initial Speed X: &quot; </span><span class="s2">+ (</span><span class="s0">int</span><span class="s2">) </span><span class="s1">initialSpeedX </span><span class="s2">+ </span><span class="s5">&quot;(px/s)&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Initial Speed Y: &quot; </span><span class="s2">+ (</span><span class="s0">int</span><span class="s2">) -</span><span class="s1">initialSpeedY </span><span class="s2">+ </span><span class="s5">&quot;(px/s)&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Acceleration X: &quot; </span><span class="s2">+ </span><span class="s1">roundTo2Dec</span><span class="s2">(</span><span class="s1">windDeceleration</span><span class="s2">) + </span><span class="s5">&quot;(px/s²)&quot; </span><span class="s2">+</span>
+                    <span class="s5">&quot;</span><span class="s0">\n</span><span class="s5">Acceleration Y: &quot; </span><span class="s2">+ </span><span class="s1">roundTo2Dec</span><span class="s2">(</span><span class="s1">accelerationY</span><span class="s2">) + </span><span class="s5">&quot;(px/s²)&quot;</span>
+            <span class="s2">);</span>
+        <span class="s2">}</span>
+
+
+    <span class="s2">}</span>
+
+    <span class="s3">//PLAYER METHODS</span>
+    <span class="s0">private void </span><span class="s1">createPlayer</span><span class="s2">() {</span>
+        <span class="s0">final </span><span class="s1">Image IMAGE </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Image</span><span class="s2">(</span><span class="s5">&quot;Character.png&quot;</span><span class="s2">);</span>
+        <span class="s3">//Number of columns in the spriteSheet</span>
+        <span class="s0">final int </span><span class="s1">COLUMNS </span><span class="s2">= </span><span class="s4">4</span><span class="s2">;</span>
+        <span class="s0">final int </span><span class="s1">STARTING_ROW </span><span class="s2">= </span><span class="s1">Player</span><span class="s2">.</span><span class="s1">RUN</span><span class="s2">;</span>
+        <span class="s3">//Beginning offset</span>
+        <span class="s0">final int </span><span class="s1">OFFSET_X </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s0">final int </span><span class="s1">OFFSET_Y </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s3">//Size of one image</span>
+        <span class="s0">final int </span><span class="s1">SPRITE_WIDTH </span><span class="s2">= </span><span class="s4">230</span><span class="s2">;</span>
+        <span class="s0">final int </span><span class="s1">SPRITE_HEIGHT </span><span class="s2">= </span><span class="s4">240</span><span class="s2">;</span>
+        <span class="s1">ImageView playerIV </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s1">IMAGE</span><span class="s2">);</span>
+        <span class="s3">//Set player imageView to first image</span>
+        <span class="s1">playerIV</span><span class="s2">.</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">(</span><span class="s1">OFFSET_X</span><span class="s2">, </span><span class="s1">OFFSET_Y</span><span class="s2">, </span><span class="s1">SPRITE_WIDTH</span><span class="s2">, </span><span class="s1">SPRITE_HEIGHT</span><span class="s2">));</span>
+        <span class="s1">playerIV</span><span class="s2">.</span><span class="s1">setFitWidth</span><span class="s2">(</span><span class="s1">PLAYER_WIDTH</span><span class="s2">);</span>
+        <span class="s1">playerIV</span><span class="s2">.</span><span class="s1">setFitHeight</span><span class="s2">(</span><span class="s1">PLAYER_HEIGHT</span><span class="s2">);</span>
+
+        <span class="s3">//Animation player imageview</span>
+        <span class="s0">final </span><span class="s1">Duration PLAYER_ANIM_DURATION </span><span class="s2">= </span><span class="s1">Duration</span><span class="s2">.</span><span class="s1">millis</span><span class="s2">(</span><span class="s4">1000</span><span class="s2">);</span>
+        <span class="s1">Sprite playerAnimation </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Sprite</span><span class="s2">(</span>
+                <span class="s1">playerIV</span><span class="s2">,</span>
+                <span class="s1">PLAYER_ANIM_DURATION</span><span class="s2">,</span>
+                <span class="s1">STARTING_ROW</span><span class="s2">, </span><span class="s1">COLUMNS</span><span class="s2">,</span>
+                <span class="s1">OFFSET_X</span><span class="s2">, </span><span class="s1">OFFSET_Y</span><span class="s2">,</span>
+                <span class="s1">SPRITE_WIDTH</span><span class="s2">, </span><span class="s1">SPRITE_HEIGHT</span>
+        <span class="s2">);</span>
+        <span class="s1">playerAnimation</span><span class="s2">.</span><span class="s1">setCycleCount</span><span class="s2">(</span><span class="s1">Animation</span><span class="s2">.</span><span class="s1">INDEFINITE</span><span class="s2">);</span>
+        <span class="s1">playerAnimation</span><span class="s2">.</span><span class="s1">play</span><span class="s2">();</span>
+
+        <span class="s3">//Create player object</span>
+        <span class="s1">player </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Player</span><span class="s2">(</span><span class="s1">playerIV</span><span class="s2">, </span><span class="s1">playerAnimation</span><span class="s2">);</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">Player</span><span class="s2">.</span><span class="s1">RUN</span><span class="s2">);</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">());</span>
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s4">20</span><span class="s2">*</span><span class="s1">definingSize</span><span class="s2">);</span>
+
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">playerJump</span><span class="s2">(</span><span class="s0">float </span><span class="s1">gravitationalForce</span><span class="s2">, </span><span class="s0">float </span><span class="s1">initialJumpSpeed</span><span class="s2">) {</span>
+        <span class="s3">//Move player</span>
+        <span class="s0">double </span><span class="s1">timeElapsed </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getJumpTimeElapsed</span><span class="s2">();</span>
+        <span class="s0">double </span><span class="s1">baseDisplacement </span><span class="s2">= </span><span class="s1">timeElapsed </span><span class="s2">* </span><span class="s1">initialJumpSpeed</span><span class="s2">;</span>
+        <span class="s0">double </span><span class="s1">acceleratedDisplacement </span><span class="s2">= -</span><span class="s4">0.5 </span><span class="s2">* </span><span class="s1">gravitationalForce </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">(</span><span class="s1">timeElapsed</span><span class="s2">, </span><span class="s4">2</span><span class="s2">);</span>
+
+        <span class="s1">player</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() + </span><span class="s1">baseDisplacement </span><span class="s2">+ </span><span class="s1">acceleratedDisplacement</span><span class="s2">);</span>
+
+        <span class="s3">//If the player is falling set state to falling</span>
+        <span class="s0">if </span><span class="s2">(-</span><span class="s1">gravitationalForce </span><span class="s2">* </span><span class="s1">timeElapsed </span><span class="s2">+ </span><span class="s1">initialJumpSpeed </span><span class="s2">&gt; </span><span class="s4">0</span><span class="s2">)</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">setAnimationState</span><span class="s2">(</span><span class="s1">Player</span><span class="s2">.</span><span class="s1">FALLING</span><span class="s2">);</span>
+
+        <span class="s3">//If the player is back on the floor set is jumping to false</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() &gt;= (</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">())) {</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">setIsJumping</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+            <span class="s3">//Adjust player y values to ground</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//NET METHOD</span>
+    <span class="s0">public void </span><span class="s1">createNet</span><span class="s2">(</span><span class="s0">float </span><span class="s1">gravity</span><span class="s2">, </span><span class="s0">float </span><span class="s1">netSpeed</span><span class="s2">) {</span>
+        <span class="s3">//Calculate the inital position of the net</span>
+        <span class="s0">double </span><span class="s1">initialPosX </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getX</span><span class="s2">() + </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getWidth</span><span class="s2">();</span>
+        <span class="s0">double </span><span class="s1">initialPosY </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getY</span><span class="s2">() + (</span><span class="s4">0.5 </span><span class="s2">* </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">()) - (</span><span class="s4">0.5 </span><span class="s2">* </span><span class="s1">NET_SIZE</span><span class="s2">);</span>
+
+        <span class="s3">//Calculate the angle of the throw</span>
+        <span class="s0">double </span><span class="s1">dx </span><span class="s2">= </span><span class="s1">lastKnownMouseX </span><span class="s2">- </span><span class="s1">initialPosX</span><span class="s2">;</span>
+        <span class="s0">double </span><span class="s1">dy </span><span class="s2">= -</span><span class="s1">lastKnownMouseY </span><span class="s2">+ </span><span class="s1">initialPosY</span><span class="s2">;</span>
+
+        <span class="s3">//Angle from player to point (world angle)</span>
+        <span class="s0">double </span><span class="s1">angle </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">atan2</span><span class="s2">(</span><span class="s1">dy</span><span class="s2">, </span><span class="s1">dx</span><span class="s2">);</span>
+
+        <span class="s3">//Calculate the speed in each axis</span>
+        <span class="s0">double </span><span class="s1">initialSpeedX </span><span class="s2">= </span><span class="s1">netSpeed </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">cos</span><span class="s2">(</span><span class="s1">angle</span><span class="s2">);</span>
+        <span class="s0">double </span><span class="s1">initialSpeedY </span><span class="s2">= -</span><span class="s1">netSpeed </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">sin</span><span class="s2">(</span><span class="s1">angle</span><span class="s2">);</span>
+
+        <span class="s3">//If the player is aiming backwards shoot the net like a slingshot</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">initialSpeedX </span><span class="s2">&lt; </span><span class="s4">0</span><span class="s2">) {</span>
+            <span class="s1">initialSpeedX </span><span class="s2">*= -</span><span class="s4">1</span><span class="s2">;</span>
+            <span class="s1">initialSpeedY </span><span class="s2">*= -</span><span class="s4">1</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Adds a new net to the nets array</span>
+        <span class="s1">nets</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Net</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Net.png&quot;</span><span class="s2">), </span><span class="s1">initialPosX</span><span class="s2">, </span><span class="s1">initialPosY</span><span class="s2">, </span><span class="s1">initialSpeedX</span><span class="s2">,</span>
+                <span class="s1">initialSpeedY</span><span class="s2">, </span><span class="s1">gravity</span><span class="s2">, </span><span class="s1">windDeceleration</span><span class="s2">));</span>
+        <span class="s3">//Adds the last net added to nets to the game object group</span>
+        <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">nets</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">().</span><span class="s1">getImage</span><span class="s2">());</span>
+
+        <span class="s3">//Set image sizes</span>
+        <span class="s1">nets</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">().</span><span class="s1">setHeight</span><span class="s2">(</span><span class="s1">NET_SIZE</span><span class="s2">);</span>
+        <span class="s1">nets</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">().</span><span class="s1">setWidth</span><span class="s2">(</span><span class="s1">NET_SIZE</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//OBSTACLE METHODS</span>
+    <span class="s0">public void </span><span class="s1">createSpike</span><span class="s2">() {</span>
+        <span class="s3">//Add new obstacle</span>
+        <span class="s1">obstacles</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">SimpleMovingImage</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Obstacle.png&quot;</span><span class="s2">), </span><span class="s1">SPIKE_WIDTH</span><span class="s2">, </span><span class="s1">SPIKE_HEIGHT</span><span class="s2">, </span><span class="s1">objectSpeed</span><span class="s2">, </span><span class="s4">0</span><span class="s2">));</span>
+
+        <span class="s3">//Change image view</span>
+        <span class="s1">ImageView imgV </span><span class="s2">= </span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">().</span><span class="s1">getImage</span><span class="s2">();</span>
+        <span class="s1">SimpleMovingImage obstacle </span><span class="s2">= </span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">();</span>
+
+        <span class="s3">//Set to the right spike image (random spike on the current planet)</span>
+        <span class="s1">imgV</span><span class="s2">.</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">((</span><span class="s0">int</span><span class="s2">) (</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * </span><span class="s4">5</span><span class="s2">) * </span><span class="s4">210</span><span class="s2">, </span><span class="s1">currentPlanetInt </span><span class="s2">* </span><span class="s4">280</span><span class="s2">, </span><span class="s4">210</span><span class="s2">, </span><span class="s4">280</span><span class="s2">));</span>
+
+        <span class="s3">//Add imageView to game objects</span>
+        <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">imgV</span><span class="s2">);</span>
+
+        <span class="s3">//Set obstacle to the right position</span>
+        <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">());</span>
+        <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span><span class="s3">//CHECK</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">createMeteorite</span><span class="s2">() {</span>
+        <span class="s3">//Add new meteorite</span>
+        <span class="s1">obstacles</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">SimpleMovingImage</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Meteorite.png&quot;</span><span class="s2">), </span><span class="s1">METEOR_WIDTH</span><span class="s2">, </span><span class="s1">METEOR_HEIGHT</span><span class="s2">, </span><span class="s1">objectSpeed</span><span class="s2">, </span><span class="s4">0</span><span class="s2">));</span>
+
+        <span class="s3">//Set obstacle to the right position</span>
+        <span class="s1">SimpleMovingImage obstacle </span><span class="s2">= </span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">();</span>
+
+        <span class="s3">//Change image view</span>
+        <span class="s1">ImageView imgV </span><span class="s2">= </span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">();</span>
+        <span class="s1">imgV</span><span class="s2">.</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">((</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">())) * </span><span class="s4">320</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">320</span><span class="s2">, </span><span class="s4">100</span><span class="s2">));</span>
+
+        <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * (</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() - </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() - </span><span class="s4">10</span><span class="s2">));</span>
+        <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span>
+
+        <span class="s3">//Add imageView to game objects</span>
+        <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">obstacles</span><span class="s2">.</span><span class="s1">getLast</span><span class="s2">().</span><span class="s1">getImage</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">updateSpikePlanet</span><span class="s2">() {</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">SimpleMovingImage obstacle </span><span class="s2">: </span><span class="s1">obstacles</span><span class="s2">) {</span>
+            <span class="s3">//Make sure the object is a spike</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">() == </span><span class="s1">SPIKE_HEIGHT </span><span class="s2">&amp;&amp; </span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getWidth</span><span class="s2">() == </span><span class="s1">SPIKE_WIDTH</span><span class="s2">) {</span>
+                <span class="s3">//Change the viewport to the right planet</span>
+                <span class="s3">//Set to the right spike image (same spike on the current planet)</span>
+                <span class="s1">Rectangle2D oldViewport </span><span class="s2">= </span><span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">().</span><span class="s1">getViewport</span><span class="s2">();</span>
+                <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">().</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">(</span><span class="s1">oldViewport</span><span class="s2">.</span><span class="s1">getMinX</span><span class="s2">(), </span><span class="s1">currentPlanetInt </span><span class="s2">* </span><span class="s4">280</span><span class="s2">, </span><span class="s4">210</span><span class="s2">, </span><span class="s4">280</span><span class="s2">));</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//STAR METHODS</span>
+    <span class="s0">public void </span><span class="s1">initializeStar</span><span class="s2">() {</span>
+        <span class="s3">//Create star</span>
+        <span class="s1">star </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Star</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Star.png&quot;</span><span class="s2">), </span><span class="s1">STAR_WIDTH</span><span class="s2">, </span><span class="s1">STAR_HEIGHT</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">);</span>
+
+        <span class="s3">//Get random index 0-1</span>
+        <span class="s0">int </span><span class="s1">index </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">()));</span>
+
+        <span class="s3">//Randomize the star image</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">().</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">(</span><span class="s1">index </span><span class="s2">* </span><span class="s4">230</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">230</span><span class="s2">, </span><span class="s4">230</span><span class="s2">));</span>
+
+        <span class="s3">//Set position and size</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">spawnStar</span><span class="s2">(</span><span class="s0">double </span><span class="s1">x</span><span class="s2">, </span><span class="s0">double </span><span class="s1">y</span><span class="s2">, </span><span class="s0">float </span><span class="s1">speedX</span><span class="s2">, </span><span class="s0">float </span><span class="s1">speedY</span><span class="s2">, </span><span class="s0">double </span><span class="s1">scoreValue</span><span class="s2">) {</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">x</span><span class="s2">);</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">y</span><span class="s2">);</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setSpeedX</span><span class="s2">(</span><span class="s1">speedX</span><span class="s2">);</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setSpeedY</span><span class="s2">(</span><span class="s1">speedY</span><span class="s2">);</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">setScoreValue</span><span class="s2">(</span><span class="s1">scoreValue</span><span class="s2">);</span>
+
+        <span class="s3">//Get random index 0-1</span>
+        <span class="s0">int </span><span class="s1">index </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">()));</span>
+        <span class="s3">//Randomize the star image</span>
+        <span class="s1">star</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">().</span><span class="s1">setViewport</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Rectangle2D</span><span class="s2">(</span><span class="s1">index </span><span class="s2">* </span><span class="s4">230</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s4">230</span><span class="s2">, </span><span class="s4">230</span><span class="s2">));</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//BACKGROUND METHOD</span>
+    <span class="s0">public void </span><span class="s1">createBackground</span><span class="s2">() {</span>
+        <span class="s1">background </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Background</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Background.png&quot;</span><span class="s2">), </span><span class="s1">BACKGROUND_WIDTH</span><span class="s2">, </span><span class="s1">BACKGROUND_HEIGHT</span><span class="s2">, </span><span class="s4">5120</span><span class="s2">, </span><span class="s4">1280</span><span class="s2">, </span><span class="s1">objectSpeed</span><span class="s2">, </span><span class="s1">currentPlanetInt</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//PATH METHOD</span>
+    <span class="s0">private </span><span class="s1">Path createParabola</span><span class="s2">(</span><span class="s1">Path path</span><span class="s2">, </span><span class="s0">double </span><span class="s1">a</span><span class="s2">, </span><span class="s0">double </span><span class="s1">h</span><span class="s2">, </span><span class="s0">double </span><span class="s1">k</span><span class="s2">, </span><span class="s0">double </span><span class="s1">startX</span><span class="s2">) {</span>
+        <span class="s3">//Reset the path is if it doesn't exist already</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">path </span><span class="s2">== </span><span class="s0">null</span><span class="s2">)</span>
+            <span class="s1">path </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Path</span><span class="s2">();</span>
+        <span class="s0">else</span>
+            <span class="s1">path</span><span class="s2">.</span><span class="s1">getElements</span><span class="s2">().</span><span class="s1">clear</span><span class="s2">();</span>
+
+        <span class="s3">//Style the path as a white dotted line</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">setStroke</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">setStrokeWidth</span><span class="s2">(</span><span class="s4">2</span><span class="s2">);</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">getStrokeDashArray</span><span class="s2">().</span><span class="s1">addAll</span><span class="s2">(</span><span class="s4">5.0</span><span class="s2">, </span><span class="s4">5.0</span><span class="s2">); </span><span class="s3">//This creates the dotted effect</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">setFill</span><span class="s2">(</span><span class="s0">null</span><span class="s2">); </span><span class="s3">//Important for a line (not filled)</span>
+
+        <span class="s0">double </span><span class="s1">endX </span><span class="s2">= </span><span class="s1">screenWidth</span><span class="s2">;    </span><span class="s3">//End at screen width</span>
+        <span class="s0">double </span><span class="s1">step </span><span class="s2">= </span><span class="s4">15</span><span class="s2">;          </span><span class="s3">//Smaller step = smoother curve</span>
+
+        <span class="s3">//Move to starting point</span>
+        <span class="s0">double </span><span class="s1">startY </span><span class="s2">= </span><span class="s1">a </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">(</span><span class="s1">startX </span><span class="s2">- </span><span class="s1">h</span><span class="s2">, </span><span class="s4">2</span><span class="s2">) + </span><span class="s1">k </span><span class="s2">+ </span><span class="s1">NET_SIZE </span><span class="s2">* </span><span class="s4">0.5</span><span class="s2">;</span>
+        <span class="s1">path</span><span class="s2">.</span><span class="s1">getElements</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">MoveTo</span><span class="s2">(</span><span class="s1">startX</span><span class="s2">, </span><span class="s1">startY</span><span class="s2">));</span>
+
+        <span class="s3">//Create the parabola by adding line segments</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s0">double </span><span class="s1">x </span><span class="s2">= </span><span class="s1">startX </span><span class="s2">+ </span><span class="s1">step</span><span class="s2">; </span><span class="s1">x </span><span class="s2">&lt;= </span><span class="s1">endX</span><span class="s2">; </span><span class="s1">x </span><span class="s2">+= </span><span class="s1">step</span><span class="s2">) {</span>
+            <span class="s0">double </span><span class="s1">y </span><span class="s2">= </span><span class="s1">a </span><span class="s2">* </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">pow</span><span class="s2">(</span><span class="s1">x </span><span class="s2">- </span><span class="s1">h</span><span class="s2">, </span><span class="s4">2</span><span class="s2">) + </span><span class="s1">k </span><span class="s2">+ </span><span class="s1">NET_SIZE </span><span class="s2">* </span><span class="s4">0.5</span><span class="s2">;</span>
+            <span class="s1">path</span><span class="s2">.</span><span class="s1">getElements</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s0">new </span><span class="s1">LineTo</span><span class="s2">(</span><span class="s1">x</span><span class="s2">, </span><span class="s1">y</span><span class="s2">));</span>
+        <span class="s2">}</span>
+
+        <span class="s0">return </span><span class="s1">path</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//PORTAL METHOD</span>
+    <span class="s0">private void </span><span class="s1">spawnPortal</span><span class="s2">() {</span>
+        <span class="s3">//Spawn portal</span>
+        <span class="s1">portal </span><span class="s2">= </span><span class="s0">new </span><span class="s1">SimpleMovingImage</span><span class="s2">(</span><span class="s0">new </span><span class="s1">ImageView</span><span class="s2">(</span><span class="s5">&quot;Black_hole.png&quot;</span><span class="s2">), </span><span class="s1">PORTAL_WIDTH</span><span class="s2">, </span><span class="s1">PORTAL_HEIGHT</span><span class="s2">, </span><span class="s1">objectSpeed</span><span class="s2">, </span><span class="s4">0</span><span class="s2">);</span>
+        <span class="s1">portal</span><span class="s2">.</span><span class="s1">setX</span><span class="s2">(</span><span class="s1">screenWidth</span><span class="s2">);</span>
+        <span class="s1">portal</span><span class="s2">.</span><span class="s1">setY</span><span class="s2">(</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">portal</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">());</span>
+        <span class="s1">gameObjects</span><span class="s2">.</span><span class="s1">getChildren</span><span class="s2">().</span><span class="s1">add</span><span class="s2">(</span><span class="s1">portal</span><span class="s2">.</span><span class="s1">getImage</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//PLANET CHANGE METHOD</span>
+    <span class="s0">private void </span><span class="s1">changePlanet</span><span class="s2">() {</span>
+        <span class="s3">//OLD MMETHOD</span>
+        <span class="s3">// Determine new planet and update currentPlanetInt</span>
+        <span class="s3">//int newPlanetInt = (int) Math.round((Math.random() * 7));</span>
+        <span class="s3">//while (currentPlanetInt == newPlanetInt) {</span>
+            <span class="s3">//newPlanetInt = (int) Math.round((Math.random() * 7));</span>
+        <span class="s3">//}</span>
+        <span class="s3">//Next planet is the next one</span>
+        <span class="s1">currentPlanetInt</span><span class="s2">++;</span>
+
+        <span class="s3">//if escapes solar system reset to mercury</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">&gt;=</span><span class="s4">8</span><span class="s2">) {</span>
+            <span class="s1">currentPlanetInt </span><span class="s2">= </span><span class="s4">0</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s3">//Update background</span>
+        <span class="s1">background</span><span class="s2">.</span><span class="s1">changePlanet</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">);</span>
+        <span class="s3">//Add planet to planetsDiscovered</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">planetsDiscovered</span><span class="s2">.</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">) == </span><span class="s5">'0'</span><span class="s2">) {</span>
+            <span class="s1">planetsDiscovered</span><span class="s2">.</span><span class="s1">setCharAt</span><span class="s2">(</span><span class="s1">currentPlanetInt</span><span class="s2">, </span><span class="s5">'1'</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//GAMEPLAY SPAWNING METHODS</span>
+    <span class="s0">private void </span><span class="s1">gameObjectSpawner</span><span class="s2">(</span><span class="s0">long </span><span class="s1">now</span><span class="s2">) {</span>
+
+        <span class="s3">//Initialize spawning time for star and portal</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">startSpawnPortalStarTime </span><span class="s2">== </span><span class="s4">0</span><span class="s2">) {</span>
+            <span class="s1">startSpawnPortalStarTime </span><span class="s2">= </span><span class="s1">now </span><span class="s2">+ </span><span class="s4">1_000_000_000</span><span class="s2">;</span>
+            <span class="s1">lastPortalSpawnTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+            <span class="s1">lastStarSpawnTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Spawn a new obstacle if the spawn interval has passed</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">now </span><span class="s2">- </span><span class="s1">lastObstacleSpawnTime </span><span class="s2">&gt;= </span><span class="s1">obstacleSpawnIntervalNano</span><span class="s2">) {</span>
+            <span class="s1">spawnObstacle</span><span class="s2">();</span>
+            <span class="s1">lastObstacleSpawnTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+            <span class="s1">increaseSpawnSpeed</span><span class="s2">(); </span><span class="s3">// Gradually increase spawn speed</span>
+        <span class="s2">}</span>
+        <span class="s3">//Spawn a new star if the spawn interval has passed</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">now </span><span class="s2">- </span><span class="s1">lastStarSpawnTime </span><span class="s2">&gt;= </span><span class="s1">starSpawnIntervalNano </span><span class="s2">&amp;&amp; </span><span class="s1">now </span><span class="s2">&gt; </span><span class="s1">startSpawnPortalStarTime</span><span class="s2">) {</span>
+            <span class="s3">//Give a score value based on time passed</span>
+            <span class="s0">long </span><span class="s1">scoreValue </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) </span><span class="s4">500 </span><span class="s2">* </span><span class="s4">1_000_000_000 </span><span class="s2">/ </span><span class="s1">obstacleSpawnIntervalNano</span><span class="s2">;</span>
+
+            <span class="s1">spawnStar</span><span class="s2">(</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * (</span><span class="s1">screenWidth </span><span class="s2">- </span><span class="s1">star</span><span class="s2">.</span><span class="s1">getWidth</span><span class="s2">()), </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * (</span><span class="s1">GROUND_Y </span><span class="s2">- </span><span class="s1">star</span><span class="s2">.</span><span class="s1">getHeight</span><span class="s2">()), </span><span class="s4">0</span><span class="s2">, </span><span class="s4">0</span><span class="s2">, </span><span class="s1">scoreValue</span><span class="s2">);</span>
+
+            <span class="s1">lastStarSpawnTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+            <span class="s1">randomizeStarSpawnTime</span><span class="s2">(); </span><span class="s3">//Gradually increase spawn speed</span>
+        <span class="s2">}</span>
+
+        <span class="s3">//Spawn a new portal if the spawn interval has passed</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">now </span><span class="s2">- </span><span class="s1">lastPortalSpawnTime </span><span class="s2">&gt;= </span><span class="s1">portalSpawnIntervalNano </span><span class="s2">&amp;&amp; </span><span class="s1">now </span><span class="s2">&gt; </span><span class="s1">startSpawnPortalStarTime</span><span class="s2">) {</span>
+            <span class="s1">spawnPortal</span><span class="s2">();</span>
+
+            <span class="s1">lastPortalSpawnTime </span><span class="s2">= </span><span class="s1">now</span><span class="s2">;</span>
+            <span class="s1">randomizePortalSpawnTime</span><span class="s2">(); </span><span class="s3">//Gradually increase spawn speed</span>
+        <span class="s2">}</span>
+
+
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">spawnObstacle</span><span class="s2">() {</span>
+        <span class="s3">//Create new random obstacle</span>
+        <span class="s0">int </span><span class="s1">index </span><span class="s2">= (</span><span class="s0">int</span><span class="s2">) (</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">round</span><span class="s2">(</span><span class="s4">2</span><span class="s2">*</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">()));</span>
+        <span class="s0">switch </span><span class="s2">(</span><span class="s1">index</span><span class="s2">) {</span>
+            <span class="s0">case </span><span class="s4">0</span><span class="s2">: </span><span class="s3">//Spawn spike</span>
+                <span class="s1">createSpike</span><span class="s2">();</span>
+                <span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">1</span><span class="s2">: </span><span class="s3">//Spawn meteor</span>
+                <span class="s1">createMeteorite</span><span class="s2">();</span>
+                <span class="s0">break</span><span class="s2">;</span>
+
+            <span class="s0">case </span><span class="s4">2</span><span class="s2">:</span>
+                <span class="s1">createMeteorite</span><span class="s2">();</span>
+                <span class="s0">break</span><span class="s2">;</span>
+
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">randomizeStarSpawnTime</span><span class="s2">() {</span>
+        <span class="s1">starSpawnIntervalNano </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) (((</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * </span><span class="s4">5</span><span class="s2">) + </span><span class="s4">10</span><span class="s2">) * </span><span class="s4">1_000_000_000</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public void </span><span class="s1">randomizePortalSpawnTime</span><span class="s2">() {</span>
+        <span class="s1">portalSpawnIntervalNano </span><span class="s2">= (</span><span class="s0">long</span><span class="s2">) (((</span><span class="s1">Math</span><span class="s2">.</span><span class="s1">random</span><span class="s2">() * </span><span class="s4">10</span><span class="s2">) + </span><span class="s4">20</span><span class="s2">) * </span><span class="s4">1_000_000_000</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">increaseSpawnSpeed</span><span class="s2">() {</span>
+        <span class="s3">//Decrease the spawn interval</span>
+        <span class="s0">long </span><span class="s1">SPAWN_TIME_DECREMENT </span><span class="s2">= </span><span class="s4">1_000_000</span><span class="s2">;</span>
+        <span class="s1">obstacleSpawnIntervalNano </span><span class="s2">-= </span><span class="s1">SPAWN_TIME_DECREMENT</span><span class="s2">;</span>
+        <span class="s1">obstacleSpawnIntervalNano </span><span class="s2">= </span><span class="s1">Math</span><span class="s2">.</span><span class="s1">max</span><span class="s2">(</span><span class="s4">10_000_000</span><span class="s2">,</span><span class="s1">obstacleSpawnIntervalNano </span><span class="s2">);</span><span class="s3">// Don't go below 0.1 seconds</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s5">&quot;SPAWN_TIME &quot;</span><span class="s2">+ </span><span class="s1">obstacleSpawnIntervalNano</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">updateGameObjectsSpeed</span><span class="s2">() {</span>
+        <span class="s3">//Update background</span>
+        <span class="s1">background</span><span class="s2">.</span><span class="s1">setSpeedX</span><span class="s2">(</span><span class="s1">objectSpeed</span><span class="s2">);</span>
+        <span class="s3">//Update obstacles</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">SimpleMovingImage obstacle </span><span class="s2">: </span><span class="s1">obstacles</span><span class="s2">) {</span>
+            <span class="s1">obstacle</span><span class="s2">.</span><span class="s1">setSpeedX</span><span class="s2">(</span><span class="s1">objectSpeed</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+    <span class="s2">}</span>
+
+    <span class="s3">//IsBlackedOut method</span>
+    <span class="s0">public boolean </span><span class="s1">isBlackedOut</span><span class="s2">(</span><span class="s0">int </span><span class="s1">planetInt</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s1">IOMethods</span><span class="s2">.</span><span class="s1">getPlanetsDiscovered</span><span class="s2">().</span><span class="s1">charAt</span><span class="s2">(</span><span class="s1">planetInt</span><span class="s2">) == </span><span class="s5">'0'</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">//MATH METHOD</span>
+    <span class="s0">private double </span><span class="s1">roundTo2Dec</span><span class="s2">(</span><span class="s0">double </span><span class="s1">value</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s2">((</span><span class="s0">int</span><span class="s2">) (</span><span class="s1">value </span><span class="s2">* </span><span class="s4">100</span><span class="s2">)) / </span><span class="s4">100.0</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
