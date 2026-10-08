@@ -625,7 +625,7 @@ public class AstroJump extends Application {
         obstacleSpawnIntervalNano = (long) 2 *1_000_000_000;
         starSpawnIntervalNano = (long) 4 * 1_000_000_000;
         portalSpawnIntervalNano = (long) 30 * 1_000_000_000;
-        
+
         Scene game = new Scene(gameObjects, screenWidth, screenHeight);
 
         //Initialize the next star spawning
